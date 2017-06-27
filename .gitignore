@@ -1,0 +1,51 @@
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*.project
+*.classpath
+
+### Truffle
+smart-contracts/build
+
+### Angular
+# compiled output
+web-frontend/dist
+web-frontend/tmp
+
+# dependencies
+web-frontend/node_modules
+
+# misc
+web-frontend/.sass-cache
+web-frontend/connect.lock
+web-frontend/coverage/*
+web-frontend/libpeerconnection.log
+web-frontend/npm-debug.log
+web-frontend/testem.log
+web-frontend/typings
+
+# e2e
+web-frontend/e2e/*.js
+web-frontend/e2e/*.map
+web-backend/.gitignore
+
+
+web-backend/gradlew.bat
+
+web-frontend/.editorconfig
+web-frontend/package-lock.json
+web-frontend/compiled_contracts
