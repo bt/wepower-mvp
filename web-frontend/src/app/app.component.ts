@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 var Web3 = require('web3');
 const contract = require('truffle-contract');
 const metaincoinArtifacts = require('../../compiled_contracts/MetaCoin.json');
