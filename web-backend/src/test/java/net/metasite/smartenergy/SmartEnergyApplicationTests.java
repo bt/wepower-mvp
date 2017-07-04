@@ -1,4 +1,4 @@
-package net.metasite.ecryptoexchange;
+package net.metasite.smartenergy;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

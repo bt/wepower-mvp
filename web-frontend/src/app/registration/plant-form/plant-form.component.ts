@@ -30,16 +30,21 @@ export class PlantFormComponent implements OnInit {
   ngOnInit() {
     this.formData = this.defaultForm();
     this.areasService.loadAvailableAreas()
-      .then(availableAreas => this.supportedAreas = availableAreas)
-      .catch(reason => console.log(reason));
+      .subscribe(
+        availableAreas => this.supportedAreas = availableAreas,
+        error =>  console.error(error)
+      );
   }
 
   /**
    * Initiates plant creation based on form data
    */
   createPlant(): void {
-    this.plantService.createPlant(this.formData);
-    console.log(this.formData);
+    this.plantService.createPlant(this.formData)
+      .subscribe(
+        plantData => console.log(plantData),
+        error => console.error(error)
+      );
   }
 
   /**
@@ -56,23 +61,5 @@ export class PlantFormComponent implements OnInit {
     form.location = new GeoLocation();
 
     return form;
-  }
-
-  /**
-   * Temporary.
-   * Converts plant type to nice display name
-   *
-   * @param type
-   * @returns {any}
-   */
-  displayPlantType(type : PlantType): string {
-    switch (type) {
-      case (PlantType.HYDRO):
-        return "Hydro"
-      case (PlantType.SOLAR):
-        return "Solar"
-      case (PlantType.WIND):
-        return "Wind"
-    }
   }
 }

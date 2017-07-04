@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import {ConsumerForm} from "./consumer-form";
-import {GeoArea} from "../../shared/geo-area";
-import {AreaOptionsService} from "../area-options.service";
-import {HouseSizeOptionsService} from "../house-size-options.service";
-import {HouseSize} from "../../shared/house-size";
-import {ConsumerManagementService} from "../consumer-management.service";
+
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+
+import { ConsumerForm } from "./consumer-form";
+import { GeoArea } from "../../shared/geo-area";
+import { AreaOptionsService } from "../area-options.service";
+import { HouseSizeOptionsService } from "../house-size-options.service";
+import { HouseSize } from "../../shared/house-size";
+import { ConsumerManagementService } from "../consumer-management.service";
 
 @Component({
   selector: 'app-consumer-form',
@@ -25,19 +29,29 @@ export class ConsumerFormComponent implements OnInit {
     this.formData = this.defaultForm();
 
     this.areasService.loadAvailableAreas()
-      .then(availableAreas => this.supportedAreas = availableAreas)
-      .catch(reason => console.log(reason));
+      .subscribe(
+        availableAreas => this.supportedAreas = availableAreas,
+        error =>  console.error(error)
+      );
 
     this.houseSizeService.loadAvailableSizes()
-      .then(availableSizes => this.supportedHouseSizes = availableSizes)
-      .catch(reason => console.log(reason));
+      .subscribe(
+        availableSizes => this.supportedHouseSizes = availableSizes,
+        error => console.log(error)
+      );
   }
 
   /**
    * Initiates plant creation based on form data
+   *
+   * TODO: Use received customer data.
    */
   createConsumer(): void {
-    this.consumerService.createConsumer(this.formData);
+    this.consumerService.createConsumer(this.formData)
+      .subscribe(
+        customerData => console.log(customerData),
+        error => console.error(error)
+      );
   }
 
   /**
@@ -48,6 +62,7 @@ export class ConsumerFormComponent implements OnInit {
   private defaultForm() {
     let form = new ConsumerForm();
     form.houseSizeCode = "M";
+    form.areaCode = "ITA";
     return form;
   }
 }
