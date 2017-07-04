@@ -11,7 +11,7 @@
       <span>Etherium Wallet ID</span>
     </div>
     <div class="col-md">
-      <input type="text" [(ngModel)]="formData.walletId">
+      <input type="text" [(ngModel)]="formData.walletId" class="form-control">
     </div>
   </div>
 
@@ -20,7 +20,7 @@
       <span>Plant name</span>
     </div>
     <div class="col-md">
-      <input type="text" [(ngModel)]="formData.name">
+      <input type="text" [(ngModel)]="formData.name" class="form-control">
     </div>
   </div>
 
@@ -30,7 +30,7 @@
     </div>
     <div class="col-md">
       <select class="form-control" [(ngModel)]="formData.areaCode">
-        <option name="geo-area" *ngFor="let area of areas" [value]="area.code"
+        <option name="geo-area" *ngFor="let area of supportedAreas" [value]="area.code"
         >{{area.name}}</option>
       </select>
     </div>
@@ -41,7 +41,7 @@
       <span>Plant capacity</span>
     </div>
     <div class="col-md">
-      <input type="text" [(ngModel)]="formData.consumption">
+      <input type="text" [(ngModel)]="formData.capacity" class="form-control">
     </div>
   </div>
 
@@ -72,7 +72,7 @@
       <span>Latitude</span>
     </div>
     <div class="col-md">
-      <input type="text">
+      <input [(ngModel)]="formData.location.latitude" type="text" class="form-control">
     </div>
   </div>
 
@@ -81,7 +81,7 @@
       <span>Longtitude</span>
     </div>
     <div class="col-md">
-      <input type="text">
+      <input [(ngModel)]="formData.location.longtitude" type="text" class="form-control">
     </div>
   </div>
 
@@ -96,7 +96,7 @@
       <span>From</span>
     </div>
     <div class="col-md">
-      <input type="text">
+      <input [(ngModel)]="formData.activePeriod.from" type="text" class="form-control">
     </div>
   </div>
 
@@ -105,13 +105,13 @@
       <span>Till</span>
     </div>
     <div class="col-md">
-      <input type="text">
+      <input [(ngModel)]="formData.activePeriod.to" type="text" class="form-control">
     </div>
   </div>
 
   <div class="row form-group">
     <div class="col-md">
-      <button (click)="savePlant()" type="button" class="btn btn-primary">Submit</button>
+      <button (click)="createPlant()" type="button" class="btn btn-primary">Submit</button>
     </div>
     <div class="col-md">
       <button routerLink="/landing" type="button" class="btn btn-secondary">Cancel</button>

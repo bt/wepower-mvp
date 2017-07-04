@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Period } from "./period";
 import { GeoLocation } from "./geo-location";
 import {GeoArea} from "./geo-area";
+import {HouseSize} from "./house-size";
 
 @NgModule({
   imports: [
@@ -11,6 +12,7 @@ import {GeoArea} from "./geo-area";
   exports: [
     GeoArea,
     GeoLocation,
+    HouseSize,
     Period
   ],
   declarations: []

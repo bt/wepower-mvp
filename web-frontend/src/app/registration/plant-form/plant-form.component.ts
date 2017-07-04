@@ -4,6 +4,8 @@ import { PlantForm, PlantType } from "./plant-form";
 import { GeoArea } from "../../shared/geo-area";
 import { PlantManagementService } from "../plant-management.service";
 import { AreaOptionsService } from "../area-options.service";
+import {Period} from "../../shared/period";
+import {GeoLocation} from "../../shared/geo-location";
 
 @Component({
   selector: 'app-plant-form',
@@ -19,7 +21,7 @@ export class PlantFormComponent implements OnInit {
     .map(key => PlantType[key]);
 
   formData : PlantForm;
-  areas : Array<GeoArea>;
+  supportedAreas : Array<GeoArea>;
 
   constructor(private plantService: PlantManagementService,
               private areasService: AreaOptionsService) {
@@ -28,18 +30,31 @@ export class PlantFormComponent implements OnInit {
   ngOnInit() {
     this.formData = this.defaultForm();
     this.areasService.loadAvailableAreas()
-      .then(value => this.areas = value)
+      .then(availableAreas => this.supportedAreas = availableAreas)
       .catch(reason => console.log(reason));
   }
 
-  savePlant(): void {
+  /**
+   * Initiates plant creation based on form data
+   */
+  createPlant(): void {
     this.plantService.createPlant(this.formData);
+    console.log(this.formData);
   }
 
+  /**
+   * Provides default values where needed for initial selections
+   *
+   * @returns {PlantForm}
+   */
   defaultForm(): PlantForm {
     let form = new PlantForm()
     form.type = PlantType.SOLAR;
     form.areaCode = "GER";
+
+    form.activePeriod = new Period();
+    form.location = new GeoLocation();
+
     return form;
   }
 

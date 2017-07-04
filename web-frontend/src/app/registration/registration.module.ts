@@ -7,6 +7,8 @@ import { PlantFormComponent } from './plant-form/plant-form.component';
 import { ConsumerFormComponent } from './consumer-form/consumer-form.component';
 import {AreaOptionsService} from "./area-options.service";
 import {PlantManagementService} from "./plant-management.service";
+import {HouseSizeOptionsService} from "./house-size-options.service";
+import {ConsumerManagementService} from "./consumer-management.service";
 
 
 @NgModule({
@@ -25,6 +27,8 @@ import {PlantManagementService} from "./plant-management.service";
   ],
   providers: [
     AreaOptionsService,
+    ConsumerManagementService,
+    HouseSizeOptionsService,
     PlantManagementService
   ]
 })

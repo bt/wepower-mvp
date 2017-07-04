@@ -6,59 +6,70 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row form-group">
     <div class="col-md">
       <span>Etherium Wallet ID</span>
     </div>
-    <div class="col-md">
-      <input type="text">
+    <div class="col-md ">
+      <input class="form-control" type="text" [(ngModel)]="formData.walletId">
     </div>
   </div>
 
-  <div class="row">
+  <div class="row form-group">
     <div class="col-md">
       <span>Home area</span>
     </div>
     <div class="col-md">
-      <input type="text">
+      <select class="form-control" [(ngModel)]="formData.areaCode">
+        <option name="geo-area" *ngFor="let area of supportedAreas" [value]="area.code"
+        >{{area.name}}</option>
+      </select>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row form-group">
     <div class="col-md">
       <span>Counter ID</span>
     </div>
     <div class="col-md">
-      <input type="text">
+      <input class="form-control" type="text" [(ngModel)]="formData.counterId">
     </div>
   </div>
 
-  <div class="row">
+  <div class="row form-group">
     <div class="col-md">
       <span>Home electricity consumption</span>
     </div>
     <div class="col-md">
-      <input type="text">
+      <input class="form-control" type="text" [(ngModel)]="formData.consumption">
     </div>
   </div>
 
-  <div class="row">
+  <div class="row form-group">
     <div class="col-md">
       <span>Home size</span>
     </div>
     <div class="col-md">
-      <span><input type="checkbox">10 - 50 m2</span>
-      <span><input type="checkbox">50 - 100 m2</span>
-      <span><input type="checkbox">100 - 150 m2</span>
+      <div class="col-md">
+        <span *ngFor="let houseSize of supportedHouseSizes">
+          <input type="radio"
+                 [(ngModel)]="formData.houseSizeCode"
+                 [value]="houseSize.code"
+          >
+          {{houseSize.description}}
+        </span>
+      </div>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row form-group">
     <div class="col-md">
-      <button type="button" class="btn btn-primary">Submit</button>
+      <button (click)="createConsumer()" type="button" class="btn btn-primary">Submit</button>
     </div>
     <div class="col-md">
-      <button type="button" class="btn btn-secondary">Cancel</button>
+      <button routerLink="/landing"
+              type="button"
+              class="btn btn-secondary">Cancel</button>
     </div>
   </div>
 
