@@ -1,4 +1,4 @@
-# Smart Energy
+# We Power
 
 ## Modules.
 * _web-backend_  - Spring boot project for back end.

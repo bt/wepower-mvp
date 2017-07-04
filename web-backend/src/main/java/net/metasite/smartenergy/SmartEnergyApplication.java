@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EcryptoExchangeApplication {
+public class SmartEnergyApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EcryptoExchangeApplication.class, args);
+		SpringApplication.run(SmartEnergyApplication.class, args);
 	}
 }
