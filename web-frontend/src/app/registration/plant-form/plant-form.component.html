@@ -1,3 +1,122 @@
-<p>
-  plant-form works!
-</p>
+<div class="container" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+  <div class="row">
+    <div class="col-md">
+      <h1>I have a Plant</h1>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>Etherium Wallet ID</span>
+    </div>
+    <div class="col-md">
+      <input type="text" [(ngModel)]="formData.walletId">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>Plant name</span>
+    </div>
+    <div class="col-md">
+      <input type="text" [(ngModel)]="formData.name">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>Plant area</span>
+    </div>
+    <div class="col-md">
+      <select class="form-control" [(ngModel)]="formData.areaCode">
+        <option name="geo-area" *ngFor="let area of areas" [value]="area.code"
+        >{{area.name}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>Plant capacity</span>
+    </div>
+    <div class="col-md">
+      <input type="text" [(ngModel)]="formData.consumption">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>Plant type</span>
+    </div>
+    <div class="col-md">
+      <span *ngFor="let type of plantTypeValues">
+        <input type="radio"
+               [(ngModel)]="formData.type"
+               [value]="type"
+        >
+        {{displayPlantType(type)}}
+      </span>
+    </div>
+  </div>
+
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>Coordinates</span>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>Latitude</span>
+    </div>
+    <div class="col-md">
+      <input type="text">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>Longtitude</span>
+    </div>
+    <div class="col-md">
+      <input type="text">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>I want to sell energy</span>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>From</span>
+    </div>
+    <div class="col-md">
+      <input type="text">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <span>Till</span>
+    </div>
+    <div class="col-md">
+      <input type="text">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md">
+      <button (click)="savePlant()" type="button" class="btn btn-primary">Submit</button>
+    </div>
+    <div class="col-md">
+      <button routerLink="/landing" type="button" class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+
+
+</div>
