@@ -1,0 +1,73 @@
+package net.metasite.smartenergy.plant;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import net.metasite.smartenergy.domain.ActivePeriod;
+import net.metasite.smartenergy.domain.Coordinates;
+import net.metasite.smartenergy.domain.Plant;
+import net.metasite.smartenergy.domain.SupportedLocationArea;
+import net.metasite.smartenergy.plant.request.PlantDetailsDTO;
+import net.metasite.smartenergy.plant.response.CreatedPlantDTO;
+import net.metasite.smartenergy.repositories.PlantRepository;
+import net.metasite.smartenergy.repositories.SupportedLocationRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.collect.Range;
+
+@Service
+public class PlantFactory {
+
+    private SupportedLocationRepository supportedLocationRepository;
+
+    private PlantRepository plantRepository;
+
+    @Autowired
+    public PlantFactory(
+            SupportedLocationRepository supportedLocationRepository,
+            PlantRepository plantRepository) {
+        this.supportedLocationRepository = supportedLocationRepository;
+        this.plantRepository = plantRepository;
+    }
+
+    @Transactional
+    public Long create(
+            String walletId,
+            String name,
+            Plant.Type type,
+            BigDecimal capacity,
+            BigDecimal latitude,
+            BigDecimal longtitude,
+            String areaCode,
+            Range<LocalDate> activeAt) {
+
+        SupportedLocationArea locationArea = supportedLocationRepository.findByCode(areaCode);
+
+        LocalDate periodStart = activeAt.lowerEndpoint();
+        LocalDate periodEnd = activeAt.hasUpperBound() ? activeAt.upperEndpoint() : null;
+
+        ActivePeriod period = new ActivePeriod(periodStart, periodEnd);
+
+        Plant newPlant = new Plant(
+                walletId,
+                name,
+                type,
+                capacity,
+                Coordinates.at(latitude, longtitude),
+                locationArea,
+                period
+        );
+
+        plantRepository.save(newPlant);
+
+        return newPlant.getId();
+    }
+}

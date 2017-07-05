@@ -1,30 +1,34 @@
 package net.metasite.smartenergy.house;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
+import net.metasite.smartenergy.domain.SupportedHouseSize;
 import net.metasite.smartenergy.house.response.HouseSizeDTO;
-import net.metasite.smartenergy.locationareas.response.AreaDTO;
+import net.metasite.smartenergy.repositories.SupportedHouseSizeRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.ImmutableList;
-
-
 @RestController
 @RequestMapping("/house-size")
 public class HouseSizesController {
 
+    @Resource
+    private SupportedHouseSizeRepository supportedHouseSizeRepository;
+
     @GetMapping
     public List<HouseSizeDTO> getSupportedSizes() {
+        return supportedHouseSizeRepository.findAll()
+                .stream()
+                .map(HouseSizesController::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
-        // TODO: Implement persistance layer
-
-        return ImmutableList.of(
-                new HouseSizeDTO("S", "10 - 50 m2"),
-                new HouseSizeDTO("M", "50 - 100 m2"),
-                new HouseSizeDTO("L", "100 - 150 m2")
-        );
+    public static HouseSizeDTO convertToDTO(SupportedHouseSize size) {
+        return new HouseSizeDTO(size.getCode(), size.getDescription());
     }
 }

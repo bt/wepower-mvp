@@ -1,28 +1,35 @@
 package net.metasite.smartenergy.locationareas;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
+import net.metasite.smartenergy.domain.SupportedLocationArea;
 import net.metasite.smartenergy.locationareas.response.AreaDTO;
+import net.metasite.smartenergy.repositories.SupportedLocationRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.ImmutableList;
-
 @RestController
 @RequestMapping("/location-area")
 public class LocationAreaController {
 
+    @Resource
+    private SupportedLocationRepository supportedLocationRepository;
+
     @GetMapping
     public List<AreaDTO> getSupportedLocations() {
 
-        // TODO: Implement persistance layer
+        return supportedLocationRepository.findAll()
+                .stream()
+                .map(LocationAreaController::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
-        return ImmutableList.of(
-                new AreaDTO("GER", "Germany"),
-                new AreaDTO("ESP", "Spain"),
-                new AreaDTO("ITA", "Italy")
-        );
+    public static AreaDTO convertToDTO(SupportedLocationArea location) {
+        return new AreaDTO(location.getCode(), location.getDescription());
     }
 }

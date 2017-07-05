@@ -1,7 +1,7 @@
 package net.metasite.smartenergy.plant.request;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class PlantDetailsDTO {
 
@@ -18,8 +18,8 @@ public class PlantDetailsDTO {
     private BigDecimal locationLatitude;
     private BigDecimal locationLongtitude;
 
-    private Date produceFrom;
-    private Date produceTo;
+    private LocalDate produceFrom;
+    private LocalDate produceTo;
 
     public PlantDetailsDTO() {
     }
@@ -52,11 +52,11 @@ public class PlantDetailsDTO {
         this.locationLongtitude = locationLongtitude;
     }
 
-    public void setProduceFrom(Date produceFrom) {
+    public void setProduceFrom(LocalDate produceFrom) {
         this.produceFrom = produceFrom;
     }
 
-    public void setProduceTo(Date produceTo) {
+    public void setProduceTo(LocalDate produceTo) {
         this.produceTo = produceTo;
     }
 
@@ -88,11 +88,11 @@ public class PlantDetailsDTO {
         return locationLongtitude;
     }
 
-    public Date getProduceFrom() {
+    public LocalDate getProduceFrom() {
         return produceFrom;
     }
 
-    public Date getProduceTo() {
+    public LocalDate getProduceTo() {
         return produceTo;
     }
 }

@@ -55,7 +55,7 @@ export class PlantFormComponent implements OnInit {
   defaultForm(): PlantForm {
     let form = new PlantForm()
     form.type = PlantType.SOLAR;
-    form.areaCode = "GER";
+    form.areaCode = "DEU";
 
     form.activePeriod = new Period();
     form.location = new GeoLocation();

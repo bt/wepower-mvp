@@ -6,7 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw'
 
-import {PlantForm} from "./plant-form/plant-form";
+import {PlantForm, PlantType} from "./plant-form/plant-form";
 import {environment} from "../../environments/environment";
 
 @Injectable()
@@ -16,7 +16,20 @@ export class PlantManagementService {
   }
 
   createPlant(plantData: PlantForm): Observable<number> {
-    return this.http.post(`${environment.dataUrls.plant}`, plantData)
+
+    let body = {
+      'name' : plantData.name,
+      'walletId' : plantData.walletId,
+      'areaCode' : plantData.areaCode,
+      'type' : PlantType[plantData.type],
+      'capacity' : plantData.capacity,
+      'locationLatitude' : plantData.location.latitude,
+      'locationLongtitude' : plantData.location.longtitude,
+      'produceFrom' : plantData.activePeriod.from,
+      'produceTo' : plantData.activePeriod.to
+    }
+
+    return this.http.post(`${environment.dataUrls.plant}`, body)
       .map(this.extractData)
       .catch(this.handleError)
   }
