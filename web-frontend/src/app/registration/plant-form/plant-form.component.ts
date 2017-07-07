@@ -6,6 +6,7 @@ import { PlantManagementService } from "../plant-management.service";
 import { AreaOptionsService } from "../area-options.service";
 import {Period} from "../../shared/period";
 import {GeoLocation} from "../../shared/geo-location";
+import {EthereumService} from "../../shared/ethereum.service";
 
 @Component({
   selector: 'app-plant-form',
@@ -24,7 +25,8 @@ export class PlantFormComponent implements OnInit {
   supportedAreas : Array<GeoArea>;
 
   constructor(private plantService: PlantManagementService,
-              private areasService: AreaOptionsService) {
+              private areasService: AreaOptionsService,
+              private ethereumService: EthereumService) {
   }
 
   ngOnInit() {
@@ -54,6 +56,7 @@ export class PlantFormComponent implements OnInit {
    */
   defaultForm(): PlantForm {
     let form = new PlantForm()
+    form.walletId = this.ethereumService.activeWallet();
     form.type = PlantType.SOLAR;
     form.areaCode = "DEU";
 

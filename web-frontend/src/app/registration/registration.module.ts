@@ -6,11 +6,12 @@ import { HttpModule, JsonpModule } from '@angular/http';
 
 import { PlantFormComponent } from './plant-form/plant-form.component';
 import { ConsumerFormComponent } from './consumer-form/consumer-form.component';
-import {AreaOptionsService} from "./area-options.service";
-import {PlantManagementService} from "./plant-management.service";
-import {HouseSizeOptionsService} from "./house-size-options.service";
-import {ConsumerManagementService} from "./consumer-management.service";
+import { AreaOptionsService } from "./area-options.service";
+import {PlantManagementService } from "./plant-management.service";
+import {HouseSizeOptionsService } from "./house-size-options.service";
+import {ConsumerManagementService } from "./consumer-management.service";
 import { PlantTypePipe } from './plant-type.pipe';
+import {SharedModule} from "../shared/shared.module";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { PlantTypePipe } from './plant-type.pipe';
     FormsModule,
     HttpModule,
     JsonpModule,
-    RouterModule
+    RouterModule,
+    SharedModule
   ],
   exports: [
     PlantFormComponent,

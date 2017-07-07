@@ -9,6 +9,7 @@ import { AreaOptionsService } from "../area-options.service";
 import { HouseSizeOptionsService } from "../house-size-options.service";
 import { HouseSize } from "../../shared/house-size";
 import { ConsumerManagementService } from "../consumer-management.service";
+import {EthereumService} from "../../shared/ethereum.service";
 
 @Component({
   selector: 'app-consumer-form',
@@ -23,7 +24,8 @@ export class ConsumerFormComponent implements OnInit {
 
   constructor(private areasService : AreaOptionsService,
               private houseSizeService : HouseSizeOptionsService,
-              private consumerService : ConsumerManagementService) { }
+              private consumerService : ConsumerManagementService,
+              private ethereumService : EthereumService) { }
 
   ngOnInit() {
     this.formData = this.defaultForm();
@@ -44,7 +46,6 @@ export class ConsumerFormComponent implements OnInit {
   /**
    * Initiates plant creation based on form data
    *
-   * TODO: Use received customer data.
    */
   createConsumer(): void {
     this.consumerService.createConsumer(this.formData)
@@ -61,6 +62,7 @@ export class ConsumerFormComponent implements OnInit {
    */
   private defaultForm() {
     let form = new ConsumerForm();
+    form.walletId = this.ethereumService.activeWallet();
     form.houseSizeCode = "M";
     form.areaCode = "ITA";
     return form;
