@@ -1,20 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Period } from "./period";
-import { GeoLocation } from "./geo-location";
-import {GeoArea} from "./geo-area";
-import {HouseSize} from "./house-size";
+
+import {EthereumService} from "./ethereum.service";
+
 
 @NgModule({
   imports: [
     CommonModule
   ],
   exports: [
-    GeoArea,
-    GeoLocation,
-    HouseSize,
-    Period
+
   ],
-  declarations: []
+  declarations: [],
+  providers: [
+    EthereumService
+  ]
 })
 export class SharedModule { }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {EthereumService} from "../shared/ethereum.service";
 
 @Component({
   selector: 'app-landing',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LandingComponent implements OnInit {
 
-  constructor() { }
+  private etherium: EthereumService;
 
-  ngOnInit() {
+  connectedToWallet : boolean;
+
+  constructor(etherium : EthereumService) {
+    this.etherium = etherium;
   }
 
+  ngOnInit() {
+    console.log(this.etherium.activeWallet());
+    this.connectedToWallet = this.etherium.isActiveConnection();
+    console.log(this.connectedToWallet);
+  }
 }

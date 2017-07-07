@@ -7,4 +7,7 @@
       <button routerLink="/register/consumer" routerLinkActive="active" type="button" class="btn btn-primary">I have a Household</button>
     </div>
   </div>
+  <div *ngIf="connectedToWallet == false">
+    Please log in to your Ethereum wallet to proceed.
+  </div>
 </div>

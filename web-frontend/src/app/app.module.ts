@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { LandingModule } from "./landing/landing.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { RegistrationModule } from "./registration/registration.module";
+import { SharedModule } from "./shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { RegistrationModule } from "./registration/registration.module";
     LandingModule,
     RegistrationModule,
     AppRoutingModule,
-    RouterModule
+    RouterModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]
