@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
+
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -9,7 +11,7 @@ import { AreaOptionsService } from "../area-options.service";
 import { HouseSizeOptionsService } from "../house-size-options.service";
 import { HouseSize } from "../../shared/house-size";
 import { ConsumerManagementService } from "../consumer-management.service";
-import {EthereumService} from "../../shared/ethereum.service";
+import { EthereumService} from "../../shared/ethereum.service";
 
 @Component({
   selector: 'app-consumer-form',
@@ -25,7 +27,8 @@ export class ConsumerFormComponent implements OnInit {
   constructor(private areasService : AreaOptionsService,
               private houseSizeService : HouseSizeOptionsService,
               private consumerService : ConsumerManagementService,
-              private ethereumService : EthereumService) { }
+              private ethereumService : EthereumService,
+              private router : Router) { }
 
   ngOnInit() {
     this.formData = this.defaultForm();
@@ -50,7 +53,7 @@ export class ConsumerFormComponent implements OnInit {
   createConsumer(): void {
     this.consumerService.createConsumer(this.formData)
       .subscribe(
-        customerData => console.log(customerData),
+        customerData => this.router.navigateByUrl('/register/consumer/review'),
         error => console.error(error)
       );
   }

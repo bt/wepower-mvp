@@ -15,7 +15,7 @@ export class ConsumerManagementService {
   constructor(private http: Http) { }
 
   createConsumer(plantData : ConsumerForm): Observable<number> {
-    return this.http.post(`${environment.dataUrls.consumer}`, plantData)
+    return this.http.post(`${environment.dataUrls.consumer.root}`, plantData)
       .map(this.extractData)
       .catch(this.handleError)
   }

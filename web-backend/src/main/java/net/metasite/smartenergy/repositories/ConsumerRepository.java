@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ConsumerRepository extends BaseRepository<Consumer> {
 
+    Consumer findByWalletId(String walletId);
+
 }

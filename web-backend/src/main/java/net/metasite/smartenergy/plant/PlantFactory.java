@@ -2,13 +2,20 @@ package net.metasite.smartenergy.plant;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import net.metasite.smartenergy.domain.ActivePeriod;
+import net.metasite.smartenergy.domain.ConsumptionLog;
 import net.metasite.smartenergy.domain.Coordinates;
 import net.metasite.smartenergy.domain.Plant;
+import net.metasite.smartenergy.domain.ProductionLog;
 import net.metasite.smartenergy.domain.SupportedLocationArea;
 import net.metasite.smartenergy.plant.request.PlantDetailsDTO;
 import net.metasite.smartenergy.plant.response.CreatedPlantDTO;
+import net.metasite.smartenergy.prediction.Predictor;
+import net.metasite.smartenergy.prediction.ProductionPredictor;
 import net.metasite.smartenergy.repositories.PlantRepository;
 import net.metasite.smartenergy.repositories.SupportedLocationRepository;
 
@@ -22,6 +29,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Range;
+
+import static com.google.common.collect.Range.closed;
+import static net.metasite.smartenergy.domain.ProductionLog.buildPrediction;
 
 @Service
 public class PlantFactory {
@@ -56,6 +66,14 @@ public class PlantFactory {
 
         ActivePeriod period = new ActivePeriod(periodStart, periodEnd);
 
+        Predictor predictor = new ProductionPredictor(capacity.intValue(), type, locationArea);
+        Map<LocalDate, BigDecimal> predictedUsage = predictor.predict(closed(periodStart, periodEnd));
+
+        List<ProductionLog> usageLogs = predictedUsage.entrySet()
+                .stream()
+                .map(predictionEntry -> buildPrediction(predictionEntry.getKey(), predictionEntry.getValue()))
+                .collect(Collectors.toList());
+
         Plant newPlant = new Plant(
                 walletId,
                 name,
@@ -66,8 +84,9 @@ public class PlantFactory {
                 period
         );
 
-        plantRepository.save(newPlant);
+        newPlant.assignLogs(usageLogs);
 
+        plantRepository.save(newPlant);
         return newPlant.getId();
     }
 }

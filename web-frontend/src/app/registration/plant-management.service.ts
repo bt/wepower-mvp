@@ -29,12 +29,12 @@ export class PlantManagementService {
       'produceTo' : plantData.activePeriod.to
     }
 
-    return this.http.post(`${environment.dataUrls.plant}`, body)
+    return this.http.post(`${environment.dataUrls.plant.root}`, body)
       .map(this.extractData)
       .catch(this.handleError)
   }
 
-  extractData(response: Response): Observable<number> {
+  private extractData(response: Response): Observable<number> {
     return response.json()
   }
 

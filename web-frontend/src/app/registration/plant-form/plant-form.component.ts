@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { PlantForm, PlantType } from "./plant-form";
+import { Router } from "@angular/router";
 
+import { PlantForm, PlantType } from "./plant-form";
 import { GeoArea } from "../../shared/geo-area";
 import { PlantManagementService } from "../plant-management.service";
 import { AreaOptionsService } from "../area-options.service";
-import {Period} from "../../shared/period";
-import {GeoLocation} from "../../shared/geo-location";
-import {EthereumService} from "../../shared/ethereum.service";
+import { Period } from "../../shared/period";
+import { GeoLocation } from "../../shared/geo-location";
+import { EthereumService } from "../../shared/ethereum.service";
 
 @Component({
   selector: 'app-plant-form',
@@ -26,7 +27,8 @@ export class PlantFormComponent implements OnInit {
 
   constructor(private plantService: PlantManagementService,
               private areasService: AreaOptionsService,
-              private ethereumService: EthereumService) {
+              private ethereumService: EthereumService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -44,7 +46,7 @@ export class PlantFormComponent implements OnInit {
   createPlant(): void {
     this.plantService.createPlant(this.formData)
       .subscribe(
-        plantData => console.log(plantData),
+        plantData => this.router.navigateByUrl('/register/plant/review'),
         error => console.error(error)
       );
   }

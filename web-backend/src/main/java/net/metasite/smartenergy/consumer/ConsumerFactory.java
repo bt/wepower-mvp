@@ -1,24 +1,28 @@
 package net.metasite.smartenergy.consumer;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import net.metasite.smartenergy.consumer.request.ConsumerDetailsDTO;
-import net.metasite.smartenergy.consumer.response.CreatedConsumerDTO;
 import net.metasite.smartenergy.domain.Consumer;
+import net.metasite.smartenergy.domain.ConsumptionLog;
 import net.metasite.smartenergy.domain.SupportedHouseSize;
 import net.metasite.smartenergy.domain.SupportedLocationArea;
+import net.metasite.smartenergy.prediction.ConsumptionPredictor;
+import net.metasite.smartenergy.prediction.Predictor;
 import net.metasite.smartenergy.repositories.ConsumerRepository;
 import net.metasite.smartenergy.repositories.SupportedHouseSizeRepository;
 import net.metasite.smartenergy.repositories.SupportedLocationRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import static com.google.common.collect.Range.closed;
+import static java.time.LocalDate.now;
+import static net.metasite.smartenergy.domain.ConsumptionLog.buildPrediction;
 
 @Service
 public class ConsumerFactory {
@@ -50,6 +54,15 @@ public class ConsumerFactory {
         SupportedLocationArea locationArea = supportedLocationArea.findByCode(areaCode);
         SupportedHouseSize houseSize = supportedHouseSizeRepository.findByCode(houseSizeCode);
 
+        Predictor predictor = new ConsumptionPredictor(houseSize);
+        Map<LocalDate, BigDecimal> predictedUsage = predictor.predict(
+                closed(now(), now().plusMonths(1))
+        );
+
+        List<ConsumptionLog> usageLogs = predictedUsage.entrySet().stream()
+                .map(predictionEntry -> buildPrediction(predictionEntry.getKey(), predictionEntry.getValue()))
+                .collect(Collectors.toList());
+
         Consumer consumer = new Consumer(
                 walletId,
                 meterId,
@@ -57,6 +70,8 @@ public class ConsumerFactory {
                 locationArea,
                 houseSize
         );
+
+        consumer.assignLogs(usageLogs);
 
         consumerRepository.save(consumer);
 

@@ -1,15 +1,25 @@
 package net.metasite.smartenergy.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.google.common.collect.Range;
 
 @Entity
 @Table(schema = "public", name = "consumer")
@@ -36,6 +46,9 @@ public class Consumer {
     @Column
     private BigDecimal consumption;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "consumer")
+    private List<ConsumptionLog> consumptionlogs = new ArrayList<>();
+
     private Consumer() {
 
     }
@@ -55,5 +68,19 @@ public class Consumer {
 
     public Long getId() {
         return id;
+    }
+
+    public List<ConsumptionLog> consumptionPredictionsForPeriod(Range<LocalDate> period) {
+        return consumptionlogs.stream()
+                .filter(consumptionLog -> consumptionLog.isPrediction())
+                .filter(consumptionLog -> period.contains(consumptionLog.getDate()))
+                .collect(Collectors.toList());
+    }
+
+    public void assignLogs(List<ConsumptionLog> logs) {
+        consumptionlogs.addAll(logs);
+        for (ConsumptionLog log : logs) {
+            log.assignTo(this);
+        }
     }
 }

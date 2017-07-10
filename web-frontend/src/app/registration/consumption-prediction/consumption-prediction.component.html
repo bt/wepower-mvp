@@ -1,0 +1,7 @@
+<p>
+  consumption-prediction works!
+  <app-prediction-review
+    [prediction]="consumptionData"
+    [period]="reviewPeriod"
+    (onVisiblePeriodChanged)="periodChanged($event)"></app-prediction-review>
+</p>
