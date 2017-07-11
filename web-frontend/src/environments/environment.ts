@@ -10,11 +10,14 @@ export const environment = {
     houseSize: '/api/v1/house-size',
     plant: {
       root: '/api/v1/plant',
-      prediction: 'production/predicted'
+      predictionData: 'production/predicted',
+      predictionTotal: 'production/predicted/total',
+      productionReview: 'production/predicted/review'
     },
     consumer: {
       root: '/api/v1/consumer',
       prediction: 'consumption/predicted'
     },
+    exchangeRate: '/api/v1/exchange/price'
   }
 };

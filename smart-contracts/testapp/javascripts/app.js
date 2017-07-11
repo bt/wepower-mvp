@@ -95,7 +95,8 @@ window.App = {
     var amount = parseInt(document.getElementById("amount").value);
     var address = document.getElementById("sendAddress").value;
 
-    ExchangeContract.deployed().then(function(instance) {
+    ExchangeContract.deployed()
+    .then(function(instance) {
       return instance.addTokens.sendTransaction(address,"TEST", web3.toWei(2), amount, {from: web3.eth.coinbase});
     }).then(function(result) {
       console.log(result);

@@ -20,7 +20,7 @@ public class ProductionLog {
 
     public enum LogType {
         PREDICTION,
-        CONSUMPTION
+        PRODUCTION
     }
 
     @Id
@@ -53,6 +53,15 @@ public class ProductionLog {
         return log;
     }
 
+    public static ProductionLog buildProduction(LocalDate date, BigDecimal amount) {
+        ProductionLog log = new ProductionLog();
+        log.date = date;
+        log.amount = amount;
+        log.type = LogType.PRODUCTION;
+
+        return log;
+    }
+
     public void assignTo(Plant plant) {
         this.plant = plant;
     }
@@ -67,5 +76,9 @@ public class ProductionLog {
 
     public boolean isPrediction() {
         return type == LogType.PREDICTION;
+    }
+
+    public boolean isProduction() {
+        return type == LogType.PRODUCTION;
     }
 }

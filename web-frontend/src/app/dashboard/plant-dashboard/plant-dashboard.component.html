@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md">
+      <div class="row">
+        <div class="row">
+          Wallet balance:
+        </div>
+        <div class="row">
+          {{walletBalance}} ETH / {{walletBalanceEur}} ETH
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md">
+          <div class="row">
+            Will be produced this week
+          </div>
+          <div class="row">
+            {{producedTotal}} kWh
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="row">
+            Already sold this week
+          </div>
+          <div class="row">
+            485 kWh
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="row">
+        <div class="col-md-10">
+          Paveikslėlis
+        </div>
+        <div class="col-md-2">
+          <input class="form-control" type="text">
+          <button type="button" class="btn btn-primary">Set price</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <button type="button" class="btn btn-primary">Previous period</button>
+    </div>
+    <div class="col-md">
+      <button type="button" class="btn btn-primary">Next period</button>
+    </div>
+  </div>
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Predicted, kWh</th>
+          <th>Produced, kWh</th>
+          <th>Price, ETH/kWh</th>
+          <th>Price, EUR/kWh</th>
+          <th>kWh produced/sold</th>
+          <th>Received payment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of productionReview">
+          <td>{{row.date}}</td>
+          <td>{{row.prediction}}</td>
+          <td>{{row.production}}</td>
+          <td>{{row.priceEth}}</td>
+          <td>{{row.priceEur}}</td>
+          <td>{{row.production}} / {{row.sold}}</td>
+          <td>{{row.receivedEth}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -28,7 +28,7 @@ export class ProductionPredictionComponent implements OnInit {
   }
 
   private loadPrediction(reviewPeriod : Period) {
-    this.predictionService.getPrediction(this.ethereumService.activeWallet(), reviewPeriod)
+    this.predictionService.getPredictionData(this.ethereumService.activeWallet(), reviewPeriod)
       .subscribe(
         predictions => this.productionData = predictions,
         error => console.log(error)

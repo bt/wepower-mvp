@@ -1,9 +1,16 @@
 export const environment = {
-  production: true,
+  production: false,
   dataUrls: {
     locationArea: '/api/v1/location-area',
     houseSize: '/api/v1/house-size',
-    plant: '/api/v1/plant',
-    consumer: '/api/v1/consumer'
+    plant: {
+      root: '/api/v1/plant',
+      prediction: 'production/predicted'
+    },
+    consumer: {
+      root: '/api/v1/consumer',
+      prediction: 'consumption/predicted'
+    },
+    exchangeRate: '/api/v1/exchange/price'
   }
 };

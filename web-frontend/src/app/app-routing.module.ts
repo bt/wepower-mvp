@@ -6,6 +6,8 @@ import { PlantFormComponent } from "./registration/plant-form/plant-form.compone
 import { ConsumerFormComponent } from "./registration/consumer-form/consumer-form.component";
 import { ProductionPredictionComponent } from "./registration/production-prediction/production-prediction.component";
 import { ConsumptionPredictionComponent } from "./registration/consumption-prediction/consumption-prediction.component";
+import {ConsumerDashboardComponent} from "./dashboard/consumer-dashboard/consumer-dashboard.component";
+import {PlantDashboardComponent} from "./dashboard/plant-dashboard/plant-dashboard.component";
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
@@ -14,6 +16,8 @@ const appRoutes: Routes = [
   { path: 'register/plant/review', component: ProductionPredictionComponent, pathMatch: 'full' },
   { path: 'register/consumer', component: ConsumerFormComponent, pathMatch: 'full' },
   { path: 'register/consumer/review', component: ConsumptionPredictionComponent, pathMatch: 'full' },
+  { path: 'dashboard/plant', component: PlantDashboardComponent, pathMatch: 'full' },
+  { path: 'dashboard/consumer', component: ConsumerDashboardComponent, pathMatch: 'full' }
 ];
 
 @NgModule({

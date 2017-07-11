@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -21,7 +23,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
+
+import static net.metasite.smartenergy.domain.ProductionLog.buildProduction;
 
 @Entity
 @Table(schema = "public", name = "plant")
@@ -95,5 +100,62 @@ public class Plant {
                 .filter(productionLog -> productionLog.isPrediction())
                 .filter(productionLog -> period.contains(productionLog.getDate()))
                 .collect(Collectors.toList());
+    }
+
+    public BigDecimal totalProductionPredictionForPeriod(Range<LocalDate> period) {
+        return productionPredictionsForPeriod(period)
+                .stream()
+                .map(productionLog -> productionLog.getAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public List<ProductionLog> productionForPeriod(Range<LocalDate> period) {
+        if (!Range.atMost(LocalDate.now()).isConnected(period)) {
+            return ImmutableList.of();
+        }
+
+        Range<LocalDate> seletedPastPeriod = Range.atMost(LocalDate.now()).intersection(period);
+
+        return productionLogs.stream()
+                .filter(productionLog -> productionLog.isProduction())
+                .filter(productionLog -> seletedPastPeriod.contains(productionLog.getDate()))
+                .collect(Collectors.toList());
+    }
+
+    private Optional<BigDecimal> predictionForDay(LocalDate day) {
+        return productionLogs.stream()
+                .filter(productionLog -> productionLog.getDate().isEqual(day))
+                .findAny()
+                .map(ProductionLog::getAmount);
+    }
+
+
+    public void mockProduction(Range<LocalDate> period) {
+        float variation = 0.1f;
+        int absoluteVariation = capacity.multiply(new BigDecimal(variation)).intValue();
+
+        List<ProductionLog> production = new ArrayList<>();
+
+        for (LocalDate predictionDay = period.lowerEndpoint();
+             period.contains(predictionDay);
+             predictionDay = predictionDay.plusDays(1)) {
+
+            Optional<BigDecimal> predictedProduction = predictionForDay(predictionDay);
+
+            if (!predictedProduction.isPresent()) {
+                continue;
+            }
+
+            // After geting deviation, we subtract amplitude of change, in order to also get negative variation
+            int randomDeviation = ThreadLocalRandom.current().nextInt(absoluteVariation);
+
+            BigDecimal productionPrediction = predictedProduction.get()
+                    .add(new BigDecimal(randomDeviation));
+
+            production.add(buildProduction(predictionDay, productionPrediction));
+        }
+
+        productionLogs.addAll(production);
+        production.forEach(productionLog -> productionLog.assignTo(this));
     }
 }

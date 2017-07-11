@@ -26,7 +26,23 @@ export class EthereumService {
     return this.walletId;
   }
 
+  walletBalance() : Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.web3.eth.getBalance(this.activeWallet(), function(error, result) {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(result.valueOf());
+      });
+    });
+  }
+
   isActiveConnection() : boolean {
     return this.web3 != null && this.walletId != null;
+  }
+
+  weiToETH(weiAmount : number) : number {
+    return this.web3.fromWei(weiAmount, 'ether')
   }
 }

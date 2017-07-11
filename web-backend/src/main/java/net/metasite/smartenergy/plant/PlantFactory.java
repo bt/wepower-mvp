@@ -85,6 +85,7 @@ public class PlantFactory {
         );
 
         newPlant.assignLogs(usageLogs);
+        newPlant.mockProduction(closed(periodStart, periodEnd));
 
         plantRepository.save(newPlant);
         return newPlant.getId();

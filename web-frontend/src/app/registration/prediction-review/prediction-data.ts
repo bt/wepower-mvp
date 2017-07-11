@@ -2,7 +2,7 @@
 export class PredictionData {
 
   constructor(
-    private date : Date,
-    private energyPrediction : number
+    public date : Date,
+    public energyPrediction : number
   ) { }
 }

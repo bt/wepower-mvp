@@ -18,6 +18,7 @@ import { ProductionPredictionComponent } from './production-prediction/productio
 import { PredictionReviewComponent } from './prediction-review/prediction-review.component';
 import {ProductionPredictionService} from "./prediction/production-prediction.service";
 import {ConsumptionPredictionService} from "./prediction/consumption-prediction.service";
+import {PredictionData} from "./prediction-review/prediction-data";
 
 
 @NgModule({

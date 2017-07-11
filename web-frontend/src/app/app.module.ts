@@ -7,6 +7,7 @@ import { LandingModule } from "./landing/landing.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { RegistrationModule } from "./registration/registration.module";
 import { SharedModule } from "./shared/shared.module";
+import {DashboardModule} from "./dashboard/dashboard.module";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { SharedModule } from "./shared/shared.module";
     BrowserModule,
     LandingModule,
     RegistrationModule,
+    DashboardModule,
     AppRoutingModule,
     RouterModule,
     SharedModule
