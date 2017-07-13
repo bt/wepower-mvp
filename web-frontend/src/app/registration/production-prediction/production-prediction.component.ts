@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {PredictionData} from "../prediction-review/prediction-data";
-import {Period} from "../../shared/period";
-import {ProductionPredictionService} from "../prediction/production-prediction.service";
-import {EthereumService} from "../../shared/ethereum.service";
+
+import * as moment from 'moment';
+
+import { PredictionData } from "../prediction-review/prediction-data";
+import { Period } from "../../shared/period";
+import { ProductionPredictionService } from "../prediction/production-prediction.service";
+import { EthereumService } from "../../shared/ethereum.service";
 
 @Component({
   selector: 'app-production-prediction',
@@ -18,12 +21,13 @@ export class ProductionPredictionComponent implements OnInit {
               private ethereumService : EthereumService) { }
 
   ngOnInit() {
-    const millisInWeek = 7 * 24 * 3600 * 1000;
+    let periodStart = moment().startOf('week').add(1, 'days')
 
     this.reviewPeriod = new Period(
-      new Date(),
-      new Date(new Date().getTime() + millisInWeek)
+      periodStart.toDate(),
+      periodStart.clone().add(6, 'day').toDate()
     );
+
     this.loadPrediction(this.reviewPeriod);
   }
 
@@ -38,5 +42,4 @@ export class ProductionPredictionComponent implements OnInit {
   periodChanged(event : Period) {
     this.loadPrediction(event);
   }
-
 }

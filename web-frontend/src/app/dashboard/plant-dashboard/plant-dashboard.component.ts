@@ -11,6 +11,7 @@ import {ProductionReviewRow} from "../production-review-row";
 import {PredictionData} from "../../registration/prediction-review/prediction-data";
 import {ProductionReviewService} from "../production-review.service";
 import {ProductionDetails} from "../production-details";
+import { DataFiller } from "../../shared/data-filler.service";
 
 @Component({
   selector: 'app-plant',
@@ -39,20 +40,34 @@ export class PlantDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadHeaderData();
-    this.loadTable();
+    this.initializeTable();
   }
 
-  private loadTable() {
+  previousPeriod() {
+    this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(-1)
+    this.loadTable(this.tableReviewPeriod);
+  }
+
+  nextPeriod() {
+    this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(1)
+    this.loadTable(this.tableReviewPeriod);
+  }
+
+  private initializeTable() {
     let periodStart = moment().startOf('week').add(1, 'days')
 
     this.tableReviewPeriod = new Period(
       periodStart.toDate(),
-      periodStart.clone().add(1, 'week').toDate()
+      periodStart.clone().add(6, 'day').toDate()
     );
 
+    this.loadTable(this.tableReviewPeriod);
+  }
+
+  private loadTable(period : Period) {
     Promise.all(
       [
-        this.productionReviewService.getProductionDetails(this.ethereum.activeWallet(), this.tableReviewPeriod).toPromise(),
+        this.productionReviewService.getProductionDetails(this.ethereum.activeWallet(), period).toPromise(),
         this.exchangeMarket.exchangeRate().toPromise()
       ]
     ).then(values => {
@@ -63,8 +78,7 @@ export class PlantDashboardComponent implements OnInit {
       let sold: number = 1000
       let price: number = 25
 
-
-      this.productionReview = productionDetails.map(productionForDay => {
+      let reviewDetails = productionDetails.map(productionForDay => {
           return new ProductionReviewRow(
             productionForDay.date,
             productionForDay.prediction,
@@ -76,6 +90,7 @@ export class PlantDashboardComponent implements OnInit {
           )
         }
       )
+      this.productionReview = this.fillForWeek(reviewDetails)
     })
   }
 
@@ -107,5 +122,9 @@ export class PlantDashboardComponent implements OnInit {
         predictions => this.producedTotal = predictions,
         error => console.error(error)
       );
+  }
+
+  private fillForWeek(reviews: Array<ProductionReviewRow>) : Array<ProductionReviewRow> {
+    return (DataFiller.fillForWeek(reviews, ProductionReviewRow.emptyForDay) as Array<ProductionReviewRow>)
   }
 }

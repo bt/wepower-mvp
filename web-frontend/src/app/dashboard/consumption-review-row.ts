@@ -1,20 +1,18 @@
 import { DayDataRow } from "../shared/day-data-row";
 
-export class ProductionReviewRow implements DayDataRow {
+export class ConsumptionReviewRow implements DayDataRow {
   constructor(public date : Date,
               public prediction : number,
-              public production : number,
-              public sold : number,
+              public consumed : number,
               public priceEth : number,
               public priceEur : number,
-              public receivedEth : number) {
+              public paidEth : number) {
 
   }
 
   public static emptyForDay(date : Date) {
-    return new ProductionReviewRow(
+    return new ConsumptionReviewRow(
       date,
-      0,
       0,
       0,
       null,

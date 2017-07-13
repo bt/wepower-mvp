@@ -132,7 +132,6 @@ public class Plant {
 
     public void mockProduction(Range<LocalDate> period) {
         float variation = 0.1f;
-        int absoluteVariation = capacity.multiply(new BigDecimal(variation)).intValue();
 
         List<ProductionLog> production = new ArrayList<>();
 
@@ -146,11 +145,12 @@ public class Plant {
                 continue;
             }
 
-            // After geting deviation, we subtract amplitude of change, in order to also get negative variation
+            BigDecimal predictionForDay = predictedProduction.get();
+
+            int absoluteVariation = predictionForDay.multiply(new BigDecimal(variation)).intValue();
             int randomDeviation = ThreadLocalRandom.current().nextInt(absoluteVariation);
 
-            BigDecimal productionPrediction = predictedProduction.get()
-                    .add(new BigDecimal(randomDeviation));
+            BigDecimal productionPrediction = predictionForDay.add(new BigDecimal(randomDeviation));
 
             production.add(buildProduction(predictionDay, productionPrediction));
         }

@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
-import { PredictionData } from "./prediction-data";
-import { Period } from "../../shared/period";
+import * as moment from 'moment'
+import { PredictionData } from "./prediction-data"
+import { Period } from "../../shared/period"
+import { DataFiller } from "../../shared/data-filler.service";
 
 @Component({
   selector: 'app-prediction-review',
@@ -10,8 +12,10 @@ import { Period } from "../../shared/period";
 })
 export class PredictionReviewComponent implements OnInit {
 
-  @Input('prediction') reviewData : Array<PredictionData>;
-  @Input('period') visiblePeriod : Period;
+  _reviewData : Array<PredictionData>;
+
+  @Input('period')
+  visiblePeriod : Period;
 
   @Output() onVisiblePeriodChanged = new EventEmitter<Period>();
 
@@ -29,5 +33,14 @@ export class PredictionReviewComponent implements OnInit {
   previousPeriod() {
     this.visiblePeriod = this.visiblePeriod.plusWeeks(-1);
     this.onVisiblePeriodChanged.emit(this.visiblePeriod);
+  }
+
+  @Input('prediction')
+  set reviewData(prediction: Array<PredictionData>) {
+    this._reviewData = (DataFiller.fillForWeek(prediction, PredictionData.emptyForDay) as Array<PredictionData>)
+  }
+
+  get reviewData() : Array<PredictionData> {
+    return this._reviewData
   }
 }

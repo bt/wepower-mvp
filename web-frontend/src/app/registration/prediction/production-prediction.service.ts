@@ -3,6 +3,9 @@ import { DatePipe } from '@angular/common';
 import { Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
 import { Observable } from "rxjs/Observable";
 
+import * as moment from 'moment';
+
+
 import { Period } from "../../shared/period";
 import { environment } from "../../../environments/environment";
 import { PredictionData } from "../prediction-review/prediction-data";
@@ -14,15 +17,8 @@ export class ProductionPredictionService {
               private datePipe : DatePipe) { }
 
   getPredictionData(walletAddress : string, period : Period) : Observable<Array<PredictionData>> {
-    let params: URLSearchParams = new URLSearchParams();
-    params.set('from', this.datePipe.transform(period.from, 'yyyy-MM-dd'));
-    params.set('to', this.datePipe.transform(period.to, 'yyyy-MM-dd'));
-
-
-    let requestOptions = new RequestOptions();
-    requestOptions.params = params;
-
     let urlData = environment.dataUrls.plant;
+    let requestOptions = this.buildPredictionFilterParams(period);
 
     return this.http
       .get(`${urlData.root}/${walletAddress}/${urlData.predictionData}`, requestOptions)
@@ -32,19 +28,15 @@ export class ProductionPredictionService {
 
   private extractData(response : Response) : Observable<Array<PredictionData>> {
     return response.json()
-      .map(prediction => new PredictionData(prediction.date, prediction.predictedAmount));
+      .map(prediction => new PredictionData(
+        new Date(prediction.date[0], prediction.date[1] - 1, prediction.date[2]),
+        prediction.predictedAmount)
+      );
   }
 
   getPredictionTotal(walletAddress : string, period : Period) : Observable<number> {
-    let params: URLSearchParams = new URLSearchParams();
-    params.set('from', this.datePipe.transform(period.from, 'yyyy-MM-dd'));
-    params.set('to', this.datePipe.transform(period.to, 'yyyy-MM-dd'));
-
-
-    let requestOptions = new RequestOptions();
-    requestOptions.params = params;
-
     let urlData = environment.dataUrls.plant;
+    let requestOptions = this.buildPredictionFilterParams(period);
 
     return this.http
       .get(`${urlData.root}/${walletAddress}/${urlData.predictionTotal}`, requestOptions)
@@ -57,6 +49,17 @@ export class ProductionPredictionService {
     return response.json();
   }
 
+  private buildPredictionFilterParams(period: Period) {
+    let params: URLSearchParams = new URLSearchParams();
+
+    params.set('from', moment(period.from).format('YYYY-MM-DD'));
+    params.set('to', moment(period.to).format('YYYY-MM-DD'));
+
+    let requestOptions = new RequestOptions();
+    requestOptions.params = params;
+
+    return requestOptions;
+  }
 
   private handleError() {
     return Observable.throw("Failed prediction");

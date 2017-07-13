@@ -42,7 +42,7 @@ public class DailyPlantReviewDTO {
         mergedReview.setPredictedAmount(
                 review1.getPredictedAmount() != null ?
                         review1.getPredictedAmount() : review2.getPredictedAmount());
-        mergedReview.setProducedAmount(review1.getProducedAmount() != null ? review1.getPredictedAmount() : review2.getPredictedAmount());
+        mergedReview.setProducedAmount(review1.getProducedAmount() != null ? review1.getProducedAmount() : review2.getProducedAmount());
         return mergedReview;
     }
 

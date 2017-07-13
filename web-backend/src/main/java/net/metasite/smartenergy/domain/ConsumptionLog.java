@@ -53,6 +53,16 @@ public class ConsumptionLog {
         return log;
     }
 
+
+    public static ConsumptionLog buildConsumption(LocalDate date, BigDecimal amount) {
+        ConsumptionLog log = new ConsumptionLog();
+        log.date = date;
+        log.amount = amount;
+        log.type = LogType.CONSUMPTION;
+
+        return log;
+    }
+
     public void assignTo(Consumer consumer) {
         this.consumer = consumer;
     }
@@ -67,5 +77,9 @@ public class ConsumptionLog {
 
     public boolean isPrediction() {
         return type == LogType.PREDICTION;
+    }
+
+    public boolean isConsumption() {
+        return type == LogType.CONSUMPTION;
     }
 }

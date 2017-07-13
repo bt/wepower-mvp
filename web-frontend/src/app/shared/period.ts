@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export class Period {
 
   from : Date;
@@ -9,11 +11,12 @@ export class Period {
   }
 
   plusWeeks(weekCount : number) : Period {
+
     const millisInWeek = 7 * 24 * 3600 * 1000;
 
     return new Period(
-      new Date(this.from.getTime() + (weekCount * millisInWeek)),
-      new Date(this.to.getTime() + (weekCount * millisInWeek))
+      moment(this.from).add(weekCount, 'week').toDate(),
+      moment(this.to).add(weekCount, 'week').toDate()
     )
   }
 }

@@ -42,10 +42,10 @@
   </div>
   <div class="row">
     <div class="col-md">
-      <button type="button" class="btn btn-primary">Previous period</button>
+      <button (click)="previousPeriod()" type="button" class="btn btn-primary">Previous period</button>
     </div>
     <div class="col-md">
-      <button type="button" class="btn btn-primary">Next period</button>
+      <button (click)="nextPeriod()" type="button" class="btn btn-primary">Next period</button>
     </div>
   </div>
   <div class="row">
@@ -68,8 +68,13 @@
           <td>{{row.production}}</td>
           <td>{{row.priceEth}}</td>
           <td>{{row.priceEur}}</td>
-          <td>{{row.production}} / {{row.sold}}</td>
-          <td>{{row.receivedEth}}</td>
+          <td>
+            <div *ngIf="row.production">{{row.sold}}/{{row.production}}</div>
+            <div *ngIf="!(row.production) && row.prediction">{{row.sold}}/{{row.prediction}}</div>
+          </td>
+          <td>
+            <div *ngIf="row.receivedEth">{{row.receivedEth}}</div>
+          </td>
         </tr>
       </tbody>
     </table>

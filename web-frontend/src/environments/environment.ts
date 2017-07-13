@@ -16,7 +16,9 @@ export const environment = {
     },
     consumer: {
       root: '/api/v1/consumer',
-      prediction: 'consumption/predicted'
+      prediction: 'consumption/predicted',
+      predictionTotal: 'production/predicted/total',
+      consumptionReview: 'production/predicted/review'
     },
     exchangeRate: '/api/v1/exchange/price'
   }

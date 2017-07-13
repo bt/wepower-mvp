@@ -139,7 +139,7 @@ public class PlantController {
         return ResponseEntity.ok(reviews);
     }
 
-    public class ProductionCollector implements Collector<ProductionLog, DailyPlantReviewDTO, DailyPlantReviewDTO> {
+    private class ProductionCollector implements Collector<ProductionLog, DailyPlantReviewDTO, DailyPlantReviewDTO> {
 
         @Override
         public Supplier<DailyPlantReviewDTO> supplier() {
