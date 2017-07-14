@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="row">
+      <app-wallet-balance></app-wallet-balance>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="row">
+          Will be produced this week
+        </div>
+        <div class="row">
+          {{producedTotal}} kWh
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="row">
+          Already sold this week
+        </div>
+        <div class="row">
+          485 kWh
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="row">
+          Market price vs your plant price, Eur/MWh
+        </div>
+        Paveikslėlis.
+        <div class="row" *ngFor="let row of marketPricesReview">
+          <div class="md">{{row.date}}</div>
+          <div class="md">{{row.marketPrice}}</div>
+          <div class="md">{{row.myPrice}}</div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <input class="form-control" type="text">
+        <button type="button" class="btn btn-primary">Set price</button>
+      </div>
+    </div>
+  </div>
+</div>

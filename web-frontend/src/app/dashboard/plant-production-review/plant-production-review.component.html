@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md">
+    <button (click)="previousPeriod()" type="button" class="btn btn-primary">Previous period</button>
+  </div>
+  <div class="col-md">
+    <button (click)="nextPeriod()" type="button" class="btn btn-primary">Next period</button>
+  </div>
+</div>
+<div class="row">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Date</th>
+      <th>Predicted, kWh</th>
+      <th>Produced, kWh</th>
+      <th>Price, ETH/kWh</th>
+      <th>Price, EUR/kWh</th>
+      <th>kWh produced/sold</th>
+      <th>Received payment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of productionReview">
+      <td>{{row.date}}</td>
+      <td>{{row.prediction}}</td>
+      <td>{{row.production}}</td>
+      <td>{{row.priceEth}}</td>
+      <td>{{row.priceEur}}</td>
+      <td>
+        <div *ngIf="row.production">{{row.sold}}/{{row.production}}</div>
+        <div *ngIf="!(row.production) && row.prediction">{{row.sold}}/{{row.prediction}}</div>
+      </td>
+      <td>
+        <div *ngIf="row.receivedEth">{{row.receivedEth}}</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

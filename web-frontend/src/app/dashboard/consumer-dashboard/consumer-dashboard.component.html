@@ -1,82 +1,8 @@
 <div class="container">
   <div class="row">
-    <div class="col-md">
-      <div class="row">
-        <div class="row">
-          Wallet balance:
-        </div>
-        <div class="row">
-          {{walletBalance}} ETH/ {{walletBalanceEur}} EUR
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md">
-          <div class="row">
-            Needs to buy this week
-          </div>
-          <div class="row">
-            {{consumedTotal}} kWh
-          </div>
-        </div>
-        <div class="col-md">
-          <div class="row">
-            Already bought this week
-          </div>
-          <div class="row">
-            150 kWh
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md">
-      <div class="row">
-        <div class="col-md">
-          Paveikslėlis
-          <div class="row">
-            Market price vs paid price, Eur/MWh
-          </div>
-          Paveikslėlis.
-          <div class="row" *ngFor="let row of marketPricesReview">
-            <div class="md">{{row.date}}</div>
-            <div class="md">{{row.marketPrice}}</div>
-            <div class="md">{{row.myPrice}}</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-client-dashboard-header></app-client-dashboard-header>
   </div>
   <div class="row">
-    <div class="col-md">
-      <button (click)="previousPeriod()" type="button" class="btn btn-primary">Previous period</button>
-    </div>
-    <div class="col-md">
-      <button (click)="nextPeriod()" type="button" class="btn btn-primary">Next period</button>
-    </div>
-  </div>
-  <div class="row">
-    <table class="table">
-      <thead>
-      <tr>
-        <th>Date</th>
-        <th>Usage</th>
-        <th>Required tokens</th>
-        <th>Price, ETH/kWh</th>
-        <th>Price, EUR/kWh</th>
-        <th>Received payment</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let row of consumptionReview">
-        <td>{{row.date}}</td>
-        <td>{{row.consumption}}/{{row.prediction}}</td>
-        <td>{{row.prediction}}</td>
-        <td>{{row.priceEth}}</td>
-        <td>{{row.priceEur}}</td>
-        <td>
-          <div *ngIf="row.paidEth">{{row.paidEth}}</div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <app-client-consumption-review></app-client-consumption-review>
   </div>
 </div>
