@@ -30,10 +30,11 @@ export class ConsumptionReviewService {
 
   private extractData(response : Response) : Observable<Array<ConsumptionDetails>> {
     return response.json()
-      .map(dayReview => new ConsumptionDetails(
-        new Date(dayReview.date[0], dayReview.date[1] - 1, dayReview.date[2]),
-        dayReview.predictedAmount,
-        dayReview.consumedAmount)
+      .map(dayReview =>
+        new ConsumptionDetails(
+            new Date(dayReview.date),
+            dayReview.predictedAmount,
+            dayReview.consumedAmount)
       )
   }
 

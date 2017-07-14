@@ -28,7 +28,7 @@ export class ConsumptionPredictionService {
   private extractData(response : Response) : Observable<Array<PredictionData>> {
     return response.json()
       .map(prediction => new PredictionData(
-        new Date(prediction.date[0], prediction.date[1] - 1, prediction.date[2]),
+        new Date(prediction.date),
         prediction.predictedAmount)
       );
   }

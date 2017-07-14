@@ -13,6 +13,8 @@ import {ConsumptionReviewService} from "../consumption-review.service";
 import {ConsumptionDetails} from "../consumption-details";
 import {ConsumptionReviewRow} from "../consumption-review-row";
 import { DataFiller } from "app/shared/data-filler.service";
+import { MarketPriceRow } from "../market-price-row";
+import { ElectricityMarketPriceService } from "../electricity-market-price.service";
 
 @Component({
   selector: 'app-consumer',
@@ -33,15 +35,19 @@ export class ConsumerDashboardComponent implements OnInit {
   consumptionReview : Array<ConsumptionReviewRow>;
   tableReviewPeriod: Period;
 
+  marketPricesReview : Array<MarketPriceRow>;
+
 
   constructor(private ethereum : EthereumService,
               private exchangeMarket : ExchangeRateService,
               private predictionService : ConsumptionPredictionService,
-              private consumptionReviewService : ConsumptionReviewService) { }
+              private consumptionReviewService : ConsumptionReviewService,
+              private electricityPriceService : ElectricityMarketPriceService) { }
 
   ngOnInit() {
     this.loadHeaderData();
     this.initializeTable();
+    this.loadMarketData();
   }
 
   previousPeriod() {
@@ -52,6 +58,29 @@ export class ConsumerDashboardComponent implements OnInit {
   nextPeriod() {
     this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(1)
     this.loadTable(this.tableReviewPeriod);
+  }
+
+  private loadMarketData() {
+    let periodEnd = moment().add(1, 'days')
+    let periodStart = periodEnd.clone().subtract(6, 'day')
+
+    let marketReviewPeriod = new Period(
+      periodStart.toDate(),
+      periodEnd.toDate()
+    );
+
+    // Expected to add prices from contracts, which will have to be merged.
+    Promise.all(
+      [
+        this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise()
+      ]
+    ).then(values => {
+      let marketPrices = values[0]
+
+      // Prices from contract will have to be added later
+      this.marketPricesReview = marketPrices
+        .map(priceForDay => new MarketPriceRow(priceForDay[0], priceForDay[1], 25))
+    }).catch(error => console.error(error))
   }
 
   private initializeTable() {
@@ -103,7 +132,7 @@ export class ConsumerDashboardComponent implements OnInit {
     ).then(values => {
         this.walletBalance = this.ethereum.weiToETH(values[0])
         this.exchangeRate = values[1]
-        this.walletBalanceEur = this.walletBalance / this.exchangeRate
+        this.walletBalanceEur = this.walletBalance * this.exchangeRate
       }
     )
 

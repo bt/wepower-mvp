@@ -34,7 +34,7 @@ export class ProductionReviewService {
   extractData(response : Response) : Observable<Array<ProductionDetails>> {
     return response.json()
       .map(dayReview => new ProductionDetails(
-        new Date(dayReview.date[0], dayReview.date[1] - 1, dayReview.date[2]),
+        new Date(dayReview.date),
         dayReview.predictedAmount,
         dayReview.producedAmount)
       )

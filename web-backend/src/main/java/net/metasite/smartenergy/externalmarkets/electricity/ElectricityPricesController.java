@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import net.metasite.smartenergy.externalmarkets.electricity.response.DailyElectricityPriceDTO;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,7 @@ public class ElectricityPricesController {
     @Resource
     private ElectricityPricesManager electricityPricesManager;
 
+    @GetMapping("price")
     public ResponseEntity<List<DailyElectricityPriceDTO>> getElectricityPrices(
             @RequestParam(name = "from") String from,
             @RequestParam(name = "to") String to) {
@@ -32,7 +34,7 @@ public class ElectricityPricesController {
                 Range.closed(LocalDate.parse(from), LocalDate.parse(to))
         );
 
-        List<DailyElectricityPriceDTO> dailyPricesResponse =dailyPrices.entrySet()
+        List<DailyElectricityPriceDTO> dailyPricesResponse = dailyPrices.entrySet()
                 .stream()
                 .map(this::convertToDTO)
                 .sorted((o1, o2) -> o1.getDate().isAfter(o2.getDate()) ? 1 : -1)

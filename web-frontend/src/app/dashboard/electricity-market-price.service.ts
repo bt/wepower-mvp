@@ -27,7 +27,7 @@ export class ElectricityMarketPriceService {
     return response.json()
       .map(priceForDay =>
         [
-          new Date(priceForDay.date[0], priceForDay.date[1] - 1, priceForDay.date[2]),
+          new Date(priceForDay.date),
           priceForDay.price
         ]
       )

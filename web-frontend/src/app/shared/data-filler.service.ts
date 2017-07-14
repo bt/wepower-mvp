@@ -14,10 +14,10 @@ export class DataFiller {
     let paddedRows: Array<DayDataRow> = []
 
     let firstEntryDate = entries[0].date
-    let firstEntryDayOfWeek = firstEntryDate.getUTCDay() + 1
+    let firstEntryDayOfWeek = moment(firstEntryDate).isoWeekday()
 
     for (let index = 1; index < firstEntryDayOfWeek; index++) {
-      let dayToFill = moment(firstEntryDate).startOf('week').add(index, 'day').toDate()
+      let dayToFill = moment(firstEntryDate).startOf('isoWeek').toDate()
 
       paddedRows.push(factory(dayToFill))
     }
@@ -25,10 +25,13 @@ export class DataFiller {
     paddedRows = paddedRows.concat(entries)
 
     let lastEntryDate = entries[entriesCount - 1].date
-    let lastEntryDayOfWeek = lastEntryDate.getUTCDay() + 1
+    let lastEntryDayOfWeek = moment(lastEntryDate).isoWeekday()
+
+    console.log(entries[entriesCount - 1])
+    console.log(lastEntryDayOfWeek)
 
     for (let index = lastEntryDayOfWeek; index < 7 ; index++) {
-      let dayToFill = moment(lastEntryDate).startOf('week').add(index, 'day').toDate()
+      let dayToFill = moment(lastEntryDate).startOf('isoWeek').toDate()
 
       paddedRows.push(factory(dayToFill))
     }

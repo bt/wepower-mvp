@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ExchangeMarketService {
 
-    @Value("${ethereum-market.eth-price}")
+    @Value("${exchange-market.eth-price}")
     private String ethPriceServiceUrl;
 
     public BigDecimal getPrice() {

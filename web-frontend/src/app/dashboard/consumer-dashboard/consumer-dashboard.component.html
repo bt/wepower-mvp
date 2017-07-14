@@ -6,7 +6,7 @@
           Wallet balance:
         </div>
         <div class="row">
-          {{walletBalance}} ETH / {{walletBalanceEur}} ETH
+          {{walletBalance}} ETH/ {{walletBalanceEur}} EUR
         </div>
       </div>
       <div class="row">
@@ -32,6 +32,15 @@
       <div class="row">
         <div class="col-md">
           Paveikslėlis
+          <div class="row">
+            Market price vs paid price, Eur/MWh
+          </div>
+          Paveikslėlis.
+          <div class="row" *ngFor="let row of marketPricesReview">
+            <div class="md">{{row.date}}</div>
+            <div class="md">{{row.marketPrice}}</div>
+            <div class="md">{{row.myPrice}}</div>
+          </div>
         </div>
       </div>
     </div>

@@ -130,15 +130,13 @@ export class PlantDashboardComponent implements OnInit {
     ).then(values => {
         this.walletBalance = this.ethereum.weiToETH(values[0])
         this.exchangeRate = values[1]
-        this.walletBalanceEur = this.walletBalance / this.exchangeRate
+        this.walletBalanceEur = this.walletBalance * this.exchangeRate
       }
     ).catch(error => console.error(error))
 
-    const millisInWeek = 7 * 24 * 3600 * 1000;
-
     this.headerPeriod = new Period(
-      new Date(),
-      new Date(new Date().getTime() + millisInWeek)
+      moment().startOf('isoWeek').toDate(),
+      moment().startOf('isoWeek').add(6, 'day').toDate()
     );
     this.loadTotalPrediction(this.headerPeriod);
   }

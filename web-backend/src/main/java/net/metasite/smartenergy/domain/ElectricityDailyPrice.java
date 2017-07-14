@@ -43,6 +43,12 @@ public class ElectricityDailyPrice {
     public ElectricityDailyPrice() {
     }
 
+    public ElectricityDailyPrice(LocalDate date, BigDecimal unitPrice) {
+        this.date = date;
+        this.unitPrice = unitPrice;
+        this.source = PriceSource.NORD_POOL;
+    }
+
     public LocalDate getDate() {
         return date;
     }

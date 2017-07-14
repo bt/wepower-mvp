@@ -24,7 +24,6 @@ export class HouseSizeOptionsService {
   }
 
   private extractData(response: Response): Observable<number> {
-    console.log(response.json());
     return response.json()
         .map(size => new HouseSize(size.sizeCode, size.shortDescription));
   }
