@@ -1,4 +1,4 @@
-package net.metasite.smartenergy.exchange.externalapi;
+package net.metasite.smartenergy.externalmarkets.ethereum.externalapi;
 
 import java.math.BigDecimal;
 

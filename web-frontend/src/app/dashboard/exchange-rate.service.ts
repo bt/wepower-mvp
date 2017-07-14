@@ -13,7 +13,7 @@ export class ExchangeRateService {
   constructor(private http : Http) { }
 
   exchangeRate() : Observable<number> {
-    return this.http.get(`${environment.dataUrls.exchangeRate}`)
+    return this.http.get(`${environment.dataUrls.market.ethereumPrice}`)
       .map(this.extractData)
       .catch(this.handleError)
   }
@@ -25,6 +25,6 @@ export class ExchangeRateService {
 
   // TODO: Implement
   private handleError(error: Response): Observable<number> {
-    return Observable.throw("Failed exchange rate request")
+    return Observable.throw("Failed ethereum rate request")
   }
 }

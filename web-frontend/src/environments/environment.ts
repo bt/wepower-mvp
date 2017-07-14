@@ -20,6 +20,9 @@ export const environment = {
       predictionTotal: 'production/predicted/total',
       consumptionReview: 'production/predicted/review'
     },
-    exchangeRate: '/api/v1/exchange/price'
+    market: {
+      ethereumPrice: '/api/v1/market/ethereum/price',
+      electricityPrice: '/api/v1/market/electricity/price',
+    }
   }
 };

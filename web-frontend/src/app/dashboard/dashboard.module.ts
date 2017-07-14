@@ -5,6 +5,7 @@ import { PlantDashboardComponent } from './plant-dashboard/plant-dashboard.compo
 import {ExchangeRateService} from "./exchange-rate.service";
 import {ProductionReviewService} from "./production-review.service";
 import {ConsumptionReviewService} from "./consumption-review.service";
+import { ElectricityMarketPriceService } from "./electricity-market-price.service";
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import {ConsumptionReviewService} from "./consumption-review.service";
   providers: [
     ExchangeRateService,
     ProductionReviewService,
-    ConsumptionReviewService
+    ConsumptionReviewService,
+    ElectricityMarketPriceService
   ]
 })
 export class DashboardModule { }

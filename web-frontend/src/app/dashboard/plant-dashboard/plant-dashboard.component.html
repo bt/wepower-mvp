@@ -31,7 +31,15 @@
     <div class="col-md">
       <div class="row">
         <div class="col-md-10">
-          Paveikslėlis
+          <div class="row">
+            Market price vs your plant price, Eur/mWh
+          </div>
+          Paveikslėlis.
+          <div class="row" *ngFor="let row of marketPricesReview">
+            <div class="md">{{row.date}}</div>
+            <div class="md">{{row.marketPrice}}</div>
+            <div class="md">{{row.myPrice}}</div>
+          </div>
         </div>
         <div class="col-md-2">
           <input class="form-control" type="text">

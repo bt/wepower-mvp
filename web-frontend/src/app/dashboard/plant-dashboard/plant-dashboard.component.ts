@@ -12,6 +12,8 @@ import {PredictionData} from "../../registration/prediction-review/prediction-da
 import {ProductionReviewService} from "../production-review.service";
 import {ProductionDetails} from "../production-details";
 import { DataFiller } from "../../shared/data-filler.service";
+import { MarketPriceRow } from "../market-price-row";
+import { ElectricityMarketPriceService } from "../electricity-market-price.service";
 
 @Component({
   selector: 'app-plant',
@@ -32,25 +34,40 @@ export class PlantDashboardComponent implements OnInit {
   productionReview : Array<ProductionReviewRow>;
   tableReviewPeriod: Period;
 
+  marketPricesReview : Array<MarketPriceRow>;
+
 
   constructor(private ethereum : EthereumService,
               private exchangeMarket : ExchangeRateService,
               private predictionService : ProductionPredictionService,
-              private productionReviewService : ProductionReviewService) { }
+              private productionReviewService : ProductionReviewService,
+              private electricityPriceService : ElectricityMarketPriceService) { }
 
   ngOnInit() {
     this.loadHeaderData();
     this.initializeTable();
-  }
 
-  previousPeriod() {
-    this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(-1)
-    this.loadTable(this.tableReviewPeriod);
-  }
+    let periodEnd = moment().add(1, 'days')
+    let periodStart = periodEnd.clone().subtract(6, 'day')
 
-  nextPeriod() {
-    this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(1)
-    this.loadTable(this.tableReviewPeriod);
+    let marketReviewPeriod = new Period(
+      periodStart.toDate(),
+      periodStart.clone().add(6, 'day').toDate()
+    );
+
+    // Expected to add prices from contracts, which will have to be merged.
+    Promise.all(
+     [
+       this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise()
+     ]
+    ).then(values => {
+      let marketPrices = values[0]
+
+      // Prices from contract will have to be added later
+      this.marketPricesReview = marketPrices
+        .map(priceForDay => new MarketPriceRow(priceForDay[0], priceForDay[1], 25))
+
+    }).catch(error => console.error(error))
   }
 
   private initializeTable() {
@@ -61,6 +78,16 @@ export class PlantDashboardComponent implements OnInit {
       periodStart.clone().add(6, 'day').toDate()
     );
 
+    this.loadTable(this.tableReviewPeriod);
+  }
+
+  previousPeriod() {
+    this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(-1)
+    this.loadTable(this.tableReviewPeriod);
+  }
+
+  nextPeriod() {
+    this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(1)
     this.loadTable(this.tableReviewPeriod);
   }
 
@@ -105,7 +132,7 @@ export class PlantDashboardComponent implements OnInit {
         this.exchangeRate = values[1]
         this.walletBalanceEur = this.walletBalance / this.exchangeRate
       }
-    )
+    ).catch(error => console.error(error))
 
     const millisInWeek = 7 * 24 * 3600 * 1000;
 

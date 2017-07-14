@@ -11,6 +11,6 @@ export const environment = {
       root: '/api/v1/consumer',
       prediction: 'consumption/predicted'
     },
-    exchangeRate: '/api/v1/exchange/price'
+    marketexchangeRate: '/api/v1/ethereum/price'
   }
 };
