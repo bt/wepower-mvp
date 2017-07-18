@@ -7,12 +7,12 @@
     "clean_contracts": "rm -rf compiled_contracts/* ",
     "fetch_contracts": "cp -r ../smart-contracts/build/contracts/* compiled_contracts ",
     "deploy_contracts": "cd ../smart-contracts && truffle migrate ",
-    "build": "npm run build_contracts && ng build",
+    "compile": "npm run build_contracts && ng build",
+    "build-app-prod": "ng build --environment=dev --aot=true",
+
     "start": "ng serve --proxy-config proxy.conf.json",
     "clean_start": "npm run build_contracts && npm run deploy_contracts && npm run clean_contracts && npm run fetch_contracts && npm run start",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "build_prod": "npm run build_contracts && npm run clean_contracts && npm run fetch_contracts && npm run build-app-prod"
   },
   "private": true,
   "dependencies": {

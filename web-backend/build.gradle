@@ -42,6 +42,7 @@ dependencies {
 	compile('com.google.guava:guava:22.0')
 
 	// Persistance
+	runtime('org.postgresql:postgresql')
 	runtime('com.h2database:h2:1.4.196')
 
 	runtime('org.springframework.boot:spring-boot-devtools')

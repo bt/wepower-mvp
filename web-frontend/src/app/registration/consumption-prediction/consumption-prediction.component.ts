@@ -14,8 +14,8 @@ import { EthereumService } from "../../shared/ethereum.service";
 })
 export class ConsumptionPredictionComponent implements OnInit {
 
-  private consumptionData : Array<PredictionData>;
-  private reviewPeriod : Period;
+  public consumptionData : Array<PredictionData>;
+  public reviewPeriod : Period;
 
   constructor(private predictionService : ConsumptionPredictionService,
               private ethereumService : EthereumService) { }
