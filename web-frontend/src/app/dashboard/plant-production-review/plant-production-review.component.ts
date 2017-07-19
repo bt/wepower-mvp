@@ -13,7 +13,7 @@ import { ProductionDetails } from "../production-details";
 @Component({
   selector: 'app-plant-production-review',
   templateUrl: './plant-production-review.component.html',
-  styleUrls: ['./plant-production-review.component.css']
+  styleUrls: ['./plant-production-review.component.scss']
 })
 export class PlantProductionReviewComponent implements OnInit {
 

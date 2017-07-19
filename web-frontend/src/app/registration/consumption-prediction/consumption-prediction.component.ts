@@ -10,7 +10,7 @@ import { EthereumService } from "../../shared/ethereum.service";
 @Component({
   selector: 'app-consumption-prediction',
   templateUrl: './consumption-prediction.component.html',
-  styleUrls: ['./consumption-prediction.component.css']
+  styleUrls: ['./consumption-prediction.component.scss']
 })
 export class ConsumptionPredictionComponent implements OnInit {
 

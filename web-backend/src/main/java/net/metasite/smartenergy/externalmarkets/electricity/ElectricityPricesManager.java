@@ -77,7 +77,7 @@ public class ElectricityPricesManager {
                 .map(priceForDay -> new ElectricityDailyPrice(priceForDay.getDay(), priceForDay.getPrice()))
                 .collect(Collectors.toList());
 
-        electricityDailyPriceRepository.saveAll(validPricesReceived);
+        electricityDailyPriceRepository.save(validPricesReceived);
     }
 
     private List<PriceForDay> fetchRemainingFromNordPool(List<LocalDate> requiredDates) {

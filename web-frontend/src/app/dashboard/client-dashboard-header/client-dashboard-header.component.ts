@@ -10,7 +10,7 @@ import { ElectricityMarketPriceService } from "../electricity-market-price.servi
 @Component({
   selector: 'app-client-dashboard-header',
   templateUrl: './client-dashboard-header.component.html',
-  styleUrls: ['./client-dashboard-header.component.css']
+  styleUrls: ['./client-dashboard-header.component.scss']
 })
 export class ClientDashboardHeaderComponent implements OnInit {
 

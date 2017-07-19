@@ -13,7 +13,7 @@ import { DataFiller } from "../../shared/data-filler.service";
 @Component({
   selector: 'app-client-consumption-review',
   templateUrl: './client-consumption-review.component.html',
-  styleUrls: ['./client-consumption-review.component.css']
+  styleUrls: ['./client-consumption-review.component.scss']
 })
 export class ClientConsumptionReviewComponent implements OnInit {
 

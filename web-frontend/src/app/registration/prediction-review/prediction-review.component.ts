@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
-import * as moment from 'moment'
 import { PredictionData } from "./prediction-data"
 import { Period } from "../../shared/period"
 import { DataFiller } from "../../shared/data-filler.service";
@@ -8,7 +7,7 @@ import { DataFiller } from "../../shared/data-filler.service";
 @Component({
   selector: 'app-prediction-review',
   templateUrl: './prediction-review.component.html',
-  styleUrls: ['./prediction-review.component.css']
+  styleUrls: ['./prediction-review.component.scss']
 })
 export class PredictionReviewComponent implements OnInit {
 

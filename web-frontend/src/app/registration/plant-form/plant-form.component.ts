@@ -12,7 +12,7 @@ import { EthereumService } from "../../shared/ethereum.service";
 @Component({
   selector: 'app-plant-form',
   templateUrl: './plant-form.component.html',
-  styleUrls: ['./plant-form.component.css']
+  styleUrls: ['./plant-form.component.scss']
 })
 export class PlantFormComponent implements OnInit {
 

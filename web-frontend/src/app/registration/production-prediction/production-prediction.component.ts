@@ -10,7 +10,7 @@ import { EthereumService } from "../../shared/ethereum.service";
 @Component({
   selector: 'app-production-prediction',
   templateUrl: './production-prediction.component.html',
-  styleUrls: ['./production-prediction.component.css']
+  styleUrls: ['./production-prediction.component.scss']
 })
 export class ProductionPredictionComponent implements OnInit {
 

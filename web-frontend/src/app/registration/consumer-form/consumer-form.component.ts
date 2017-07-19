@@ -16,7 +16,7 @@ import { EthereumService} from "../../shared/ethereum.service";
 @Component({
   selector: 'app-consumer-form',
   templateUrl: './consumer-form.component.html',
-  styleUrls: ['./consumer-form.component.css']
+  styleUrls: ['./consumer-form.component.scss']
 })
 export class ConsumerFormComponent implements OnInit {
 
