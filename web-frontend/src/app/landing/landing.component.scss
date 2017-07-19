@@ -1,0 +1,49 @@
+@import "../../styles/shared/variables.scss";
+
+.header {
+  height: 90px;
+
+  a {
+    height: 100%;
+  }
+
+  img {
+    height: 100%;
+    padding: 1em;
+  }
+}
+
+.landing-container {
+  margin-left: 9em;
+  max-width: 900px;
+
+
+  .power-button {
+    margin-right: 1em;
+  }
+}
+
+.landing-header p {
+    font-family: 'Platform Web', Sans-serif;
+    font-weight: bold;
+    font-size: 70px;
+
+    color: $power-black;
+
+    line-height: 1.25;
+
+    padding-top: 3em;
+    padding-bottom: 0.5em;
+}
+
+
+
+.background-container {
+  height: 100%;
+
+  background-image: url("/assets/images/img-landing.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position-y: center;
+  background-position-x: right;
+}

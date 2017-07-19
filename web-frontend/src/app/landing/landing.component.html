@@ -1,13 +1,35 @@
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <button routerLink="/register/plant" routerLinkActive="active" type="button" class="btn btn-primary">I have an Energy plant</button>
-    </div>
-    <div class="col">
-      <button routerLink="/register/consumer" routerLinkActive="active" type="button" class="btn btn-primary">I have a Household</button>
-    </div>
+<div class="container-fluid background-container">
+  <div class="row header">
+    <a href="http://www.wepwr.network" class="logo-link">
+      <img class="img-fluid" src="/assets/images/logo.svg">
+    </a>
   </div>
-  <div *ngIf="connectedToWallet == false">
-    Please log in to your Ethereum wallet to proceed.
+  <div class="row">
+    <div class="col landing-container">
+      <div class="row">
+        <div class="col landing-header">
+          <p>
+            Join WePower green energy P2P exchange platform.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button routerLink="/register/consumer"
+                  routerLinkActive="active"
+                  type="button"
+                  class="btn btn-primary power-button">
+            Register a household</button>
+          <button routerLink="/register/plant"
+                  routerLinkActive="active"
+                  type="button"
+                  class="btn btn-primary power-button">
+            Register a plant</button>
+          <div *ngIf="connectedToWallet == false">
+            Please log in to your Ethereum wallet to proceed.
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

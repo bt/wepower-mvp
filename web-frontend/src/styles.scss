@@ -1,0 +1,28 @@
+@import "styles/shared/variables";
+
+@font-face {
+  font-family: 'Platform Web';
+  src: url('/assets/fonts/Platform-Bold-Web.eot');
+  src: url('/assets/fonts/Platform-Bold-Web.eot?#iefix') format('embedded-opentype'),
+  url('/assets/fonts/Platform-Bold-Web.woff2') format('woff2'),
+  url('/assets/fonts/Platform-Bold-Web.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+.btn-primary.power-button {
+  background-color : $power-blue;
+  font-family: 'Roboto', Sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+
+  padding: 0.7em 1em 0.7em 1em;
+
+  border: none;
+  border-radius: 0;
+}
+
+html, body, app-root {
+  height: 100%;
+}
