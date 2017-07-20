@@ -45,6 +45,7 @@ web-backend/.gitignore
 
 
 web-backend/gradlew.bat
+web-backend/build
 
 web-frontend/.editorconfig
 web-frontend/package-lock.json

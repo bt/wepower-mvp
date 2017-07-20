@@ -1,0 +1,60 @@
+
+img {
+  height: 100%;
+  padding: 1em;
+}
+
+.background-container {
+  background-color: #f1f1f1;
+  height: 100%;
+}
+
+.container {
+  margin-top: 10px;
+  padding-top: 10px;
+  padding-bottom: 3px;
+  background-color: white;
+
+}
+
+.inner-container {
+
+  margin-left: -14px;
+  width: 518px;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+.inner-block {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.text-field-heading {
+  padding-bottom: 4px;
+}
+
+.btn {
+  border: 0px solid transparent;
+}
+
+.container {
+  width: 660px;
+  padding-right: 25px;
+}
+
+#back-button {
+  color: #001cff;
+}
+
+#next-button {
+  background-color: #001cff;
+  border-radius: 0;
+}
+
+#paging {
+  position: absolute;
+  top: 30%;
+}
