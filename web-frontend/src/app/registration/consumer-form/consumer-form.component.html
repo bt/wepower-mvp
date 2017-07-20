@@ -16,11 +16,30 @@
         font-family: Arial;
         font-size: 16px;
         cursor: pointer;
+        height: 62px;
+        width: 162px;
+        border: 2px solid transparent;
     }
 
     .radio-toolbar input[type="radio"]:checked + label {
         border: 2px solid;
         border-color: #ffe600;
+    }
+
+    .fa-square.fa-stack-2x {
+        color: grey;
+    }
+
+    .fa-home.size0 {
+        font-size: 18px;
+    }
+
+    .fa-home.size1 {
+        font-size: 28px;
+    }
+
+    .fa-home.size2 {
+        font-size: 36px;
     }
 
 </style>
@@ -119,9 +138,13 @@
                             <span *ngFor="let houseSize of supportedHouseSizes; let i = index">
                               <input type="radio" name="radios" id="radio{{i}}"
                                      [(ngModel)]="formData.houseSizeCode"
-                                     [value]="houseSize.code"
-                              >
-                                <label for="radio{{i}}"><i class="fa fa-home fa-{{i+1}}x"></i>{{houseSize.description}}</label>
+                                     [value]="houseSize.code">
+                              <label for="radio{{i}}">
+                                  <span class="fa-stack">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-home size{{i}} fa-stack-1x"></i>
+                                   </span>
+                                   {{houseSize.description}}</label>
                             </span>
 
                         </div>
