@@ -1,0 +1,28 @@
+@import "../../../styles/shared/variables.scss";
+
+img {
+  height: 100%;
+  padding: 2em;
+}
+
+.header {
+  background-color: $power-grey;
+  height: 90px;
+}
+
+.main-wrap {
+  position: absolute;
+  top: 90px;
+  bottom: 90px;
+  width: 100%;
+  background-color: $power-grey;
+  overflow: auto;
+}
+
+.footer {
+  background-color: $power-grey;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 90px;
+}

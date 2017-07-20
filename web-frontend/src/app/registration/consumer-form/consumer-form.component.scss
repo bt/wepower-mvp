@@ -1,20 +1,9 @@
-
-img {
-  height: 100%;
-  padding: 1em;
-}
-
-.background-container {
-  background-color: #f1f1f1;
-  height: 100%;
-}
+@import "../../../styles/shared/variables.scss";
 
 .container {
-  margin-top: 10px;
   padding-top: 10px;
   padding-bottom: 3px;
-  background-color: white;
-
+  background-color: $power-white;
 }
 
 .inner-container {
@@ -37,7 +26,7 @@ h1 {
 }
 
 .btn {
-  border: 0px solid transparent;
+  border: 0 solid transparent;
 }
 
 .container {
@@ -46,15 +35,54 @@ h1 {
 }
 
 #back-button {
-  color: #001cff;
+  color: $power-blue;
 }
 
 #next-button {
-  background-color: #001cff;
+  background-color: $power-blue;
   border-radius: 0;
 }
 
 #paging {
   position: absolute;
   top: 30%;
+}
+
+.radio-toolbar {
+  width: 500px;
+
+}
+
+.radio-toolbar input[type="radio"] {
+  display: none;
+}
+
+.radio-toolbar label {
+  display: inline-block;
+  padding: 4px 11px;
+  font-size: 16px;
+  cursor: pointer;
+  height: 62px;
+  width: 162px;
+  border: 2px solid transparent;
+}
+
+.radio-toolbar input[type="radio"]:checked + label {
+  border: 2px solid $power-yellow;
+}
+
+.fa-square.fa-stack-2x {
+  color: $power-grey;
+}
+
+.fa-home.size0 {
+  font-size: 18px;
+}
+
+.fa-home.size1 {
+  font-size: 28px;
+}
+
+.fa-home.size2 {
+  font-size: 36px;
 }
