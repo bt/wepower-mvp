@@ -8,14 +8,24 @@ import { ProductionPredictionComponent } from "./registration/production-predict
 import { ConsumptionPredictionComponent } from "./registration/consumption-prediction/consumption-prediction.component";
 import {ConsumerDashboardComponent} from "./dashboard/consumer-dashboard/consumer-dashboard.component";
 import {PlantDashboardComponent} from "./dashboard/plant-dashboard/plant-dashboard.component";
+import { RegistrationLayoutComponent } from "./registration/registration-layout/registration-layout.component";
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
   { path: 'landing', component: LandingComponent, pathMatch: 'full' },
-  { path: 'register/plant', component: PlantFormComponent, pathMatch: 'full' },
-  { path: 'register/plant/review', component: ProductionPredictionComponent, pathMatch: 'full' },
-  { path: 'register/consumer', component: ConsumerFormComponent, pathMatch: 'full' },
-  { path: 'register/consumer/review', component: ConsumptionPredictionComponent, pathMatch: 'full' },
+
+  { path: 'register',
+    children: [
+      {
+        path: '', component: RegistrationLayoutComponent, children: [
+          { path: 'plant', component: PlantFormComponent, pathMatch: 'full' },
+          { path: 'plant/review', component: ProductionPredictionComponent, pathMatch: 'full'},
+          { path: 'consumer', component: ConsumerFormComponent, pathMatch: 'full'},
+          { path: 'consumer/review', component: ConsumptionPredictionComponent, pathMatch: 'full'}
+        ]
+      }
+    ]
+  },
   { path: 'dashboard/plant', component: PlantDashboardComponent, pathMatch: 'full' },
   { path: 'dashboard/consumer', component: ConsumerDashboardComponent, pathMatch: 'full' }
 ];

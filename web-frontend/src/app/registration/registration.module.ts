@@ -16,9 +16,9 @@ import {SharedModule} from "../shared/shared.module";
 import { ConsumptionPredictionComponent } from './consumption-prediction/consumption-prediction.component';
 import { ProductionPredictionComponent } from './production-prediction/production-prediction.component';
 import { PredictionReviewComponent } from './prediction-review/prediction-review.component';
-import {ProductionPredictionService} from "./prediction/production-prediction.service";
-import {ConsumptionPredictionService} from "./prediction/consumption-prediction.service";
-import {PredictionData} from "./prediction-review/prediction-data";
+import { ProductionPredictionService } from "./prediction/production-prediction.service";
+import { ConsumptionPredictionService } from "./prediction/consumption-prediction.service";
+import { RegistrationLayoutComponent } from './registration-layout/registration-layout.component';
 
 
 @NgModule({
@@ -32,7 +32,8 @@ import {PredictionData} from "./prediction-review/prediction-data";
   ],
   exports: [
     PlantFormComponent,
-    ConsumerFormComponent
+    ConsumerFormComponent,
+    RegistrationLayoutComponent
   ],
   declarations: [
     PlantFormComponent,
@@ -40,7 +41,8 @@ import {PredictionData} from "./prediction-review/prediction-data";
     PlantTypePipe,
     ConsumptionPredictionComponent,
     ProductionPredictionComponent,
-    PredictionReviewComponent
+    PredictionReviewComponent,
+    RegistrationLayoutComponent
   ],
   providers: [
     AreaOptionsService,
