@@ -1,0 +1,35 @@
+<div class="container-fluid dashboard-container">
+  <div class="row header">
+    <div class="col">
+      <a href="http://www.wepwr.network" class="logo-link">
+        <img class="img-fluid logo" src="/assets/images/logo.svg">
+      </a>
+    </div>
+    <div class="col">
+      <div class="identity-row">
+        <div class="identity-container">
+          <div class="identity-icon">
+            <div *ngIf="headerTypeValue == headerType.SOLAR">
+              <img class="img-fluid" src="/assets/images/icon-sun.svg">
+            </div>
+            <div *ngIf="headerTypeValue == headerType.HYDRO">
+              <img class="img-fluid" src="/assets/images/icon-hydro.svg">
+            </div>
+            <div *ngIf="headerTypeValue == headerType.WIND">
+              <img class="img-fluid" src="/assets/images/icon-wind.svg">
+            </div>
+            <div *ngIf="headerTypeValue == headerType.CONSUMER">
+              <i class="fa fa-home fa-2x"></i>
+            </div>
+          </div>
+          <div class="wallet-address">
+            <p>{{walletAddress}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <router-outlet></router-outlet>
+  </div>
+</div>

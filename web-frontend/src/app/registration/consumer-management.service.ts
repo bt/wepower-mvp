@@ -14,11 +14,20 @@ export class ConsumerManagementService {
 
   constructor(private http: Http) { }
 
-  createConsumer(plantData : ConsumerForm): Observable<number> {
-    return this.http.post(`${environment.dataUrls.consumer.root}`, plantData)
+  createConsumer(consumerData : ConsumerForm): Observable<number> {
+    return this.http.post(`${environment.dataUrls.consumer.root}`, consumerData)
       .map(this.extractData)
       .catch(this.handleError)
   }
+
+  activateConsumer(wallet: string): Observable<any> {
+    let consumerUrl = environment.dataUrls.consumer;
+
+    return this.http.post(`${consumerUrl.root}/${wallet}/${consumerUrl.activate}`, null)
+      .map(() => null)
+      .catch(this.handleError)
+  }
+
 
   // TODO: Implement
   private extractData(response: Response): Observable<number> {

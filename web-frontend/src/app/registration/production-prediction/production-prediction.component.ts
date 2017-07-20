@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
 
 import * as moment from 'moment';
 
@@ -6,6 +7,7 @@ import { PredictionData } from "../prediction-review/prediction-data";
 import { Period } from "../../shared/period";
 import { ProductionPredictionService } from "../prediction/production-prediction.service";
 import { EthereumService } from "../../shared/ethereum.service";
+import { PlantManagementService } from "../plant-management.service";
 
 @Component({
   selector: 'app-production-prediction',
@@ -17,8 +19,10 @@ export class ProductionPredictionComponent implements OnInit {
   public productionData : Array<PredictionData>;
   public reviewPeriod : Period;
 
-  constructor(private predictionService : ProductionPredictionService,
-              private ethereumService : EthereumService) { }
+  constructor(private plantService: PlantManagementService,
+              private predictionService : ProductionPredictionService,
+              private ethereumService : EthereumService,
+              private router: Router) { }
 
   ngOnInit() {
     let periodStart = moment().startOf('week').add(1, 'days')
@@ -35,11 +39,19 @@ export class ProductionPredictionComponent implements OnInit {
     this.predictionService.getPredictionData(this.ethereumService.activeWallet(), reviewPeriod)
       .subscribe(
         predictions => this.productionData = predictions,
-        error => console.log(error)
+        error => console.error(error)
       );
   }
 
   periodChanged(event : Period) {
     this.loadPrediction(event);
+  }
+
+  activatePlant() {
+    this.plantService.activatePlant(this.ethereumService.activeWallet())
+      .subscribe(
+        success => this.router.navigateByUrl('/dashboard/plant'),
+        error => console.error(error)
+      );
   }
 }

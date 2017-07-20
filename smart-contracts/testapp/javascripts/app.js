@@ -67,10 +67,9 @@ window.App = {
     ExchangeContract.deployed().then(function(instance) {
       return instance.getTokens.call();
     }).then(function (result) {
-        console.log(result);
         for (var i = 0; i < result.length; i++) {
           var token = result[i];
-          console.log(token);
+
           PlantSmartContract.at(token).balanceOf(web3.eth.coinbase)
           .then(function(balance) {
             if (balance.valueOf() > 0) {
@@ -78,13 +77,13 @@ window.App = {
               token_balance_element.innerHTML = token_balance_element.innerHTML + "<br><span>"+token+"</span> - <span>"+balance.valueOf()+"</span>";
             }
           }).catch(function(e) {
-            console.log(e);
+            console.error(e);
             self.status("Error getting token balance");
           });
 
         }
     }).catch(function(e) {
-        console.log(e);
+        console.error(e);
         self.status("Error getting token balance");
     });
   },
@@ -99,11 +98,10 @@ window.App = {
     .then(function(instance) {
       return instance.addTokens.sendTransaction(address,"TEST", web3.toWei(2), amount, {from: web3.eth.coinbase});
     }).then(function(result) {
-      console.log(result);
       self.setStatus("Transaction complete new token added " + result);
       self.refreshBalance();
     }).catch(function(e) {
-      console.log(e);
+      console.error(e);
       self.setStatus("Error generating Tokens; see log.");
     });
   },
@@ -117,11 +115,10 @@ window.App = {
     ExchangeContract.deployed().then(function(instance) {
       return instance.buyTokens.sendTransaction(address, amount, {from: web3.eth.coinbase, value: web3.toWei(amount*2)});
     }).then(function(e) {
-      console.log(e);
       self.setStatus("Bought " + amount + " of elektra");
       self.refreshBalance();
     }).catch(function(e) {
-      console.log(e);
+      console.error(e);
       self.setStatus("Error while buying");
     });
   }

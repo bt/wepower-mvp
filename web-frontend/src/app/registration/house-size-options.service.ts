@@ -23,7 +23,7 @@ export class HouseSizeOptionsService {
       .catch(this.handleError)
   }
 
-  private extractData(response: Response): Observable<number> {
+  private extractData(response: Response): Observable<Array<HouseSize>> {
     return response.json()
         .map(size => new HouseSize(size.sizeCode, size.shortDescription));
   }

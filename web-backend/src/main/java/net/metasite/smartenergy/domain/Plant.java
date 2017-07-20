@@ -63,6 +63,9 @@ public class Plant {
     @Embedded
     private ActivePeriod period;
 
+    @Column
+    private boolean active;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "plant")
     private List<ProductionLog> productionLogs = new ArrayList<>();
 
@@ -76,7 +79,8 @@ public class Plant {
             BigDecimal capacity,
             Coordinates location,
             SupportedLocationArea area,
-            ActivePeriod period) {
+            ActivePeriod period,
+            boolean active) {
         this.name = name;
         this.walletId = walletId;
         this.area = area;
@@ -84,6 +88,23 @@ public class Plant {
         this.type = type;
         this.location = location;
         this.period = period;
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public String getWalletId() {
+        return walletId;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void activate() {
+        this.active = true;
     }
 
     public void assignLogs(List<ProductionLog> usageLogs) {

@@ -34,6 +34,14 @@ export class PlantManagementService {
       .catch(this.handleError)
   }
 
+  activatePlant(wallet: string): Observable<any> {
+    let plantUrl = environment.dataUrls.plant;
+
+    return this.http.post(`${plantUrl.root}/${wallet}/${plantUrl.activate}`, null)
+      .map(() => null)
+      .catch(this.handleError)
+  }
+
   private extractData(response: Response): Observable<number> {
     return response.json()
   }

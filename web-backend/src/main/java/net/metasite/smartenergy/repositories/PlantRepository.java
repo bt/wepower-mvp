@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlantRepository extends BaseRepository<Plant> {
 
-    Plant findByWalletId(String wallet);
+    Plant findByWalletIdIgnoreCase(String wallet);
 
+    Plant findByWalletIdIgnoreCaseAndActiveIsTrue(String wallet);
 }

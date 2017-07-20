@@ -54,6 +54,9 @@ public class Consumer {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "consumer")
     private List<ConsumptionLog> consumptionlogs = new ArrayList<>();
 
+    @Column
+    private boolean active;
+
     private Consumer() {
 
     }
@@ -63,16 +66,26 @@ public class Consumer {
             String meterId,
             BigDecimal consumption,
             SupportedLocationArea at,
-            SupportedHouseSize size) {
+            SupportedHouseSize size,
+            boolean active) {
         this.walletId = walletId;
         this.area = at;
         this.size = size;
         this.meterId = meterId;
         this.consumption = consumption;
+        this.active = active;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getWalletId() {
+        return walletId;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public List<ConsumptionLog> consumptionPredictionsForPeriod(Range<LocalDate> period) {
@@ -140,7 +153,9 @@ public class Consumer {
                 .filter(consumptionLog -> consumptionLog.getDate().isEqual(day))
                 .findAny()
                 .map(ConsumptionLog::getAmount);
+    }
 
-
+    public void activate() {
+        this.active = true;
     }
 }

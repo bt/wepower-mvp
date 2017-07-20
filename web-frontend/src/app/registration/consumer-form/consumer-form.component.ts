@@ -42,7 +42,7 @@ export class ConsumerFormComponent implements OnInit {
     this.houseSizeService.loadAvailableSizes()
       .subscribe(
         availableSizes => this.supportedHouseSizes = availableSizes,
-        error => console.log(error)
+        error => console.error(error)
       );
   }
 

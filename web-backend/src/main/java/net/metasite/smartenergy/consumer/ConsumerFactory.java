@@ -68,7 +68,8 @@ public class ConsumerFactory {
                 meterId,
                 consumption,
                 locationArea,
-                houseSize
+                houseSize,
+                false
         );
 
         consumer.assignLogs(usageLogs);

@@ -19,7 +19,6 @@ export class ExchangeRateService {
   }
 
   private extractData(response: Response): Observable<number> {
-    console.log(response.json())
     return response.json()
   }
 

@@ -6,9 +6,8 @@ import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw'
-import {Period} from "../shared/period";
-import {environment} from "../../environments/environment";
-import {ProductionDetails} from "./production-details";
+import { Period } from "../shared/period";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class ElectricityMarketPriceService {

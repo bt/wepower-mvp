@@ -22,7 +22,7 @@ export class AreaOptionsService {
       .catch(this.handleError)
   }
 
-  private extractData(response: Response): Observable<number> {
+  private extractData(response: Response): Observable<Array<GeoArea>> {
     return response.json().map(area => new GeoArea(area.name, area.code)) || {};
   }
 

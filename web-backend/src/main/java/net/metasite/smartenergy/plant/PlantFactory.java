@@ -7,26 +7,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.metasite.smartenergy.domain.ActivePeriod;
-import net.metasite.smartenergy.domain.ConsumptionLog;
 import net.metasite.smartenergy.domain.Coordinates;
 import net.metasite.smartenergy.domain.Plant;
 import net.metasite.smartenergy.domain.ProductionLog;
 import net.metasite.smartenergy.domain.SupportedLocationArea;
-import net.metasite.smartenergy.plant.request.PlantDetailsDTO;
-import net.metasite.smartenergy.plant.response.CreatedPlantDTO;
 import net.metasite.smartenergy.prediction.Predictor;
 import net.metasite.smartenergy.prediction.ProductionPredictor;
 import net.metasite.smartenergy.repositories.PlantRepository;
 import net.metasite.smartenergy.repositories.SupportedLocationRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Range;
 
@@ -81,7 +73,8 @@ public class PlantFactory {
                 capacity,
                 Coordinates.at(latitude, longtitude),
                 locationArea,
-                period
+                period,
+                false
         );
 
         newPlant.assignLogs(usageLogs);

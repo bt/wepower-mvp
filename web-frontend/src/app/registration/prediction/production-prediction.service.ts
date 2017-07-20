@@ -45,7 +45,6 @@ export class ProductionPredictionService {
   }
 
   private extractTotal(response : Response) : Observable<number> {
-    console.log(response.json())
     return response.json();
   }
 

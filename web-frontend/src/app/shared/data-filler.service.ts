@@ -27,9 +27,6 @@ export class DataFiller {
     let lastEntryDate = entries[entriesCount - 1].date
     let lastEntryDayOfWeek = moment(lastEntryDate).isoWeekday()
 
-    console.log(entries[entriesCount - 1])
-    console.log(lastEntryDayOfWeek)
-
     for (let index = lastEntryDayOfWeek; index < 7 ; index++) {
       let dayToFill = moment(lastEntryDate).startOf('isoWeek').toDate()
 

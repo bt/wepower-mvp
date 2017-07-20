@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import * as moment from 'moment';
 
@@ -6,6 +7,7 @@ import { PredictionData } from "../prediction-review/prediction-data";
 import { Period } from "../../shared/period";
 import { ConsumptionPredictionService } from "../prediction/consumption-prediction.service";
 import { EthereumService } from "../../shared/ethereum.service";
+import { ConsumerManagementService } from "../consumer-management.service";
 
 @Component({
   selector: 'app-consumption-prediction',
@@ -17,8 +19,10 @@ export class ConsumptionPredictionComponent implements OnInit {
   public consumptionData : Array<PredictionData>;
   public reviewPeriod : Period;
 
-  constructor(private predictionService : ConsumptionPredictionService,
-              private ethereumService : EthereumService) { }
+  constructor(private consumerService : ConsumerManagementService,
+              private predictionService : ConsumptionPredictionService,
+              private ethereumService : EthereumService,
+              private router: Router) { }
 
   ngOnInit() {
     let periodStart = moment().startOf('week').add(1, 'days')
@@ -32,15 +36,22 @@ export class ConsumptionPredictionComponent implements OnInit {
   }
 
   private loadPrediction(reviewPeriod : Period) {
-    console.log(reviewPeriod);
     this.predictionService.getPrediction(this.ethereumService.activeWallet(), reviewPeriod)
       .subscribe(
         predictions => this.consumptionData = predictions,
-        error => console.log(error)
+        error => console.error(error)
       );
   }
 
   periodChanged(event : Period) {
     this.loadPrediction(event);
+  }
+
+  activateConsumer() {
+    this.consumerService.activateConsumer(this.ethereumService.activeWallet())
+      .subscribe(
+        success => this.router.navigateByUrl('/dashboard/consumer'),
+        error => console.error(error)
+      );
   }
 }

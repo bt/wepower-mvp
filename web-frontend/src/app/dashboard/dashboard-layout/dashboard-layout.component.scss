@@ -1,0 +1,66 @@
+@import "../../../styles/shared/variables";
+
+.header {
+  height: 110px;
+
+  a {
+    height: 100%;
+  }
+
+  .logo {
+    height: 100%;
+    padding: 1.5em;
+  }
+}
+
+.dashboard-container {
+  background-color: $power-background-grey;
+  height: 100%;
+
+  .col {
+    padding: 0
+  }
+}
+
+.identity-row {
+  height: 100%;
+  padding: 1em;
+
+  .identity-container {
+    border-style: solid;
+    border-color: $power-grey;
+
+    display: flex;
+    float: right;
+
+    .identity-icon {
+      display: inline-block;
+
+      background-color: $power-grey;
+      margin: 0.5em;
+
+      img {
+        height: 3.5em;
+      }
+
+      i {
+        padding: 0.3em;
+      }
+    }
+
+    .wallet-address {
+      display: inline-block;
+
+      font-family: 'Roboto', 'Sans-serif';
+      font-size: 20px;
+
+      margin: 1em 0.5em 1em 0.5em;
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+}
+

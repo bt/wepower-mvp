@@ -10,12 +10,14 @@ export const environment = {
     houseSize: '/api/v1/house-size',
     plant: {
       root: '/api/v1/plant',
+      activate: 'activate',
       predictionData: 'production/predicted',
       predictionTotal: 'production/predicted/total',
       productionReview: 'production/predicted/review'
     },
     consumer: {
       root: '/api/v1/consumer',
+      activate: 'activate',
       prediction: 'consumption/predicted',
       predictionTotal: 'production/predicted/total',
       consumptionReview: 'production/predicted/review'
@@ -23,6 +25,9 @@ export const environment = {
     market: {
       ethereumPrice: '/api/v1/market/ethereum/price',
       electricityPrice: '/api/v1/market/electricity/price',
+    },
+    wallet: {
+      root: '/api/v1/wallet'
     }
   }
 };

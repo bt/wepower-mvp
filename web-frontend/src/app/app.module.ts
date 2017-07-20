@@ -7,7 +7,8 @@ import { LandingModule } from "./landing/landing.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { RegistrationModule } from "./registration/registration.module";
 import { SharedModule } from "./shared/shared.module";
-import {DashboardModule} from "./dashboard/dashboard.module";
+import { DashboardModule } from "./dashboard/dashboard.module";
+import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
 
 @NgModule({
   declarations: [
@@ -20,9 +21,10 @@ import {DashboardModule} from "./dashboard/dashboard.module";
     DashboardModule,
     AppRoutingModule,
     RouterModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
