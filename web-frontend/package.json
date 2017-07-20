@@ -5,7 +5,7 @@
   "scripts": {
     "build_contracts": "cd ../smart-contracts && truffle compile ",
     "clean_contracts": "rm -rf compiled_contracts/* ",
-    "fetch_contracts": "cp -r ../smart-contracts/build/contracts/* compiled_contracts ",
+    "fetch_contracts": "mkdir -p compiled_contracts && cp -r ../smart-contracts/build/contracts/* compiled_contracts/",
     "deploy_contracts": "cd ../smart-contracts && truffle migrate ",
     "compile": "npm run build_contracts && ng build",
     "build-app-prod": "ng build --environment=dev --aot=true",
