@@ -33,6 +33,14 @@
 .btn-primary.power-button.active {
   background-color : $power-grey;
 }
+.btn-primary.power-button.active:hover {
+  background-color : $power-grey;
+  color: $power-white;
+
+  border: none;
+  border-radius: 0;
+}
+
 
 html, body, app-root {
   height: 100%;

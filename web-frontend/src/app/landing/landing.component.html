@@ -25,8 +25,10 @@
                   type="button"
                   class="btn btn-primary power-button">
             Register a plant</button>
-          <div *ngIf="connectedToWallet == false">
-            Please log in to your Ethereum wallet to proceed.
+          <div *ngIf="connectedToWallet == false" class="warning">
+            <p>
+              Please log in to your Ethereum wallet to proceed.
+            </p>
           </div>
         </div>
       </div>
