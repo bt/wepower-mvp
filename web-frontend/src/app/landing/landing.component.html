@@ -15,12 +15,12 @@
       </div>
       <div class="row">
         <div class="col">
-          <button routerLink="/register/consumer"
+          <button [routerLink]="connectedToWallet ? '/register/consumer' : null"
                   routerLinkActive="active"
                   type="button"
                   class="btn btn-primary power-button">
             Register a household</button>
-          <button routerLink="/register/plant"
+          <button [routerLink]="connectedToWallet ? '/register/plant' : null"
                   routerLinkActive="active"
                   type="button"
                   class="btn btn-primary power-button">

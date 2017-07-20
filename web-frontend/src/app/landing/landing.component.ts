@@ -17,8 +17,6 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.etherium.activeWallet());
     this.connectedToWallet = this.etherium.isActiveConnection();
-    console.log(this.connectedToWallet);
   }
 }
