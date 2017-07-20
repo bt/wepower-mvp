@@ -1,3 +1,30 @@
+<style>
+
+    .radio-toolbar {
+        width: 500px;
+
+    }
+
+    .radio-toolbar input[type="radio"] {
+        display: none;
+    }
+
+    .radio-toolbar label {
+        display: inline-block;
+        /*background-color: #ddd;*/
+        padding: 4px 11px;
+        font-family: Arial;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .radio-toolbar input[type="radio"]:checked + label {
+        border: 2px solid;
+        border-color: #ffe600;
+    }
+
+</style>
+
 
 <div class="container-fluid background-container">
 
@@ -86,14 +113,21 @@
                 </div>
                 <div class="col-md">
                     <div class="col-md">
-        <span *ngFor="let houseSize of supportedHouseSizes">
-          <input type="radio"
-                 [(ngModel)]="formData.houseSizeCode"
-                 [value]="houseSize.code"
-          >
-          {{houseSize.description}}
-        </span>
+
+                        <div class="radio-toolbar">
+
+                            <span *ngFor="let houseSize of supportedHouseSizes; let i = index">
+                              <input type="radio" name="radios" id="radio{{i}}"
+                                     [(ngModel)]="formData.houseSizeCode"
+                                     [value]="houseSize.code"
+                              >
+                                <label for="radio{{i}}"><i class="fa fa-home fa-{{i+1}}x"></i>{{houseSize.description}}</label>
+                            </span>
+
+                        </div>
+
                     </div>
+
                 </div>
             </div>
 
