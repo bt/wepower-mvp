@@ -1,0 +1,11 @@
+@import "../../../styles/shared/variables";
+
+.header-data-container {
+  background-color: $power-white;
+}
+.header-data-container.right {
+  margin: 0 1em 1em 0
+}
+.header-data-container.left {
+    margin: 0 0em 1em 1em
+}

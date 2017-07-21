@@ -1,39 +1,52 @@
 <div class="row">
   <div class="col-md-6">
     <div class="row">
-      <app-wallet-balance></app-wallet-balance>
+      <div class="col header-data-container left">
+        <app-wallet-balance></app-wallet-balance>
+      </div>
     </div>
-    <div class="row">
-      <div class="col-md">
+    <div class="row header-data-container left">
+      <div class="col-md ">
         <div class="row">
-          Will be produced this week
+          <div class="col">
+            Will be produced this week
+          </div>
         </div>
         <div class="row">
-          {{producedTotal}} kWh
+          <div class="col">
+            {{producedTotal}} kWh
+          </div>
         </div>
       </div>
       <div class="col-md">
         <div class="row">
-          Already sold this week
+          <div class="col">
+            Already sold this week
+          </div>
         </div>
         <div class="row">
-          485 kWh
+          <div class="col">
+            485 kWh
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="row">
+    <div class="row header-data-container right">
       <div class="col-md-10">
         <div class="row">
-          Market price vs your plant price, Eur/MWh
+          <div class="col">
+            Market price vs your plant price, Eur/MWh
+          </div>
         </div>
-        Paveikslėlis.
-        <div class="row" *ngFor="let row of marketPricesReview">
-          <div class="md">{{row.date}}</div>
-          <div class="md">{{row.marketPrice}}</div>
-          <div class="md">{{row.myPrice}}</div>
-        </div>
+        <canvas baseChart width="400" height="400"
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [colors]="lineChartColors"
+                legend="false"
+                chartType="line"
+                ></canvas>
       </div>
       <div class="col-md-2">
         <input class="form-control" type="text">

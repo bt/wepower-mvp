@@ -16,8 +16,25 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
   producedTotal : number;
   headerPeriod : Period;
-  marketPricesReview : Array<MarketPriceRow>;
 
+  public lineChartData:Array<any> = [
+    {data: [], label: 'Market price'},
+    {data: [], label: 'Your price'}
+  ];
+
+  public lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+
+  public lineChartColors:Array<any> = [
+    {
+      borderColor: '#001cff',
+      backgroundColor: 'rgba(0,0,0,0)'
+    },
+    {
+      borderColor: '#00a700',
+      backgroundColor: 'rgba(0,0,0,0)'
+    }
+  ];
 
   constructor(private predictionService : ProductionPredictionService,
               private ethereum : EthereumService,
@@ -51,12 +68,17 @@ export class PlantDashboardHeaderComponent implements OnInit {
         this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise()
       ]
     ).then(values => {
-      let marketPrices = values[0]
-
-      // Prices from contract will have to be added later
-      this.marketPricesReview = marketPrices
-        .map(priceForDay => new MarketPriceRow(priceForDay[0], priceForDay[1], 25))
-
+      this.setChartData(values[0])
+      // let upadatedData = [
+      //   {data: [], label: 'Market price'},
+      //   {data: [28, 48, 40, 19, 86, 27, 90], label: 'Your price'}
+      // ]
+      // // Prices from contract will have to be added later
+      // upadatedData[1].data = marketPrices
+      //   .map(priceForDay => {
+      //     return priceForDay[1]
+      //   })
+      // this.lineChartData = upadatedData
     }).catch(error => console.error(error))
   }
 
@@ -66,5 +88,17 @@ export class PlantDashboardHeaderComponent implements OnInit {
         predictions => this.producedTotal = predictions,
         error => console.error(error)
       );
+  }
+
+  public setChartData(marketPrices : Array<[Date, number]>):void {
+    let _lineChartData:Array<any> = new Array(this.lineChartData.length);
+
+    _lineChartData[0] = {data: new Array(7), label: 'Market price'};
+    for (let j = 0; j < marketPrices.length; j++) {
+      _lineChartData[0].data[j] = marketPrices[j][1];
+    }
+
+    console.log("updated")
+    this.lineChartData = _lineChartData;
   }
 }

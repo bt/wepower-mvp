@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+import { ChartsModule } from 'ng2-charts';
 import { AngularFontAwesomeModule } from "angular-font-awesome";
 
 
@@ -24,7 +25,8 @@ import { ConsumerDashboardGuardService } from "./router-guards/consumer-dashboar
   imports: [
     CommonModule,
     RouterModule,
-    AngularFontAwesomeModule
+    AngularFontAwesomeModule,
+    ChartsModule
   ],
   exports: [
     DashboardLayoutComponent

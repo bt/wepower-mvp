@@ -52,7 +52,7 @@ dependencies {
 
 	compile('org.flywaydb:flyway-core')
 	compile('com.google.guava:guava:22.0')
-
+	compile('org.hibernate:hibernate-java8')
 	// Persistance
 	runtime('org.postgresql:postgresql')
 	runtime('com.h2database:h2:1.4.196')
