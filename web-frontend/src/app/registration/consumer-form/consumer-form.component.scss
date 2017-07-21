@@ -6,17 +6,17 @@
   background-color: $power-white;
 }
 
-.inner-container {
+.main-form-block {
 
-  margin-left: -14px;
-  width: 518px;
+  //margin-left: -14px;
+  width: 600px;
 }
 
 h1 {
   font-weight: bold;
 }
 
-.inner-block {
+.household-size-block {
   padding-top: 8px;
   padding-bottom: 8px;
 }
@@ -31,7 +31,11 @@ h1 {
 
 .container {
   width: 780px;
-  padding-right: 25px;
+  padding: 30px 35px 35px 28px;
+}
+
+.content {
+  padding: 0 0 0 0;
 }
 
 #back-button {
@@ -44,8 +48,7 @@ h1 {
 }
 
 #paging {
-  position: absolute;
-  top: 30%;
+  text-align: right;
 }
 
 .radio-toolbar {
@@ -59,21 +62,32 @@ h1 {
 
 .radio-toolbar label {
   display: inline-block;
-  padding: 11px 11px;
+  //padding: 11px 11px;
   font-size: 16px;
   cursor: pointer;
   height: 54px;
-  width: 189px;
+  width: 156px;
   margin-right: 4px;
   border: 2px solid $power-grey;
+  text-align: center;
 }
 
 .radio-toolbar input[type="radio"]:checked + label {
   border: 2px solid $power-yellow;
 }
 
+.fa-stack {
+  position: relative;
+  display: inline-block;
+  width: 3em;
+  height: 3em;
+  line-height: 2em;
+  vertical-align: middle;
+}
+
 .fa-square.fa-stack-2x {
   color: $power-grey;
+  font-size: 48px;
 }
 
 .fa-home.size0 {
