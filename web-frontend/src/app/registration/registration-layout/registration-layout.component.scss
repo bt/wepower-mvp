@@ -2,17 +2,18 @@
 
 img {
   height: 100%;
-  padding: 2em;
+  padding-left: 34px;
+  margin-top: -14px;
 }
 
 .header {
   background-color: $power-grey;
-  height: 90px;
+  height: 110px;
 }
 
 .main-wrap {
   position: absolute;
-  top: 90px;
+  top: 110px;
   bottom: 90px;
   width: 100%;
   background-color: $power-grey;
