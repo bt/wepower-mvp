@@ -10,44 +10,33 @@
     </div>
     <div class="main-form-block">
       <h6>Ethereum Wallet ID</h6>
-      <div class="col-md">
-        <input class="form-control" type="text" [(ngModel)]="formData.walletId" disabled>
-      </div>
+      <input class="form-control" type="text" [(ngModel)]="formData.walletId" disabled>
       <h6>Household area</h6>
-      <div class="col-md">
-        <select class="form-control" [(ngModel)]="formData.areaCode">
-          <option name="geo-area" *ngFor="let area of supportedAreas" [value]="area.code">{{area.name}}
-          </option>
-        </select>
-      </div>
+      <select class="form-control" [(ngModel)]="formData.areaCode">
+        <option name="geo-area" *ngFor="let area of supportedAreas" [value]="area.code">{{area.name}}
+        </option>
+      </select>
       <h6>Meter ID</h6>
-      <div class="col-md">
-        <input class="form-control" type="text" [(ngModel)]="formData.meterId">
-      </div>
+      <input class="form-control" type="text" [(ngModel)]="formData.meterId">
       <h6>Household electricity consumption</h6>
-      <div class="col-md">
-        <input class="form-control" type="text" [(ngModel)]="formData.consumption">
-      </div>
+      <input class="form-control" type="text" [(ngModel)]="formData.consumption">
     </div>
     <div class="household-size-block">
       <h6>Household size</h6>
       <div class="radio-toolbar">
-            <span *ngFor="let houseSize of supportedHouseSizes; let i = index">
-              <input type="radio" name="radios" id="radio{{i}}"
-                     [(ngModel)]="formData.houseSizeCode"
-                     [value]="houseSize.code">
-              <label for="radio{{i}}">
-                <div class="col-md-4">
-                  <span class="fa-stack">
-                    <i class="fa fa-square fa-stack-2x"></i>
-                    <i class="fa fa-home size{{i}} fa-stack-1x"></i>
-                   </span>
-                </div>
-                <div class="col-md-8">
-                  {{houseSize.description}}
-                </div>
-              </label>
+        <span *ngFor="let houseSize of supportedHouseSizes; let i = index">
+          <input type="radio" name="radios" id="radio{{i}}"
+                 [(ngModel)]="formData.houseSizeCode"
+                 [value]="houseSize.code">
+          <label for="radio{{i}}">
+            <div class="box">
+              <i class="fa fa-home size{{i}} fa-stack-1x"></i>
+            </div>
+            <span class="description">
+              {{houseSize.description}}
             </span>
+          </label>
+        </span>
       </div>
     </div>
     <div class="navigation-block">
