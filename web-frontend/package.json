@@ -6,12 +6,14 @@
     "build_contracts": "cd ../smart-contracts && truffle compile ",
     "clean_contracts": "rm -rf compiled_contracts/* ",
     "fetch_contracts": "mkdir -p compiled_contracts && cp -r ../smart-contracts/build/contracts/* compiled_contracts/",
-    "deploy_contracts": "cd ../smart-contracts && truffle migrate ",
+    "deploy_contracts_dev": "cd ../smart-contracts && truffle migrate --reset ",
+    "deploy_contracts_prod": "cd ../smart-contracts && truffle migrate --reset --network demo",
     "compile": "npm run build_contracts && ng build",
-    "build-app-prod": "ng build --environment=dev --aot=true",
+    "build-app-prod": "ng build --environment=dev",
+    "deploy-app-prod": "scp -r dist/* root@192.168.50.157:/home/metasite/wepower/web-app/.",
     "start": "ng serve --proxy-config proxy.conf.json",
-    "clean_start": "npm run build_contracts && npm run deploy_contracts && npm run clean_contracts && npm run fetch_contracts && npm run start",
-    "build_prod": "npm run build_contracts && npm run clean_contracts && npm run fetch_contracts && npm run build-app-prod"
+    "clean_start": "npm run build_contracts && npm run deploy_contracts_dev && npm run clean_contracts && npm run fetch_contracts && npm run start",
+    "build_prod": "npm run build_contracts && npm run deploy_contracts_prod && npm run clean_contracts && npm run fetch_contracts && npm run build-app-prod && npm run deploy-app-prod"
   },
   "private": true,
   "dependencies": {
