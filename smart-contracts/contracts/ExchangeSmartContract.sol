@@ -1,18 +1,14 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.11;
 
 import "./PlantSmartContract.sol";
 
 contract ExchangeSmartContract is Ownable {
 
-  address[] tokens;
+  address[] public tokens;
 
-  function addTokens(address _plant, string _name, uint256 _price, uint256 _initAmount) returns(address[]) {
-    address token = new PlantSmartContract(_plant, _initAmount, _price, _name, 1);
+  function addTokens(address _plant, string _name, uint256 _price, uint256 _initAmount, uint _validTill) returns(address[]) {
+    address token = new PlantSmartContract(_plant, _initAmount, _price, _name, 1, _validTill);
     tokens.push(token);
-    return tokens;
-  }
-
-  function getTokens() returns (address[])  {
     return tokens;
   }
 
@@ -28,7 +24,7 @@ contract ExchangeSmartContract is Ownable {
       throw;
     }
 
-    return _amount * token.getPrice();
+    return _amount * token.price();
   }
 
   function buyTokens(address _tokenAddress, uint256 _amount) payable returns (uint256) {
@@ -38,12 +34,12 @@ contract ExchangeSmartContract is Ownable {
       throw;
     }
 
-    uint256 price = _amount * token.getPrice();
+    uint256 price = _amount * token.price();
     if (price > msg.value) {
       throw;
     }
 
-    address plant = token.getPlant();
+    address plant = token.plant();
 
     plant.transfer(price);
 

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.11;
 
 import "./libs/StandardToken.sol";
 import "./libs/Ownable.sol";
@@ -6,12 +6,11 @@ import "./libs/Ownable.sol";
 
 contract PlantSmartContract is StandardToken, Ownable {
 
-
-
   string public name;
   string public symbol = "KWH";
   uint256 public amountInKWH;
 
+  uint validTill;
   uint256 public price;
   address public plant;
 
@@ -20,12 +19,14 @@ contract PlantSmartContract is StandardToken, Ownable {
       uint256 _initAmount,
       uint256 _price,
       string _name,
-      uint256 _amountInKWH) {
+      uint256 _amountInKWH,
+      uint _validTill) {
 
     plant = _plant;
     price = _price;
     name = _name;
     amountInKWH = _amountInKWH;
+    validTill = _validTill;
 
     totalSupply = _initAmount;
     balances[plant] = _initAmount;
@@ -34,6 +35,11 @@ contract PlantSmartContract is StandardToken, Ownable {
   }
 
   function buy(address _from, address _to, uint256 _amount) onlyOwner {
+
+    if (now > validTill) {
+      throw;
+    }
+
     if (balances[_from] < _amount) {
       throw;
     }
@@ -43,15 +49,11 @@ contract PlantSmartContract is StandardToken, Ownable {
     Transfer(_from, _to, _amount);
   }
 
-  function getPrice() returns (uint256) {
-    return price;
-  }
-
-  function getPlant() returns (address) {
-    return plant;
-  }
-
   function getAvailableAmount() returns(uint256) {
+    if (now > validTill) {
+      return 0;
+    }
+
     return balanceOf(plant);
   }
 }
