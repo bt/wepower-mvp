@@ -39,6 +39,10 @@ export class ClientConsumptionReviewComponent implements OnInit {
     this.loadTable(this.tableReviewPeriod);
   }
 
+  sendTokens() {
+
+  }
+
   private initializeTable() {
     let periodStart = moment().startOf('week').add(1, 'days')
 
