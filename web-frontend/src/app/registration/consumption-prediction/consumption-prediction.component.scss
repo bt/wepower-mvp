@@ -1,0 +1,9 @@
+@import "../../../styles/shared/variables";
+
+.preview-container {
+  background-color: $power-white;
+
+  .note {
+    background-color: $power-background-grey;
+  }
+}

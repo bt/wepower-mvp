@@ -1,15 +1,34 @@
-<p>
-  consumption-prediction works!
-  <app-prediction-review
-    [prediction]="consumptionData"
-    [period]="reviewPeriod"
-    (onVisiblePeriodChanged)="periodChanged($event)"></app-prediction-review>
-</p>
-<div class="row form-group">
-  <div class="col-md">
-    <button (click)="activateConsumer()" type="button" class="btn btn-primary">Submit</button>
-  </div>
-  <div class="col-md">
-    <button routerLink="/landing" type="button" class="btn btn-secondary">Cancel</button>
+<div class="row">
+  <div class="col preview-container">
+    <div class="row">
+      <div class="col-md">
+        Prediction usage
+      </div>
+      <div class="col-md">
+        Step 2 of 2
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <app-prediction-review
+          [prediction]="consumptionData"
+          [period]="reviewPeriod"
+          (onVisiblePeriodChanged)="periodChanged($event)"></app-prediction-review>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md note">
+        Based on your past energy usage, we predict your energy usage.
+        *Note the prediction will adjust accordingly to your usage based on AI algorithm.
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col-md">
+        <button routerLink="/register/consumer" type="button" class="btn btn-secondary">Back</button>
+      </div>
+      <div class="col-md">
+        <button (click)="activateConsumer()" type="button" class="btn btn-primary">Take me to the market</button>
+      </div>
+    </div>
   </div>
 </div>

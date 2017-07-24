@@ -19,6 +19,8 @@ import { PredictionReviewComponent } from './prediction-review/prediction-review
 import { ProductionPredictionService } from "./prediction/production-prediction.service";
 import { ConsumptionPredictionService } from "./prediction/consumption-prediction.service";
 import { RegistrationLayoutComponent } from './registration-layout/registration-layout.component';
+import { ChartsModule } from "ng2-charts";
+
 
 
 @NgModule({
@@ -28,7 +30,8 @@ import { RegistrationLayoutComponent } from './registration-layout/registration-
     HttpModule,
     JsonpModule,
     RouterModule,
-    SharedModule
+    SharedModule,
+    ChartsModule
   ],
   exports: [
     PlantFormComponent,

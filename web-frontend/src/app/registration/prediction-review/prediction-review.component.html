@@ -1,21 +1,21 @@
 <div class="row">
   <div class="col-md">
-    Prediction review!
-  </div>
-</div>
-<div class="row">
-  <div class="col-md">
      <button type="button" class="btn btn-primary" (click)="previousPeriod()">Previous period</button>
   </div>
   <div class="col-md">
     <button type="button" class="btn btn-primary" (click)="nextPeriod()">Next period</button>
   </div>
 </div>
-<div class="row" *ngFor="let entry of reviewData">
-  <div class="col-md">
-    <p>{{entry.date}}</p>
-  </div>
-  <div class="col-md">
-    <p>{{entry.energyPrediction}}</p>
+<div class="row">
+  <div class="col-md-6">
+    <div style="display: block;">
+      <canvas baseChart width="400" height="400"
+              [datasets]="lineChartData"
+              [labels]="lineChartLabels"
+              [options]="lineChartOptions"
+              [colors]="lineChartColors"
+              [chartType]="lineChartType"></canvas>
+    </div>
   </div>
 </div>
+
