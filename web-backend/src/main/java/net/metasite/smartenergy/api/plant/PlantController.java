@@ -14,7 +14,10 @@ import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
+import net.metasite.smartenergy.api.consumer.response.ConsumptionAvailabilityDTO;
 import net.metasite.smartenergy.api.plant.response.PlantDetailsResponseDTO;
+import net.metasite.smartenergy.api.plant.response.ProductionAvailabilityDTO;
+import net.metasite.smartenergy.domain.Consumer;
 import net.metasite.smartenergy.domain.Plant;
 import net.metasite.smartenergy.domain.ProductionLog;
 import net.metasite.smartenergy.api.plant.request.PlantDetailsDTO;
@@ -116,6 +119,27 @@ public class PlantController {
         plantManager.activate(wallet);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("{wallet}/production/predicted/period")
+    public ResponseEntity<ProductionAvailabilityDTO> getPredictionAvailability(
+            @PathVariable(name = "wallet") String wallet) {
+
+        Plant plant = plantRepository.findByWalletIdIgnoreCase(wallet);
+
+        if (plant == null) {
+            String errorMessage = "Plant not found";
+            LOG.error(errorMessage);
+            return new ResponseEntity(errorMessage, HttpStatus.NOT_FOUND);
+        }
+
+        Range<LocalDate> predictionsForPeriod = plant.predictedRange();
+
+        ProductionAvailabilityDTO availabilityResponse = new ProductionAvailabilityDTO();
+        availabilityResponse.setFrom(predictionsForPeriod.lowerEndpoint());
+        availabilityResponse.setTo(predictionsForPeriod.upperEndpoint());
+
+        return ResponseEntity.ok(availabilityResponse);
     }
 
     @GetMapping("{wallet}/production/predicted")

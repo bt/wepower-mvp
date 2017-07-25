@@ -12,10 +12,13 @@
   }
 }
 
-.btn {
+.pagination-button {
   padding: 1.8em;
   background-color: transparent;
   background-size: 100%;
+
+  border: none;
+  outline: none;
 }
 
 .button-back {
@@ -23,8 +26,10 @@
 
   background-image: url('/assets/images/pagination_back.png');
 }
-.button-back:active {
+.button-back:disabled {
   background-image: url('/assets/images/pagination_back_inactive.png');
+  border: none;
+
 }
 
 .button-forward {
@@ -32,6 +37,6 @@
 
   background-image: url('/assets/images/pagination_forward.png');
 }
-.button-forward:active {
+.button-forward:disabled {
   background-image: url('/assets/images/pagination_forward_inactive.png');
 }

@@ -8,6 +8,7 @@ import 'rxjs/add/observable/throw'
 
 import {PlantForm, PlantType} from "./plant-form/plant-form";
 import {environment} from "../../environments/environment";
+import { Period } from "../shared/period";
 
 @Injectable()
 export class PlantManagementService {
@@ -34,16 +35,16 @@ export class PlantManagementService {
       .catch(this.handleError)
   }
 
+  private extractData(response: Response): Observable<number> {
+    return response.json()
+  }
+
   activatePlant(wallet: string): Observable<any> {
     let plantUrl = environment.dataUrls.plant;
 
     return this.http.post(`${plantUrl.root}/${wallet}/${plantUrl.activate}`, null)
       .map(() => null)
       .catch(this.handleError)
-  }
-
-  private extractData(response: Response): Observable<number> {
-    return response.json()
   }
 
   // TODO: Implement

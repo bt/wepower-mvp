@@ -26,7 +26,7 @@ export class ProductionPredictionService {
       .catch(this.handleError)
   }
 
-  private extractData(response : Response) : Observable<Array<PredictionData>> {
+  private extractData(response : Response) : Array<PredictionData> {
     return response.json()
       .map(prediction => new PredictionData(
         new Date(prediction.date),
@@ -44,8 +44,22 @@ export class ProductionPredictionService {
       .catch(this.handleError)
   }
 
-  private extractTotal(response : Response) : Observable<number> {
+  private extractTotal(response : Response) : number {
     return response.json();
+  }
+
+  getPredictedPeriod(wallet: string): Observable<Period> {
+    let plantUrl = environment.dataUrls.plant;
+
+    return this.http.get(`${plantUrl.root}/${wallet}/${plantUrl.predictionPeriod}`, null)
+      .map(this.extractPeriod)
+      .catch(this.handleError)
+  }
+
+  private extractPeriod(response : Response) : Period {
+    let jsonBody = response.json()
+
+    return new Period(new Date(jsonBody.from), new Date(jsonBody.to))
   }
 
   private buildPredictionFilterParams(period: Period) {

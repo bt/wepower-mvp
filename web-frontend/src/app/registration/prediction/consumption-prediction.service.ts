@@ -43,6 +43,20 @@ export class ConsumptionPredictionService {
       .catch(this.handleError)
   }
 
+  getPredictedPeriod(wallet: string): Observable<Period> {
+    let consumerUrl = environment.dataUrls.consumer;
+
+    return this.http.get(`${consumerUrl.root}/${wallet}/${consumerUrl.predictionPeriod}`, null)
+      .map(this.extractPeriod)
+      .catch(this.handleError)
+  }
+
+  private extractPeriod(response : Response) : Period {
+    let jsonBody = response.json()
+
+    return new Period(new Date(jsonBody.from), new Date(jsonBody.to))
+  }
+
   private buildPredictionFilterParams(period: Period) {
     let params: URLSearchParams = new URLSearchParams();
 

@@ -13,16 +13,20 @@ import { DataFiller } from "../../shared/data-filler.service"
 })
 export class PredictionReviewComponent implements OnInit {
 
-  _reviewData : Array<PredictionData>
-  labelValuesMap = {}
+
+  backDisabled : boolean
+  frontDisabled : boolean
 
   @Input('period')
   visiblePeriod : Period;
 
+  _reviewData : Array<PredictionData>
+  _availableRange : Period;
+
   @Output() onVisiblePeriodChanged = new EventEmitter<Period>()
-  //
-  // @ViewChild(ChartComponent) chartComp;
-  // let chart = this.chartComp.chart;
+
+  // Charts stuff, should be refactored into separate component
+  labelValuesMap = {}
 
   // Default value is required to initialise empty chart on page load.
   public lineChartData:Array<any> = [{data:[]}]
@@ -239,11 +243,46 @@ export class PredictionReviewComponent implements OnInit {
   nextPeriod() {
     this.visiblePeriod = this.visiblePeriod.plusWeeks(1);
     this.onVisiblePeriodChanged.emit(this.visiblePeriod);
+    this.adjustButtonActivity()
   }
 
   previousPeriod() {
     this.visiblePeriod = this.visiblePeriod.plusWeeks(-1);
     this.onVisiblePeriodChanged.emit(this.visiblePeriod);
+    this.adjustButtonActivity()
+  }
+
+  private adjustButtonActivity() {
+    console.log('From')
+
+    if (this.visiblePeriod == null || this.availableRange) {
+      this.backDisabled = true
+      this.frontDisabled = true
+    }
+
+    this.backDisabled = false
+    if (this.visiblePeriod.from <= this.availableRange.from) {
+      this.backDisabled = true
+    }
+
+    this.frontDisabled = false
+    if (this.visiblePeriod.to >= this.availableRange.to) {
+      this.frontDisabled = true
+    }
+  }
+
+  @Input('availableRange')
+  set availableRange(availableRange: Period) {
+    if (!availableRange) {
+      return
+    }
+
+    this._availableRange = availableRange
+    this.adjustButtonActivity()
+  }
+
+  get availableRange() : Period {
+    return this._availableRange
   }
 
   @Input('prediction')
@@ -257,7 +296,6 @@ export class PredictionReviewComponent implements OnInit {
   }
 
   public plotPredictionData(data : Array<PredictionData>):void {
-
     if (data.length == 0) {
       return
     }

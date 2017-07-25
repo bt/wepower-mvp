@@ -1,10 +1,18 @@
 <div class="row pagination">
   <div class="col-md ">
-    <span class="review-period">Jul 31 – Aug 6, 2017</span>
+    <span class="review-period">{{visiblePeriod.from | date:'MMM dd' }} – {{visiblePeriod.to | date:'MMM dd'}}, {{visiblePeriod.to | date:'y'}}</span>
   </div>
   <div class="col-md selector">
-    <button type="button" class="btn button-back" (click)="previousPeriod()"></button>
-    <button type="button" class="btn button-forward" (click)="nextPeriod()"></button>
+    <button type="button"
+            class="pagination-button button-back"
+            (click)="previousPeriod()"
+            [disabled]="backDisabled"
+    ></button>
+    <button type="button"
+            class="pagination-button button-forward"
+            (click)="nextPeriod()"
+            [disabled]="frontDisabled"
+    ></button>
   </div>
 </div>
 <div class="row">

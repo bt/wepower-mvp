@@ -98,7 +98,6 @@ export class PlantDashboardHeaderComponent implements OnInit {
       _lineChartData[0].data[j] = marketPrices[j][1];
     }
 
-    console.log("updated")
     this.lineChartData = _lineChartData;
   }
 }

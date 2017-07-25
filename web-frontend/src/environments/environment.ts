@@ -12,6 +12,7 @@ export const environment = {
       root: '/api/v1/plant',
       activate: 'activate',
       predictionData: 'production/predicted',
+      predictionPeriod: 'production/predicted/period',
       predictionTotal: 'production/predicted/total',
       productionReview: 'production/predicted/review'
     },
@@ -19,8 +20,9 @@ export const environment = {
       root: '/api/v1/consumer',
       activate: 'activate',
       prediction: 'consumption/predicted',
-      predictionTotal: 'production/predicted/total',
-      consumptionReview: 'production/predicted/review'
+      predictionPeriod: 'consumption/predicted/period',
+      predictionTotal: 'consumption/predicted/total',
+      consumptionReview: 'consumption/predicted/review'
     },
     market: {
       ethereumPrice: '/api/v1/market/ethereum/price',

@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import javax.annotation.Resource;
 
 import net.metasite.smartenergy.api.consumer.request.ConsumerDetailsDTO;
+import net.metasite.smartenergy.api.consumer.response.ConsumptionAvailabilityDTO;
 import net.metasite.smartenergy.api.consumer.response.CreatedConsumerDTO;
 import net.metasite.smartenergy.api.consumer.response.DailyConsumerReviewDTO;
 import net.metasite.smartenergy.api.consumer.response.PredictionDTO;
@@ -123,11 +124,34 @@ public class ConsumerController {
         return ResponseEntity.ok(responsePredictions);
     }
 
+
+
+    @GetMapping("{wallet}/consumption/predicted/period")
+    public ResponseEntity<ConsumptionAvailabilityDTO> getPredictionAvailability(
+            @PathVariable(name = "wallet") String wallet) {
+
+        Consumer consumer = consumerRepository.findByWalletIdIgnoreCase(wallet);
+
+        if (consumer == null) {
+            String errorMessage = "Consumer not found";
+            LOG.error(errorMessage);
+            return new ResponseEntity(errorMessage, HttpStatus.NOT_FOUND);
+        }
+
+        Range<LocalDate> predictionsForPeriod = consumer.predictedRange();
+
+        ConsumptionAvailabilityDTO availabilityResponse = new ConsumptionAvailabilityDTO();
+        availabilityResponse.setFrom(predictionsForPeriod.lowerEndpoint());
+        availabilityResponse.setTo(predictionsForPeriod.upperEndpoint());
+
+        return ResponseEntity.ok(availabilityResponse);
+    }
+
     public PredictionDTO convertToDTO(ConsumptionLog log) {
         return new PredictionDTO(log.getDate(), log.getAmount());
     }
 
-    @GetMapping("{wallet}/production/predicted/total")
+    @GetMapping("{wallet}/consumption/predicted/total")
     public ResponseEntity<BigDecimal> getPredictedConsumptionTotal(
             @PathVariable(name = "wallet") String wallet,
             @RequestParam(name = "from") String from,
@@ -148,7 +172,7 @@ public class ConsumerController {
         return ResponseEntity.ok(totalProductionForPeriod);
     }
 
-    @GetMapping("{wallet}/production/predicted/review")
+    @GetMapping("{wallet}/consumption/predicted/review")
     public ResponseEntity<List<DailyConsumerReviewDTO>> getPredictedConsumptionReview(
             @PathVariable(name = "wallet") String wallet,
             @RequestParam(name = "from") String from,

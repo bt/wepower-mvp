@@ -24,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 
 import static net.metasite.smartenergy.domain.ProductionLog.buildProduction;
@@ -178,5 +179,17 @@ public class Plant {
 
         productionLogs.addAll(production);
         production.forEach(productionLog -> productionLog.assignTo(this));
+    }
+
+    public Range<LocalDate> predictedRange() {
+        List<ProductionLog> sortedPredictions = productionLogs.stream()
+                .filter(consumptionLog -> consumptionLog.isPrediction())
+                .sorted((o1, o2) -> o1.getDate().isAfter(o2.getDate()) ? 1 : -1)
+                .collect(Collectors.toList());
+
+        ProductionLog firtPrediction = Iterables.getFirst(sortedPredictions, null);
+        ProductionLog lastPrediction = Iterables.getLast(sortedPredictions);
+
+        return Range.closed(firtPrediction.getDate(), lastPrediction.getDate());
     }
 }

@@ -18,6 +18,7 @@ export class ConsumptionPredictionComponent implements OnInit {
 
   public consumptionData : Array<PredictionData>;
   public reviewPeriod : Period;
+  public predictionRange : Period
 
   constructor(private consumerService : ConsumerManagementService,
               private predictionService : ConsumptionPredictionService,
@@ -33,12 +34,21 @@ export class ConsumptionPredictionComponent implements OnInit {
     );
 
     this.loadPrediction(this.reviewPeriod);
+    this.loadAvailablePeriod();
   }
 
   private loadPrediction(reviewPeriod : Period) {
     this.predictionService.getPrediction(this.ethereumService.activeWallet(), reviewPeriod)
       .subscribe(
         predictions => this.consumptionData = predictions,
+        error => console.error(error)
+      );
+  }
+
+  private loadAvailablePeriod() {
+    this.predictionService.getPredictedPeriod(this.ethereumService.activeWallet())
+      .subscribe(
+        period => this.predictionRange = period,
         error => console.error(error)
       );
   }

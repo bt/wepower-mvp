@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 
 import static net.metasite.smartenergy.domain.ProductionLog.buildProduction;
@@ -157,5 +158,17 @@ public class Consumer {
 
     public void activate() {
         this.active = true;
+    }
+
+    public Range<LocalDate> predictedRange() {
+        List<ConsumptionLog> sortedPredictions = consumptionlogs.stream()
+                .filter(consumptionLog -> consumptionLog.isPrediction())
+                .sorted((o1, o2) -> o1.getDate().isAfter(o2.getDate()) ? 1 : -1)
+                .collect(Collectors.toList());
+
+        ConsumptionLog firtPrediction = Iterables.getFirst(sortedPredictions, null);
+        ConsumptionLog lastPrediction = Iterables.getLast(sortedPredictions);
+
+        return Range.closed(firtPrediction.getDate(), lastPrediction.getDate());
     }
 }
