@@ -29,7 +29,7 @@ select.form-control:not([size]):not([multiple]) {
 h1 {
   font-family: 'Platform Web', Sans-serif;
   font-weight: bold;
-  font-size: 40px;
+  font-size: 56px;
 }
 
 h6 {
@@ -39,29 +39,31 @@ h6 {
 
 .household-size-block {
   width: 710px;
-  //padding-top: 8px;
-  //padding-bottom: 8px;
-}
-
-.btn {
-  border: 0 solid transparent;
 }
 
 .content {
-  //padding: 0 0 0 0;
+  padding: 0 0 0 0;
 }
 
 #back-button {
+  border: 0 transparent;
   color: $power-blue;
+  position: absolute;
+  left: 0px;
 }
 
 #next-button {
-  background-color: $power-blue;
   border-radius: 0;
+  left: 45px;
+  position: absolute;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  font-size: 16px;
 }
 
 #paging {
   text-align: right;
+  padding-top: 34px;
 }
 
 .radio-toolbar {
