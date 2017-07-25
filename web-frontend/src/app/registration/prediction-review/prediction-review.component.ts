@@ -253,8 +253,6 @@ export class PredictionReviewComponent implements OnInit {
   }
 
   private adjustButtonActivity() {
-    console.log('From')
-
     if (this.visiblePeriod == null || this.availableRange) {
       this.backDisabled = true
       this.frontDisabled = true
