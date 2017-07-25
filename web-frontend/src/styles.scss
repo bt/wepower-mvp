@@ -17,7 +17,7 @@
   font-weight: 600;
   font-size: 24px;
 
-  padding: 0.7em 1em 0.7em 1em;
+  padding: 0.7em 1em;
 
   // Required in order not to push button when added on hover
   border: '1px solid transparent';
@@ -30,7 +30,6 @@
 
   border-color: $power-blue;
 }
-
 .btn-primary.power-button.active {
   background-color : $power-grey;
   border-color: transparent;
@@ -39,6 +38,44 @@
   background-color : $power-grey;
   color: $power-white;
   border-color: transparent;
+}
+
+.power-button.navigation-back {
+  border: none;
+  outline: none;
+
+  background-color: transparent;
+  color: $power-blue;
+
+  font-size: 20px;
+  font-weight: 400;
+
+  padding: 0.7em 0em;
+
+  float: left;
+
+  i {
+    padding-right: 0.4em;
+  }
+}
+.power-button.navigation-back:hover {
+  border: none;
+  background-color: transparent;
+  color: $power-blue;
+}
+
+.power-button.navigation-next {
+  outline: none;
+  border-radius: 0;
+
+  font-size: 20px;
+  font-weight: 400;
+
+  float: right;
+
+  i {
+    padding: 0 0.4em;
+  }
 }
 
 html, body, app-root {
