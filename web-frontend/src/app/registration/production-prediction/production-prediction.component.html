@@ -1,16 +1,43 @@
-<p>
-  production-prediction works!
-  <app-prediction-review
-    [prediction]="productionData"
-    [period]="reviewPeriod"
-    [availableRange]="predictionRange"
-    (onVisiblePeriodChanged)="periodChanged($event)"></app-prediction-review>
-</p>
-<div class="row form-group">
-  <div class="col-md">
-    <button (click)="activatePlant()" type="button" class="btn btn-primary">Accept</button>
-  </div>
-  <div class="col-md">
-    <button routerLink="/landing" type="button" class="btn btn-secondary">Cancel</button>
+<div class="container preview-container">
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <div class="col-md">
+          <h1>Predicted capacity</h1>
+        </div>
+        <div class="col-md">
+          <span class="step-number">Step 2 of 2</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <app-prediction-review
+            [prediction]="productionData"
+            [period]="reviewPeriod"
+            [availableRange]="predictionRange"
+            (onVisiblePeriodChanged)="periodChanged($event)"></app-prediction-review>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md">
+          <div class="note">
+            <p>Based on your plant parameters, we predict your energy production.</p>
+            <p>*Note the prediction will adjust accordingly to your production monitoring based on AI algorithm.</p>
+          </div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-md">
+          <button routerLink="/register/plant" type="button" class="btn btn-primary power-button navigation-back">
+            <i class="fa fa-chevron-left"></i> Back
+          </button>
+        </div>
+        <div class="col-md">
+          <button (click)="activatePlant()" type="button" class="btn btn-primary power-button navigation-next">
+            Take me to the market <i class="fa fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

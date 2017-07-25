@@ -1,0 +1,36 @@
+@import "../../../styles/shared/variables";
+
+.preview-container {
+  background-color: $power-white;
+
+  padding: 1.8em;
+
+  width: 930px;
+
+  h1 {
+    font-weight: bold;
+    font-size: 50px;
+  }
+
+  .step-number {
+    padding-top: 1em;
+    float: right;
+
+    font-size: 20px;
+  }
+}
+
+.note {
+  background-color: $power-background-grey;
+
+  margin: 3em 0;
+
+  padding: 1em 0.5em;
+
+  p {
+    font-size: 20px;
+
+    padding: 0em;
+    margin: 0em;
+  }
+}
