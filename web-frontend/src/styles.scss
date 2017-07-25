@@ -19,26 +19,26 @@
 
   padding: 0.7em 1em 0.7em 1em;
 
-  border: none;
+  // Required in order not to push button when added on hover
+  border: '1px solid transparent';
+
   border-radius: 0;
 }
 .btn-primary.power-button:hover {
   background-color: $power-white;
   color: $power-blue;
+
   border-color: $power-blue;
-  border-style: solid;
-  border-width: 1px;
 }
 
 .btn-primary.power-button.active {
   background-color : $power-grey;
+  border-color: transparent;
 }
 .btn-primary.power-button.active:hover {
   background-color : $power-grey;
   color: $power-white;
-
-  border: none;
-  border-radius: 0;
+  border-color: transparent;
 }
 
 

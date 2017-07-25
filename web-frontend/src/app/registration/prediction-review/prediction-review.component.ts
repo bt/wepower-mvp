@@ -29,7 +29,8 @@ export class PredictionReviewComponent implements OnInit {
   public lineChartLabels:Array<any> = []
 
   public lineChartOptions:any = {
-    responsive: true,
+    responsive: false,
+
     legend: { display: false },
     tooltips: {
       enabled: false,
@@ -68,7 +69,7 @@ export class PredictionReviewComponent implements OnInit {
         if (tooltipModel.yAlign) {
           if (tooltipModel.yAlign == 'top') {
             // If div is aligned at top - we add some pixels, to push it down to back to canvas
-            top = tooltipModel.y + 25
+            top = tooltipModel.y + 5
             pointDown = false
           } else {
             // Position over value
