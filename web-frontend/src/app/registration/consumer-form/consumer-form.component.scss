@@ -9,10 +9,17 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .container {
-  padding: 30px 35px 35px 28px;
   background-color: $power-white;
+
+  padding: 1.8em 1.5em;
+
   width: 930px;
   height: 830px;
+
+  h1 {
+    font-weight: bold;
+    font-size: 50px;
+  }
 }
 
 .main-form-block {
@@ -24,12 +31,6 @@ select.form-control:not([size]):not([multiple]) {
 .form-control {
   height: 57px;
   margin: 13px 0 25px 0;
-}
-
-h1 {
-  font-family: 'Platform Web', Sans-serif;
-  font-weight: bold;
-  font-size: 56px;
 }
 
 h6 {

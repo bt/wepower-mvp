@@ -1,9 +1,10 @@
-<div class="row">
-  <div class="col-md">
-     <button type="button" class="btn btn-primary" (click)="previousPeriod()">Previous period</button>
+<div class="row pagination">
+  <div class="col-md ">
+    <span class="review-period">Jul 31 – Aug 6, 2017</span>
   </div>
-  <div class="col-md">
-    <button type="button" class="btn btn-primary" (click)="nextPeriod()">Next period</button>
+  <div class="col-md selector">
+    <button type="button" class="btn button-back" (click)="previousPeriod()"></button>
+    <button type="button" class="btn button-forward" (click)="nextPeriod()"></button>
   </div>
 </div>
 <div class="row">
