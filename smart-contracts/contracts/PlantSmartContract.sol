@@ -1,59 +1,72 @@
 pragma solidity ^0.4.11;
 
-import "./libs/StandardToken.sol";
 import "./libs/Ownable.sol";
 
+contract PlantSmartContract is Ownable {
 
-contract PlantSmartContract is StandardToken, Ownable {
+  event Transfer(address indexed from, address indexed to, uint256 value);
 
-  string public name;
-  string public symbol = "KWH";
-  uint256 public amountInKWH;
+  struct Wepwr {
+    string name;
+    uint date;
+    uint256 amount;
+    address plant;
+  }
 
-  uint validTill;
+  uint constant SECONDS_IN_DAY = 86400;
+
   uint256 public price;
   address public plant;
+  uint8 public source;
 
-  function PlantSmartContract(
-      address _plant,
-      uint256 _initAmount,
-      uint256 _price,
-      string _name,
-      uint256 _amountInKWH,
-      uint _validTill) {
+  mapping (address => Wepwr[]) tokens;
 
+  function PlantSmartContract(address _plant, uint256 _price, uint8 _source) {
     plant = _plant;
     price = _price;
-    name = _name;
-    amountInKWH = _amountInKWH;
-    validTill = _validTill;
+    source = _source;
+  }
 
-    totalSupply = _initAmount;
-    balances[plant] = _initAmount;
-    Transfer(this, plant, _initAmount);
+  function setPrice(uint256 _price) {
+    price = _price;
+  }
+
+  //TODO: if there are token for a day then we will get duplicates. Should merge those two.
+  function mint(string name, uint256 _amount, uint _date) {
+    tokens[plant].push(Wepwr(name, _date / SECONDS_IN_DAY, _amount, plant));
+    Transfer(this, plant, _amount);
+  }
+
+  function balanceOf(address _address, uint _date) returns(uint256) {
+    uint256 balance = 0;
+
+    for (uint i = 0; i < tokens[_address].length; i++) {
+      Wepwr token = tokens[_address][i];
+      if (token.date == _date / SECONDS_IN_DAY && token.date >= now) {
+        balance = balance + token.amount;
+      }
+    }
+
+    return balance;
+  }
+
+  function transfer(address _from, address _to, uint256 _amount, uint _date) onlyOwner {
+
+    for (uint i = 0; i < tokens[_from].length; i++) {
+      Wepwr token = tokens[_from][i];
+      if (token.date == _date / SECONDS_IN_DAY && token.date >= now) {
+        if (token.amount < _amount) {
+          throw;
+        }
+
+        token.amount = token.amount - _amount;
+        tokens[_to].push(Wepwr(token.name, token.date, _amount, token.plant));
+
+        Transfer(_from, _to, _amount);
+      }
+    }
+
 
   }
 
-  function buy(address _from, address _to, uint256 _amount) onlyOwner {
-
-    if (now > validTill) {
-      throw;
-    }
-
-    if (balances[_from] < _amount) {
-      throw;
-    }
-
-    balances[_to] = balances[_to].add(_amount);
-    balances[_from] = balances[_from].sub(_amount);
-    Transfer(_from, _to, _amount);
-  }
-
-  function getAvailableAmount() returns(uint256) {
-    if (now > validTill) {
-      return 0;
-    }
-
-    return balanceOf(plant);
-  }
 }
