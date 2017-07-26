@@ -17,16 +17,23 @@ import { ProductionDetails } from "../production-details";
 })
 export class PlantProductionReviewComponent implements OnInit {
 
-  productionReview : Array<ProductionReviewRow>;
-  tableReviewPeriod: Period;
-
+  productionReview : Array<ProductionReviewRow>
+  tableReviewPeriod: Period
+  walletId : string
 
   constructor(private ethereum : EthereumService,
               private exchangeMarket : ExchangeRateService,
               private productionReviewService : ProductionReviewService) { }
 
   ngOnInit() {
-    this.initializeTable()
+    this.ethereum.activeWallet()
+      .subscribe(
+        wallet => {
+          this.walletId = wallet
+          this.initializeTable()
+        },
+        error => console.error(error)
+      )
   }
 
   private initializeTable() {
@@ -53,7 +60,7 @@ export class PlantProductionReviewComponent implements OnInit {
   private loadTable(period : Period) {
     Promise.all(
       [
-        this.productionReviewService.getProductionDetails(this.ethereum.activeWallet(), period).toPromise(),
+        this.productionReviewService.getProductionDetails(this.walletId, period).toPromise(),
         this.exchangeMarket.exchangeRate().toPromise()
       ]
     ).then(values => {

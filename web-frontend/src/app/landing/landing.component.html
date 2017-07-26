@@ -16,14 +16,17 @@
       <div class="row">
         <div class="col">
           <button [routerLink]="connectedToWallet ? '/register/consumer' : null"
+                  [disabled]="!connectedToWallet"
                   routerLinkActive="active"
                   type="button"
                   class="btn btn-primary power-button">
             Register a household</button>
           <button [routerLink]="connectedToWallet ? '/register/plant' : null"
+                  [disabled]="!connectedToWallet"
                   routerLinkActive="active"
                   type="button"
-                  class="btn btn-primary power-button">
+                  class="btn btn-primary power-button"
+          >
             Register a plant</button>
           <div *ngIf="connectedToWallet == false" class="warning">
             <p>

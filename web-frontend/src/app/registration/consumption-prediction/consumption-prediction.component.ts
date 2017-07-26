@@ -16,9 +16,10 @@ import { ConsumerManagementService } from "../consumer-management.service";
 })
 export class ConsumptionPredictionComponent implements OnInit {
 
-  public consumptionData : Array<PredictionData>;
-  public reviewPeriod : Period;
+  public consumptionData : Array<PredictionData>
+  public reviewPeriod : Period
   public predictionRange : Period
+  public walletId : string
 
   constructor(private consumerService : ConsumerManagementService,
               private predictionService : ConsumptionPredictionService,
@@ -26,6 +27,16 @@ export class ConsumptionPredictionComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
+    this.ethereumService.activeWallet()
+      .subscribe(
+        wallet => {
+          this.walletId = wallet
+          this.initComponent()
+        },
+        error => console.error(error))
+  }
+
+  private initComponent() {
     let periodStart = moment().startOf('week').add(1, 'days')
 
     this.reviewPeriod = new Period(
@@ -38,7 +49,7 @@ export class ConsumptionPredictionComponent implements OnInit {
   }
 
   private loadPrediction(reviewPeriod : Period) {
-    this.predictionService.getPrediction(this.ethereumService.activeWallet(), reviewPeriod)
+    this.predictionService.getPrediction(this.walletId, reviewPeriod)
       .subscribe(
         predictions => this.consumptionData = predictions,
         error => console.error(error)
@@ -46,7 +57,7 @@ export class ConsumptionPredictionComponent implements OnInit {
   }
 
   private loadAvailablePeriod() {
-    this.predictionService.getPredictedPeriod(this.ethereumService.activeWallet())
+    this.predictionService.getPredictedPeriod(this.walletId)
       .subscribe(
         period => this.predictionRange = period,
         error => console.error(error)
@@ -58,7 +69,7 @@ export class ConsumptionPredictionComponent implements OnInit {
   }
 
   activateConsumer() {
-    this.consumerService.activateConsumer(this.ethereumService.activeWallet())
+    this.consumerService.activateConsumer(this.walletId)
       .subscribe(
         success => this.router.navigateByUrl('/dashboard/consumer'),
         error => console.error(error)

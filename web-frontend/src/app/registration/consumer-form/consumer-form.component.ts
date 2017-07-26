@@ -38,7 +38,7 @@ export class ConsumerFormComponent implements OnInit {
               private router : Router) { }
 
   ngOnInit() {
-    this.formData = this.defaultForm();
+    this.updateDefaultForm();
 
     this.areasService.loadAvailableAreas()
       .subscribe(
@@ -76,11 +76,25 @@ export class ConsumerFormComponent implements OnInit {
    *
    * @returns {ConsumerForm}
    */
-  private defaultForm() {
-    let form = new ConsumerForm();
-    form.walletId = this.ethereumService.activeWallet();
-    form.houseSizeCode = "M";
-    return form;
+  private updateDefaultForm() {
+    this.formData = new ConsumerForm()
+    this.formData.houseSizeCode = "M";
+
+    // Like really?
+    setTimeout(() => {}, 500)
+
+    this.ethereumService.activeWallet()
+      .subscribe(
+        wallet => {
+          let form = new ConsumerForm()
+
+          form.houseSizeCode = this.formData.houseSizeCode
+          form.walletId = wallet
+
+          this.formData = form
+        },
+        error => console.error(error)
+      );
   }
 
   private getUpdatedForm() : ConsumerForm {

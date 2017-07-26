@@ -5,6 +5,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angul
 import { Observable } from "rxjs/Observable";
 import { RegistrationStateService } from "../../shared/registration-state.service";
 import { EthereumService } from "../../shared/ethereum.service";
+import "rxjs/add/operator/mergeMap";
 
 @Injectable()
 export class ConsumerDashboardGuardService implements CanActivate {
@@ -14,9 +15,19 @@ export class ConsumerDashboardGuardService implements CanActivate {
               private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    let walletId = this.ethereumService.activeWallet();
-    return this.registrationState.isActive(walletId, 'CONSUMER')
+    return this.ethereumService.activeWallet()
+      .mergeMap(wallet => {
+        if (!wallet) {
+          return Observable.throw("No wallet is present")
+        }
+
+        return this.registrationState.isActive(wallet, 'CONSUMER')
+      })
       .map(allowed => this.checkStatus(allowed))
+      .catch(error => {
+        console.error(error)
+        return Observable.of(this.checkStatus(false))
+      })
   }
 
   checkStatus(allowed : boolean) : boolean {

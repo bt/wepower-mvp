@@ -14,8 +14,9 @@ import { ElectricityMarketPriceService } from "../electricity-market-price.servi
 })
 export class PlantDashboardHeaderComponent implements OnInit {
 
-  producedTotal : number;
-  headerPeriod : Period;
+  producedTotal : number
+  headerPeriod : Period
+  walletId : string
 
   public lineChartData:Array<any> = [
     {data: [], label: 'Market price'},
@@ -41,7 +42,14 @@ export class PlantDashboardHeaderComponent implements OnInit {
               private electricityPriceService : ElectricityMarketPriceService) { }
 
   ngOnInit() {
-    this.loadData()
+    this.ethereum.activeWallet()
+      .subscribe(
+        wallet => {
+          this.walletId = wallet
+          this.loadData()
+        },
+        error => console.error(error)
+      )
   }
 
   private loadData() {
@@ -83,7 +91,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
   }
 
   private loadTotalPrediction(reviewPeriod : Period) {
-    this.predictionService.getPredictionTotal(this.ethereum.activeWallet(), reviewPeriod)
+    this.predictionService.getPredictionTotal(this.walletId, reviewPeriod)
       .subscribe(
         predictions => this.producedTotal = predictions,
         error => console.error(error)

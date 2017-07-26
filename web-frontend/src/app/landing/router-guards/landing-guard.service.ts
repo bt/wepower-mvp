@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import 'rxjs/add/observable/of'
+import 'rxjs/add/observable/fromPromise'
+import "rxjs/add/operator/mergeMap";
 
 import { RegistrationStateService } from "../../shared/registration-state.service";
 import { EthereumService } from "../../shared/ethereum.service";
@@ -18,14 +20,21 @@ export class LandingGuardService implements CanActivate {
               private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    if (!this.ethereumService.isActiveConnection()) {
-      return Observable.of(true)
-    }
+    return this.ethereumService.activeWallet()
+      .mergeMap(wallet => {
+        if (!wallet) {
+          return Observable.throw("Active wallet is not present")
+        }
 
-    let walletAddress = this.ethereumService.activeWallet();
+        return this.registrationState.getActiveWalletDetails(wallet)
+      })
+      .map(details => this.manageLandingRedirects(details))
+      .catch(error => {
+        console.error(error)
 
-    return this.registrationState.getActiveWalletDetails(walletAddress)
-       .map(details => this.manageLandingRedirects(details))
+        // If something failed along the way, we redirect to landing
+        return Observable.of(true)
+      })
   }
 
   manageLandingRedirects(details : WalletDetails) : boolean {

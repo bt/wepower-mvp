@@ -21,12 +21,11 @@ export class AppComponent {
   balance: number;
   etherium: EthereumService;
 
-  constructor(etherium : EthereumService) {
+  constructor(etherium: EthereumService) {
     this.etherium = etherium;
-    this.checkAndInstantiateWeb3();
   }
 
-  checkAndInstantiateWeb3() {
-    this.etherium.loadConnection();
+  ngOnInit() {
+
   }
 }

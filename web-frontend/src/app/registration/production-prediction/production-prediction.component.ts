@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
+import "rxjs/add/operator/mergeMap";
 
 import * as moment from 'moment';
 
@@ -18,6 +19,7 @@ export class ProductionPredictionComponent implements OnInit {
 
   public productionData : Array<PredictionData>;
   public reviewPeriod : Period;
+  public walletId : string
 
   constructor(private plantService: PlantManagementService,
               private predictionService : ProductionPredictionService,
@@ -32,11 +34,17 @@ export class ProductionPredictionComponent implements OnInit {
       periodStart.clone().add(6, 'day').toDate()
     );
 
-    this.loadPrediction(this.reviewPeriod);
+    this.ethereumService.activeWallet()
+      .subscribe(
+        wallet => {
+          this.walletId = wallet
+          this.loadPrediction(this.reviewPeriod);
+        },
+        error => console.error(error))
   }
 
   private loadPrediction(reviewPeriod : Period) {
-    this.predictionService.getPredictionData(this.ethereumService.activeWallet(), reviewPeriod)
+    this.predictionService.getPredictionData(this.walletId, reviewPeriod)
       .subscribe(
         predictions => this.productionData = predictions,
         error => console.error(error)
@@ -48,10 +56,11 @@ export class ProductionPredictionComponent implements OnInit {
   }
 
   activatePlant() {
-    this.plantService.activatePlant(this.ethereumService.activeWallet())
+    this.ethereumService.activeWallet()
+      .mergeMap(this.plantService.activatePlant)
       .subscribe(
         success => this.router.navigateByUrl('/dashboard/plant'),
         error => console.error(error)
-      );
+      )
   }
 }

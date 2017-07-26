@@ -41,7 +41,7 @@ export class PlantFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.formData = this.defaultForm();
+    this.updateDefaultForm();
     this.areasService.loadAvailableAreas()
       .subscribe(
         availableAreas => {
@@ -70,15 +70,17 @@ export class PlantFormComponent implements OnInit {
    *
    * @returns {PlantForm}
    */
-  defaultForm(): PlantForm {
-    let form = new PlantForm()
-    form.walletId = this.ethereumService.activeWallet();
-    form.type = PlantType.SOLAR;
+  updateDefaultForm() {
+    this.formData = new PlantForm()
+    this.formData.type = PlantType.SOLAR;
 
-    form.activePeriod = new Period();
-    form.location = new GeoLocation();
+    this.formData.activePeriod = new Period();
+    this.formData.location = new GeoLocation()
 
-    return form;
+    this.ethereumService.activeWallet()
+      .subscribe(
+        wallet => this.formData.walletId = wallet,
+        error => console.error(error))
   }
 
   private getUpdatedForm() : PlantForm {

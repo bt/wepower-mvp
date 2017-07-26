@@ -17,6 +17,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
   consumedTotal : number;
   headerPeriod : Period;
   marketPricesReview : Array<MarketPriceRow>;
+  walletId : string
 
   constructor(private predictionService : ConsumptionPredictionService,
               private ethereum : EthereumService,
@@ -28,12 +29,20 @@ export class ClientDashboardHeaderComponent implements OnInit {
       periodStart.toDate(),
       periodStart.clone().add(1, 'week').toDate()
     );
-    this.loadTotalPrediction(this.headerPeriod);
-    this.loadMarketData()
+
+    this.ethereum.activeWallet()
+      .subscribe(
+        wallet => {
+          this.walletId = wallet
+          this.loadTotalPrediction(this.headerPeriod);
+          this.loadMarketData()
+        },
+        error => console.error(error)
+      )
   }
 
   private loadTotalPrediction(reviewPeriod : Period) {
-    this.predictionService.getPredictionTotal(this.ethereum.activeWallet(), reviewPeriod)
+    this.predictionService.getPredictionTotal(this.walletId, reviewPeriod)
       .subscribe(
         predictions => this.consumedTotal = predictions,
         error => console.error(error)

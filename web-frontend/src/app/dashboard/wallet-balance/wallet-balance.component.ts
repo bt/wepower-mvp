@@ -19,7 +19,7 @@ export class WalletBalanceComponent implements OnInit {
   ngOnInit() {
     Promise.all(
       [
-        this.ethereum.walletBalance(),
+        this.ethereum.walletBalance().toPromise(),
         this.exchangeMarket.exchangeRate().toPromise()
       ]
     ).then(values => {

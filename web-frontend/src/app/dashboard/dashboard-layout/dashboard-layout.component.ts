@@ -23,8 +23,17 @@ export class DashboardLayoutComponent implements OnInit {
               private registrationStateService : RegistrationStateService) { }
 
   ngOnInit() {
-    this.walletAddress = this.ethereumService.activeWallet();
+    this.ethereumService.activeWallet()
+      .subscribe(
+        wallet => {
+          this.walletAddress = wallet
+          this.initHeader();
+        },
+        error => console.error(error)
+      )
+  }
 
+  private initHeader() {
     this.registrationStateService.getActiveWalletDetails(this.walletAddress).subscribe(
       details => this.extractHeaderType(details),
       error => console.error(error)

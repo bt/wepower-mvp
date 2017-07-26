@@ -31,11 +31,11 @@
 
   border-color: $power-blue;
 }
-.btn-primary.power-button.active {
+.btn-primary.power-button:disabled {
   background-color : $power-grey;
   border-color: transparent;
 }
-.btn-primary.power-button.active:hover {
+.btn-primary.power-button:disabled:hover {
   background-color : $power-grey;
   color: $power-white;
   border-color: transparent;

@@ -17,8 +17,9 @@ import { DataFiller } from "../../shared/data-filler.service";
 })
 export class ClientConsumptionReviewComponent implements OnInit {
 
-  consumptionReview : Array<ConsumptionReviewRow>;
-  tableReviewPeriod: Period;
+  consumptionReview : Array<ConsumptionReviewRow>
+  tableReviewPeriod: Period
+  walletId : string
 
   constructor(private ethereum : EthereumService,
               private exchangeMarket : ExchangeRateService,
@@ -26,7 +27,14 @@ export class ClientConsumptionReviewComponent implements OnInit {
 
 
   ngOnInit() {
-    this.initializeTable();
+    this.ethereum.activeWallet()
+      .subscribe(
+        wallet => {
+          this.walletId = wallet
+          this.initializeTable();
+        },
+        error => console.error(error)
+      )
   }
 
   previousPeriod() {
@@ -57,7 +65,7 @@ export class ClientConsumptionReviewComponent implements OnInit {
   private loadTable(period : Period) {
     Promise.all(
       [
-        this.consumptionReviewService.getConsumptionDetails(this.ethereum.activeWallet(), period).toPromise(),
+        this.consumptionReviewService.getConsumptionDetails(this.walletId, period).toPromise(),
         this.exchangeMarket.exchangeRate().toPromise()
       ]
     ).then(values => {

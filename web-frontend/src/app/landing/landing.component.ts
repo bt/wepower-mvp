@@ -10,13 +10,24 @@ export class LandingComponent implements OnInit {
 
   private etherium: EthereumService;
 
-  connectedToWallet : boolean;
+  connectedToWallet = false;
 
   constructor(etherium : EthereumService) {
     this.etherium = etherium;
   }
 
   ngOnInit() {
-    this.connectedToWallet = this.etherium.isActiveConnection();
+    // Literaly I have no idea why this helps
+    setTimeout(() => {}, 200)
+
+    this.etherium.activeWallet()
+      .subscribe(
+        wallet => {
+          if (wallet) {
+            this.connectedToWallet = true
+          }
+        },
+        error => console.error(error)
+      );
   }
 }
