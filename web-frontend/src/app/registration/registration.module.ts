@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule }   from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { DatePipe } from '@angular/common';
@@ -8,11 +7,11 @@ import { DatePipe } from '@angular/common';
 import { PlantFormComponent } from './plant-form/plant-form.component';
 import { ConsumerFormComponent } from './consumer-form/consumer-form.component';
 import { AreaOptionsService } from "./area-options.service";
-import {PlantManagementService } from "./plant-management.service";
-import {HouseSizeOptionsService } from "./house-size-options.service";
-import {ConsumerManagementService } from "./consumer-management.service";
+import { PlantManagementService } from "./plant-management.service";
+import { HouseSizeOptionsService } from "./house-size-options.service";
+import { ConsumerManagementService } from "./consumer-management.service";
 import { PlantTypePipe } from './plant-type.pipe';
-import {SharedModule} from "../shared/shared.module";
+import { SharedModule } from "../shared/shared.module";
 import { ConsumptionPredictionComponent } from './consumption-prediction/consumption-prediction.component';
 import { ProductionPredictionComponent } from './production-prediction/production-prediction.component';
 import { PredictionReviewComponent } from './prediction-review/prediction-review.component';
@@ -20,6 +19,8 @@ import { ProductionPredictionService } from "./prediction/production-prediction.
 import { ConsumptionPredictionService } from "./prediction/consumption-prediction.service";
 import { RegistrationLayoutComponent } from './registration-layout/registration-layout.component';
 import { ChartsModule } from "ng2-charts";
+import { MdAutocompleteModule, MdInputModule } from '@angular/material';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 
 
@@ -27,11 +28,14 @@ import { ChartsModule } from "ng2-charts";
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     JsonpModule,
     RouterModule,
     SharedModule,
-    ChartsModule
+    ChartsModule,
+    MdAutocompleteModule,
+    MdInputModule
   ],
   exports: [
     PlantFormComponent,
@@ -57,4 +61,5 @@ import { ChartsModule } from "ng2-charts";
     DatePipe
   ]
 })
-export class RegistrationModule { }
+export class RegistrationModule {
+}

@@ -26,13 +26,20 @@
 
   <div class="row form-group">
     <div class="col-md">
-      <span>Plant area</span>
+      <h6>Plant area</h6>
     </div>
     <div class="col-md">
-      <select class="form-control" [(ngModel)]="formData.areaCode">
-        <option name="geo-area" *ngFor="let area of supportedAreas" [value]="area.code"
-        >{{area.name}}</option>
-      </select>
+      <input mdInput
+             [formControl]="areaControl"
+             [mdAutocomplete]="auto"
+             [(ngModel)]="formData.areaName"
+             class="form-control">
+
+      <md-autocomplete #auto="mdAutocomplete">
+        <md-option *ngFor="let area of filteredAreas | async" [value]="area">
+          {{ area }}
+        </md-option>
+      </md-autocomplete>
     </div>
   </div>
 

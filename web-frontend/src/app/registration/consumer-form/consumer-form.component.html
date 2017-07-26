@@ -10,16 +10,27 @@
     </div>
     <div class="main-form-block">
       <h6>Ethereum Wallet ID</h6>
-      <input class="form-control" type="text" [(ngModel)]="formData.walletId" disabled>
-      <h6>Household area</h6>
-      <select class="form-control" [(ngModel)]="formData.areaCode">
-        <option name="geo-area" *ngFor="let area of supportedAreas" [value]="area.code">{{area.name}}
-        </option>
-      </select>
+      <input class="form-control" [(ngModel)]="formData.walletId" disabled>
+
+      <div>
+        <h6>Household area</h6>
+        <input mdInput
+               [formControl]="areaControl"
+               [mdAutocomplete]="auto"
+               [(ngModel)]="formData.areaName"
+               class="form-control">
+
+        <md-autocomplete #auto="mdAutocomplete">
+          <md-option *ngFor="let area of filteredAreas | async" [value]="area">
+            {{ area }}
+          </md-option>
+        </md-autocomplete>
+      </div>
+
       <h6>Meter ID</h6>
-      <input class="form-control" type="text" [(ngModel)]="formData.meterId">
+      <input class="form-control" [(ngModel)]="formData.meterId">
       <h6>Household electricity consumption</h6>
-      <input class="form-control" type="text" [(ngModel)]="formData.consumption">
+      <input class="form-control" [(ngModel)]="formData.consumption">
     </div>
     <div class="household-size-block">
       <h6>Household size</h6>

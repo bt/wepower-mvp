@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
+import { FormControl } from '@angular/forms';
+
 
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/startWith';
 
 import { ConsumerForm } from "./consumer-form";
 import { GeoArea } from "../../shared/geo-area";
@@ -12,6 +15,7 @@ import { HouseSizeOptionsService } from "../house-size-options.service";
 import { HouseSize } from "../../shared/house-size";
 import { ConsumerManagementService } from "../consumer-management.service";
 import { EthereumService} from "../../shared/ethereum.service";
+import { Observable } from "rxjs/Observable";
 
 @Component({
   selector: 'app-consumer-form',
@@ -23,6 +27,9 @@ export class ConsumerFormComponent implements OnInit {
   formData : ConsumerForm;
   supportedAreas : Array<GeoArea>;
   supportedHouseSizes : Array<HouseSize>;
+  areaControl = new FormControl();
+
+  filteredAreas: Observable<string[]>;
 
   constructor(private areasService : AreaOptionsService,
               private houseSizeService : HouseSizeOptionsService,
@@ -35,8 +42,14 @@ export class ConsumerFormComponent implements OnInit {
 
     this.areasService.loadAvailableAreas()
       .subscribe(
-        availableAreas => this.supportedAreas = availableAreas,
+        availableAreas => {
+          this.supportedAreas = availableAreas
+          this.filteredAreas = this.areaControl.valueChanges
+            .startWith(null)
+            .map(val => val ? this.filter(val) : this.supportedAreas.map(area => area.name).slice());
+        },
         error =>  console.error(error)
+
       );
 
     this.houseSizeService.loadAvailableSizes()
@@ -51,7 +64,7 @@ export class ConsumerFormComponent implements OnInit {
    *
    */
   createConsumer(): void {
-    this.consumerService.createConsumer(this.formData)
+    this.consumerService.createConsumer(this.getUpdatedForm())
       .subscribe(
         customerData => this.router.navigateByUrl('/register/consumer/review'),
         error => console.error(error)
@@ -67,7 +80,21 @@ export class ConsumerFormComponent implements OnInit {
     let form = new ConsumerForm();
     form.walletId = this.ethereumService.activeWallet();
     form.houseSizeCode = "M";
-    form.areaCode = "ITA";
     return form;
+  }
+
+  private getUpdatedForm() : ConsumerForm {
+    let selectedArea = this.supportedAreas
+      .find(area => area.name == this.formData.areaName)
+    this.formData.areaCode = selectedArea.code
+
+    return this.formData
+  }
+
+  filter(val: string): string[] {
+    return this.supportedAreas
+      .filter(area => new RegExp(`^${val}`, 'gi')
+      .test(area.name))
+      .map(area => area.name);
   }
 }

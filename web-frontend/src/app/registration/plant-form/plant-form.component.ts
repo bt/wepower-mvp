@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
+import { FormControl } from '@angular/forms';
+
+import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/startWith';
 
 import { PlantForm, PlantType } from "./plant-form";
 import { GeoArea } from "../../shared/geo-area";
@@ -25,6 +29,11 @@ export class PlantFormComponent implements OnInit {
   formData : PlantForm;
   supportedAreas : Array<GeoArea>;
 
+  areaControl = new FormControl();
+
+  filteredAreas: Observable<string[]>;
+
+
   constructor(private plantService: PlantManagementService,
               private areasService: AreaOptionsService,
               private ethereumService: EthereumService,
@@ -35,7 +44,12 @@ export class PlantFormComponent implements OnInit {
     this.formData = this.defaultForm();
     this.areasService.loadAvailableAreas()
       .subscribe(
-        availableAreas => this.supportedAreas = availableAreas,
+        availableAreas => {
+          this.supportedAreas = availableAreas
+          this.filteredAreas = this.areaControl.valueChanges
+            .startWith(null)
+            .map(val => val ? this.filter(val) : this.supportedAreas.map(area => area.name).slice())
+        },
         error =>  console.error(error)
       );
   }
@@ -60,11 +74,25 @@ export class PlantFormComponent implements OnInit {
     let form = new PlantForm()
     form.walletId = this.ethereumService.activeWallet();
     form.type = PlantType.SOLAR;
-    form.areaCode = "DEU";
 
     form.activePeriod = new Period();
     form.location = new GeoLocation();
 
     return form;
+  }
+
+  private getUpdatedForm() : PlantForm {
+    let selectedArea = this.supportedAreas
+      .find(area => area.name == this.formData.areaName)
+    this.formData.areaCode = selectedArea.code
+
+    return this.formData
+  }
+
+  filter(val: string): string[] {
+    return this.supportedAreas
+      .filter(area => new RegExp(`^${val}`, 'gi')
+        .test(area.name))
+      .map(area => area.name);
   }
 }

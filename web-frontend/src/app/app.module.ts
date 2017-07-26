@@ -9,6 +9,8 @@ import { RegistrationModule } from "./registration/registration.module";
 import { SharedModule } from "./shared/shared.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -22,6 +24,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awes
     AppRoutingModule,
     RouterModule,
     SharedModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

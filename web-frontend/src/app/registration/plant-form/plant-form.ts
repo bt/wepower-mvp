@@ -11,6 +11,7 @@ export class PlantForm {
   public name : string;
   public walletId : string;
   public areaCode : string;
+  public areaName : string;
   public capacity : number;
   public type : PlantType;
   public location : GeoLocation;
