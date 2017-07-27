@@ -20,7 +20,7 @@ import { ConsumptionPredictionService } from "./prediction/consumption-predictio
 import { RegistrationLayoutComponent } from './registration-layout/registration-layout.component';
 import { ChartsModule } from "ng2-charts";
 import { MdAutocompleteModule, MdInputModule } from '@angular/material';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule } from '@angular/forms';
 
 
 
@@ -28,7 +28,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     HttpModule,
     JsonpModule,
     RouterModule,

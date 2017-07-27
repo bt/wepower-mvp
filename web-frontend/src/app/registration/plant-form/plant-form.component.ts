@@ -29,9 +29,7 @@ export class PlantFormComponent implements OnInit {
   formData : PlantForm;
   supportedAreas : Array<GeoArea>;
 
-  areaControl = new FormControl();
-
-  filteredAreas: Observable<string[]>;
+  filteredAreas: string[];
 
 
   constructor(private plantService: PlantManagementService,
@@ -46,9 +44,7 @@ export class PlantFormComponent implements OnInit {
       .subscribe(
         availableAreas => {
           this.supportedAreas = availableAreas
-          this.filteredAreas = this.areaControl.valueChanges
-            .startWith(null)
-            .map(val => val ? this.filter(val) : this.supportedAreas.map(area => area.name).slice())
+          this.filteredAreas = this.supportedAreas.map(area => area.name).slice()
         },
         error =>  console.error(error)
       );
@@ -89,6 +85,12 @@ export class PlantFormComponent implements OnInit {
     this.formData.areaCode = selectedArea.code
 
     return this.formData
+  }
+
+
+
+  updateFilteredAreas(val: string) {
+    this.filteredAreas = this.filter(val)
   }
 
   filter(val: string): string[] {

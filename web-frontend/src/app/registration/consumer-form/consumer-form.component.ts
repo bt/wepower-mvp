@@ -15,7 +15,6 @@ import { HouseSizeOptionsService } from "../house-size-options.service";
 import { HouseSize } from "../../shared/house-size";
 import { ConsumerManagementService } from "../consumer-management.service";
 import { EthereumService} from "../../shared/ethereum.service";
-import { Observable } from "rxjs/Observable";
 
 @Component({
   selector: 'app-consumer-form',
@@ -27,9 +26,8 @@ export class ConsumerFormComponent implements OnInit {
   formData : ConsumerForm;
   supportedAreas : Array<GeoArea>;
   supportedHouseSizes : Array<HouseSize>;
-  areaControl = new FormControl();
 
-  filteredAreas: Observable<string[]>;
+  filteredAreas: string[];
 
   constructor(private areasService : AreaOptionsService,
               private houseSizeService : HouseSizeOptionsService,
@@ -44,9 +42,7 @@ export class ConsumerFormComponent implements OnInit {
       .subscribe(
         availableAreas => {
           this.supportedAreas = availableAreas
-          this.filteredAreas = this.areaControl.valueChanges
-            .startWith(null)
-            .map(val => val ? this.filter(val) : this.supportedAreas.map(area => area.name).slice());
+          this.filteredAreas = this.supportedAreas.map(area => area.name).slice()
         },
         error =>  console.error(error)
 
@@ -105,10 +101,15 @@ export class ConsumerFormComponent implements OnInit {
     return this.formData
   }
 
+
+  updateFilteredAreas(val: string) {
+    this.filteredAreas = this.filter(val)
+  }
+
   filter(val: string): string[] {
     return this.supportedAreas
       .filter(area => new RegExp(`^${val}`, 'gi')
-      .test(area.name))
+        .test(area.name))
       .map(area => area.name);
   }
 }

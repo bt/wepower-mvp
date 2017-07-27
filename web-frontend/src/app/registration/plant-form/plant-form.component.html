@@ -30,13 +30,13 @@
     </div>
     <div class="col-md">
       <input mdInput
-             [formControl]="areaControl"
+             (keyup)="updateFilteredAreas(formData.areaName)"
              [mdAutocomplete]="auto"
              [(ngModel)]="formData.areaName"
              class="form-control">
 
       <md-autocomplete #auto="mdAutocomplete">
-        <md-option *ngFor="let area of filteredAreas | async" [value]="area">
+        <md-option *ngFor="let area of filteredAreas" [value]="area">
           {{ area }}
         </md-option>
       </md-autocomplete>
