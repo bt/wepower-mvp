@@ -18,7 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import net.metasite.smartenergy.domain.ActivePeriod;
-import net.metasite.smartenergy.domain.Coordinates;
 import net.metasite.smartenergy.domain.Plant;
 import net.metasite.smartenergy.domain.ProductionLog;
 import net.metasite.smartenergy.domain.SupportedLocationArea;

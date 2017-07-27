@@ -1,127 +1,118 @@
-<div class="container" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<div class="container form">
+  <div class="row">
+    <div class="col-md-8">
+      <h1>Register energy plant</h1>
+    </div>
+    <div class="col-md-4">
+      <span class="step-number">Step 1 of 2</span>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-md">
-      <h1>I have a Plant</h1>
-    </div>
-  </div>
+      <div class="row form-group">
+        <div class="col-md">
+          <div class="row">
+            <div class="col-md">
+              <label>Etherium Wallet ID</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <input [(ngModel)]="formData.walletId" disabled class="field">
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="row form-group">
-    <div class="col-md">
-      <span>Etherium Wallet ID</span>
-    </div>
-    <div class="col-md">
-      <input type="text" [(ngModel)]="formData.walletId" class="form-control" disabled>
-    </div>
-  </div>
+      <div class="row form-group">
+        <div class="col-md">
+          <div class="row">
+            <div class="col-md">
+              <label>Plant type</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <span *ngFor="let type of plantTypeValues">
+                <input type="radio"
+                       [(ngModel)]="formData.type"
+                       [value]="type"
+                >
+                {{type | plantType}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="row form-group">
-    <div class="col-md">
-      <span>Plant name</span>
-    </div>
-    <div class="col-md">
-      <input type="text" [(ngModel)]="formData.name" class="form-control">
-    </div>
-  </div>
+      <div class="row">
+        <div class="col-md">
+          <div class="row">
+            <div class="col-md">
+              <label>Plant name</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <input class="field" [(ngModel)]="formData.name">
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="row form-group">
-    <div class="col-md">
-      <h6>Plant area</h6>
-    </div>
-    <div class="col-md">
-      <input mdInput
-             (keyup)="updateFilteredAreas(formData.areaName)"
-             [mdAutocomplete]="auto"
-             [(ngModel)]="formData.areaName"
-             class="form-control">
+      <div class="row">
+        <div class="col-md">
+          <div class="row">
+            <div class="col-md">
+              <label>Plant area</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <input mdInput
+                     (keyup)="updateFilteredAreas(formData.areaName)"
+                     [mdAutocomplete]="auto"
+                     [(ngModel)]="formData.areaName"
+                     class="field">
 
-      <md-autocomplete #auto="mdAutocomplete">
-        <md-option *ngFor="let area of filteredAreas" [value]="area">
-          {{ area }}
-        </md-option>
-      </md-autocomplete>
-    </div>
-  </div>
+              <md-autocomplete #auto="mdAutocomplete">
+                <md-option *ngFor="let area of filteredAreas" [value]="area">
+                  {{ area }}
+                </md-option>
+              </md-autocomplete>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="row form-group">
-    <div class="col-md">
-      <span>Plant capacity</span>
-    </div>
-    <div class="col-md">
-      <input type="text" [(ngModel)]="formData.capacity" class="form-control">
-    </div>
-  </div>
+      <div class="row">
+        <div class="col-md">
+          <div class="row">
+            <div class="col-md">
+              <label>Plant capacity, kW</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <input [(ngModel)]="formData.capacity" class="field">
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="row form-group">
-    <div class="col-md">
-      <span>Plant type</span>
-    </div>
-    <div class="col-md">
-      <span *ngFor="let type of plantTypeValues">
-        <input type="radio"
-               [(ngModel)]="formData.type"
-               [value]="type"
-        >
-        {{type | plantType}}
-      </span>
-    </div>
-  </div>
-
-
-  <div class="row form-group">
-    <div class="col-md">
-      <span>Coordinates</span>
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-md">
-      <span>Latitude</span>
-    </div>
-    <div class="col-md">
-      <input [(ngModel)]="formData.location.latitude" type="text" class="form-control">
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-md">
-      <span>Longtitude</span>
-    </div>
-    <div class="col-md">
-      <input [(ngModel)]="formData.location.longtitude" type="text" class="form-control">
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-md">
-      <span>I want to sell energy</span>
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-md">
-      <span>From</span>
-    </div>
-    <div class="col-md">
-      <input [(ngModel)]="formData.activePeriod.from" type="text" class="form-control">
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-md">
-      <span>Till</span>
-    </div>
-    <div class="col-md">
-      <input [(ngModel)]="formData.activePeriod.to" type="text" class="form-control">
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-md">
-      <button (click)="createPlant()" type="button" class="btn btn-primary">Submit</button>
-    </div>
-    <div class="col-md">
-      <button routerLink="/landing" type="button" class="btn btn-secondary">Cancel</button>
+      <div class="row form-group">
+        <div class="col-md">
+          <button routerLink="/landing" type="button" class="btn btn-primary power-button navigation-back">
+            <i class="fa fa-chevron-left"></i> <span>Back</span>
+          </button>
+        </div>
+        <div class="col-md">
+          <button (click)="createPlant()" type="button" class="btn btn-primary power-button navigation-next">
+            Next <i class="fa fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

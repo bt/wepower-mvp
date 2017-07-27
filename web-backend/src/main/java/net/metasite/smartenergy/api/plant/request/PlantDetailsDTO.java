@@ -15,9 +15,6 @@ public class PlantDetailsDTO {
     private BigDecimal capacity;
     private Type type;
 
-    private BigDecimal locationLatitude;
-    private BigDecimal locationLongtitude;
-
     private LocalDate produceFrom;
     private LocalDate produceTo;
 
@@ -42,14 +39,6 @@ public class PlantDetailsDTO {
 
     public void setType(Type type) {
         this.type = type;
-    }
-
-    public void setLocationLatitude(BigDecimal locationLatitude) {
-        this.locationLatitude = locationLatitude;
-    }
-
-    public void setLocationLongtitude(BigDecimal locationLongtitude) {
-        this.locationLongtitude = locationLongtitude;
     }
 
     public void setProduceFrom(LocalDate produceFrom) {
@@ -78,14 +67,6 @@ public class PlantDetailsDTO {
 
     public Type getType() {
         return type;
-    }
-
-    public BigDecimal getLocationLatitude() {
-        return locationLatitude;
-    }
-
-    public BigDecimal getLocationLongtitude() {
-        return locationLongtitude;
     }
 
     public LocalDate getProduceFrom() {

@@ -6,6 +6,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw'
 
+import * as moment from 'moment'
+
 import {PlantForm, PlantType} from "./plant-form/plant-form";
 import {environment} from "../../environments/environment";
 
@@ -23,10 +25,8 @@ export class PlantManagementService {
       'areaCode' : plantData.areaCode,
       'type' : PlantType[plantData.type],
       'capacity' : plantData.capacity,
-      'locationLatitude' : plantData.location.latitude,
-      'locationLongtitude' : plantData.location.longtitude,
-      'produceFrom' : plantData.activePeriod.from,
-      'produceTo' : plantData.activePeriod.to
+      'produceFrom' : moment().toDate(),
+      'produceTo' : moment().add(1, 'month').toDate()
     }
 
     return this.http.post(`${environment.dataUrls.plant.root}`, body)

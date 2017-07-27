@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.metasite.smartenergy.domain.ActivePeriod;
-import net.metasite.smartenergy.domain.Coordinates;
 import net.metasite.smartenergy.domain.Plant;
 import net.metasite.smartenergy.domain.ProductionLog;
 import net.metasite.smartenergy.domain.SupportedLocationArea;
@@ -46,8 +45,6 @@ public class PlantFactory {
             String name,
             Plant.Type type,
             BigDecimal capacity,
-            BigDecimal latitude,
-            BigDecimal longtitude,
             String areaCode,
             Range<LocalDate> activeAt) {
 
@@ -71,7 +68,6 @@ public class PlantFactory {
                 name,
                 type,
                 capacity,
-                Coordinates.at(latitude, longtitude),
                 locationArea,
                 period,
                 false

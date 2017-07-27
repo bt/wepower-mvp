@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { FormControl } from '@angular/forms';
 
-import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/startWith';
 
 import { PlantForm, PlantType } from "./plant-form";
 import { GeoArea } from "../../shared/geo-area";
 import { PlantManagementService } from "../plant-management.service";
 import { AreaOptionsService } from "../area-options.service";
-import { Period } from "../../shared/period";
-import { GeoLocation } from "../../shared/geo-location";
 import { EthereumService } from "../../shared/ethereum.service";
 
 @Component({
@@ -69,9 +65,6 @@ export class PlantFormComponent implements OnInit {
   updateDefaultForm() {
     this.formData = new PlantForm()
     this.formData.type = PlantType.SOLAR;
-
-    this.formData.activePeriod = new Period();
-    this.formData.location = new GeoLocation()
 
     this.ethereumService.activeWallet()
       .subscribe(

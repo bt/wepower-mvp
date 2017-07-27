@@ -77,8 +77,6 @@ public class PlantController {
                 request.getName(),
                 Plant.Type.valueOf(request.getType().name()),
                 request.getCapacity(),
-                request.getLocationLatitude(),
-                request.getLocationLongtitude(),
                 request.getAreaCode(),
                 Range.closed(request.getProduceFrom(), request.getProduceTo())
         );

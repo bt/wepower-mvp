@@ -59,9 +59,6 @@ public class Plant {
     private Type type;
 
     @Embedded
-    private Coordinates location;
-
-    @Embedded
     private ActivePeriod period;
 
     @Column
@@ -78,7 +75,6 @@ public class Plant {
             String name,
             Type type,
             BigDecimal capacity,
-            Coordinates location,
             SupportedLocationArea area,
             ActivePeriod period,
             boolean active) {
@@ -87,7 +83,6 @@ public class Plant {
         this.area = area;
         this.capacity = capacity;
         this.type = type;
-        this.location = location;
         this.period = period;
         this.active = active;
     }

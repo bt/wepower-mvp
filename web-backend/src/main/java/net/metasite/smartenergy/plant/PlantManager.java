@@ -34,8 +34,6 @@ public class PlantManager {
             String name,
             Plant.Type type,
             BigDecimal capacity,
-            BigDecimal latitude,
-            BigDecimal longtitude,
             String areaCode,
             Range<LocalDate> activeAt) {
 
@@ -51,8 +49,6 @@ public class PlantManager {
                 name,
                 type,
                 capacity,
-                latitude,
-                longtitude,
                 areaCode,
                 activeAt
         );

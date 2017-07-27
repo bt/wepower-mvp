@@ -18,6 +18,7 @@ import { PlantManagementService } from "../plant-management.service";
 export class ProductionPredictionComponent implements OnInit {
 
   public productionData : Array<PredictionData>;
+  public predictionRange : Period
   public reviewPeriod : Period;
   public walletId : string
 
@@ -39,6 +40,7 @@ export class ProductionPredictionComponent implements OnInit {
         wallet => {
           this.walletId = wallet
           this.loadPrediction(this.reviewPeriod);
+          this.loadAvailablePeriod()
         },
         error => console.error(error))
   }
@@ -47,6 +49,14 @@ export class ProductionPredictionComponent implements OnInit {
     this.predictionService.getPredictionData(this.walletId, reviewPeriod)
       .subscribe(
         predictions => this.productionData = predictions,
+        error => console.error(error)
+      );
+  }
+
+  private loadAvailablePeriod() {
+    this.predictionService.getPredictedPeriod(this.walletId)
+      .subscribe(
+        period => this.predictionRange = period,
         error => console.error(error)
       );
   }
