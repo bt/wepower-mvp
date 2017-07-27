@@ -7,7 +7,6 @@ contract PlantSmartContract is Ownable {
   event Transfer(address indexed from, address indexed to, uint256 value);
 
   struct Wepwr {
-    string name;
     uint date;
     uint256 amount;
     address plant;
@@ -32,8 +31,8 @@ contract PlantSmartContract is Ownable {
   }
 
   //TODO: if there are token for a day then we will get duplicates. Should merge those two.
-  function mint(string name, uint256 _amount, uint _date) {
-    tokens[plant].push(Wepwr(name, _date / SECONDS_IN_DAY, _amount, plant));
+  function mint(uint256 _amount, uint _date) {
+    tokens[plant].push(Wepwr(_date / SECONDS_IN_DAY, _amount, plant));
     Transfer(this, plant, _amount);
   }
 
@@ -60,7 +59,7 @@ contract PlantSmartContract is Ownable {
         }
 
         token.amount = token.amount - _amount;
-        tokens[_to].push(Wepwr(token.name, token.date, _amount, token.plant));
+        tokens[_to].push(Wepwr(token.date, _amount, token.plant));
 
         Transfer(_from, _to, _amount);
       }

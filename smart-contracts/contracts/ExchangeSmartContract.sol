@@ -10,20 +10,26 @@ contract ExchangeSmartContract is Ownable {
   /**
     source 0 - sun, 1 - water, 2 - wind
   */
-  function createPlantContract(address _plant, uint256 _price, uint8 _source) {
+  function createPlantContract(address _plant, uint256 _price, uint8 _source, uint256[] _amounts, uint[] _dates) {
     if (plantContracts[_plant] == 0) {
       plantContracts[_plant] = new PlantSmartContract(_plant, _price, _source);
       plants.push(_plant);
     }
+    addTokens(_plant, _amounts, _dates);
   }
 
   function getPlantContract(address _plant) constant returns(address) {
     return plantContracts[_plant];
   }
 
-  function addTokens(address _plant, string _name, uint256 _amount, uint _date) {
+  function addTokens(address _plant, uint256[] _amounts, uint[] _dates) {
+    if (_amounts.length != _dates.length) {
+      throw;
+    }
     PlantSmartContract plantContract = PlantSmartContract(plantContracts[_plant]);
-    plantContract.mint(_name, _amount, _date);
+    for (uint256 i = 0; i < _amounts.length; i++) {
+      plantContract.mint(_amounts[i], _dates[i]);
+    }
   }
 
   function getBestPrice(uint256 _amount, uint _date, uint8 _source) constant returns (address) {

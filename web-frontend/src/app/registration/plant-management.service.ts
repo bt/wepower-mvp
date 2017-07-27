@@ -10,11 +10,12 @@ import * as moment from 'moment'
 
 import {PlantForm, PlantType} from "./plant-form/plant-form";
 import {environment} from "../../environments/environment";
+import { EthereumService } from "../shared/ethereum.service";
 
 @Injectable()
 export class PlantManagementService {
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private ethereumService: EthereumService) {
   }
 
   createPlant(plantData: PlantForm): Observable<number> {
@@ -41,9 +42,13 @@ export class PlantManagementService {
   activatePlant(wallet: string): Observable<any> {
     let plantUrl = environment.dataUrls.plant;
 
+    this.ethereumService.registerPlant().catch(this.handleError());
+
     return this.http.post(`${plantUrl.root}/${wallet}/${plantUrl.activate}`, null)
       .map(() => null)
       .catch(this.handleError)
+
+
   }
 
   // TODO: Implement

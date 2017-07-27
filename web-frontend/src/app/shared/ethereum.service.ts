@@ -12,31 +12,42 @@ import "rxjs/add/operator/filter";
 
 var Web3 = require('web3');
 
+var exchange_artifact = require('../../../compiled_contracts/ExchangeSmartContract.json');
+
 @Injectable()
 export class EthereumService {
 
-  private walletLoading : Observable<string>
+  private walletLoading : Observable< string>
   private web3 : any;
+
+  private exchange: any;
 
   constructor() { }
 
-  loadConnection() {
+  loadConnection()  {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window['web3'] === 'undefined') {
-      console.error("No web3 detected! Is MetaMask is on?");
+      console.error("No web3 detected! Is MetaMask on?");
       return false;
     }
     // Use Mist/MetaMask's provider
     this.web3 = new Web3(window['web3'].currentProvider);
+
+    contract(exchange_artifact).deployed().then(function(instance) {
+        this.exchange = instance;
+    });
+
+    return true;
   }
 
-  activeWallet() : Observable<string> {
+  activeWallet(): Observable<string> {
     if (!this.isActiveConnection()) {
       this.loadConnection()
     }
 
-    let promise = new Promise((resolve, reject) => {
-      this.web3.eth.getAccounts((error, result) => {
+  let promise = new Promise((resolve, reject) => {
+      this.web3.eth.getAccounts((error, result) =>{
+
 
         if (!result) {
           resolve(null)
@@ -80,11 +91,31 @@ export class EthereumService {
       })
   }
 
-  isActiveConnection() : boolean {
+  registerPlant(price: number, source: number, amounts: number[], dates: number[]): Promise<string> {
+      return this.exchange.createPlantContract.sendTransaction(
+              this.activeWallet(),
+              this.EthToWei(price),
+              source,
+              amounts,
+              dates,
+              {from: this.web3.eth.coinbase});
+  }
+
+  setPrice(price: number): Promise<string> {
+    return this.exchange.setPrice.sendTransaction(price, {from: this.web3.eth.coinbase});
+  }
+
+  isActiveConnection(): boolean {
     return this.web3 != null
   }
 
-  weiToETH(weiAmount : number) : number {
+  weiToETH(weiAmount: number): number {
     return this.web3.fromWei(weiAmount, 'ether')
   }
+
+  EthToWei(ethAmount: number): number {
+      return this.web3.toWei(ethAmount)
+  }
+
+
 }
