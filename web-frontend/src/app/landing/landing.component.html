@@ -28,7 +28,7 @@
                   class="btn btn-primary power-button"
           >
             Register a plant</button>
-          <div *ngIf="connectedToWallet == false" class="warning">
+          <div *ngIf="!connectedToWallet" class="warning">
             <p>
               <i class="fa fa-info-circle"></i>
               To use application you have to be authenthicated in Ethereum account

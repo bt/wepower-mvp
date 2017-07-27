@@ -17,12 +17,9 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Literaly I have no idea why this helps
-    setTimeout(() => {}, 200)
-
     this.etherium.activeWallet()
-      .subscribe(
-        wallet => {
+      .toPromise()
+      .then(wallet => {
           if (wallet) {
             this.connectedToWallet = true
           }

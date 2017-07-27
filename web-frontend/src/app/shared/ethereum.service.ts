@@ -4,6 +4,7 @@ import { Observable } from "rxjs/Observable";
 import 'rxjs/add/observable/bindCallback';
 import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/timeout';
+import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/timeoutWith';
 import 'rxjs/add/operator/toPromise';
 import "rxjs/add/operator/mergeMap";
@@ -34,14 +35,19 @@ export class EthereumService {
       this.loadConnection()
     }
 
-    let accountObservable = Observable.bindCallback(this.web3.eth.getAccounts)
+    let promise = new Promise((resolve, reject) => {
+      this.web3.eth.getAccounts((error, result) => {
 
-    return accountObservable()
-      .map(result => {
-        // Returns [Error, Array<Account>]
-        return result[1][0]
+        if (!result) {
+          resolve(null)
+        } else {
+          resolve(result[0]);
+        }
       })
-      .timeout(500)
+    });
+
+    return Observable.fromPromise(promise)
+      .timeout(3000)
       .catch((error) => {
         console.log(error)
         return Observable.of(null)

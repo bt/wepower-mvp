@@ -31,7 +31,6 @@ export class LandingGuardService implements CanActivate {
       .map(details => this.manageLandingRedirects(details))
       .catch(error => {
         console.error(error)
-
         // If something failed along the way, we redirect to landing
         return Observable.of(true)
       })
