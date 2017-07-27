@@ -11,7 +11,7 @@
     <form #consumerForm="ngForm">
       <div class="main-form-block">
         <h6>Ethereum Wallet ID</h6>
-        <input class="form-control" [(ngModel)]="formData.walletId" disabled>
+        <input class="form-control" [(ngModel)]="formData.walletId" name="walletId" disabled>
 
         <div>
           <h6>Household area</h6>
@@ -19,7 +19,8 @@
                  [mdAutocomplete]="auto"
                  [(ngModel)]="formData.areaName"
                  (keyup)="updateFilteredAreas(formData.areaName)"
-                 class="form-control">
+                 class="form-control"
+                 name="areaName">
 
           <md-autocomplete #auto="mdAutocomplete">
             <md-option *ngFor="let area of filteredAreas" [value]="area">
