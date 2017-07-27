@@ -100,9 +100,9 @@ INSERT INTO public.location_area(id, code, description) VALUES(115, 'GR-Thessaly
 INSERT INTO public.location_area(id, code, description) VALUES(116, 'GR-Western Greece', 'Western Greece');
 INSERT INTO public.location_area(id, code, description) VALUES(117, 'GR-Western Macedonia', 'Western Macedonia');
 
-INSERT INTO public.house_size(id, code, description) VALUES(1, 'S', '10 - 50 m2');
-INSERT INTO public.house_size(id, code, description) VALUES(2, 'M', '50 - 100 m2');
-INSERT INTO public.house_size(id, code, description) VALUES(3, 'L', '100 - 150 m2');
+INSERT INTO public.house_size(id, code, description) VALUES(1, 'S', '10 - 50');
+INSERT INTO public.house_size(id, code, description) VALUES(2, 'M', '50 - 100');
+INSERT INTO public.house_size(id, code, description) VALUES(3, 'L', '100 - 150');
 
 
 INSERT INTO public.electricity_daily_price(id, date, region, source, unit_price) VALUES(-1, '2017-07-10'::DATE, 'LT', 'NORD_POOL', 36);
