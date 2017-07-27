@@ -47,7 +47,7 @@ export class EthereumService {
     });
 
     return Observable.fromPromise(promise)
-      .timeout(3000)
+      .timeout(1000)
       .catch((error) => {
         console.log(error)
         return Observable.of(null)

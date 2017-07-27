@@ -8,7 +8,6 @@ import 'rxjs/add/observable/throw'
 
 import {PlantForm, PlantType} from "./plant-form/plant-form";
 import {environment} from "../../environments/environment";
-import { Period } from "../shared/period";
 
 @Injectable()
 export class PlantManagementService {

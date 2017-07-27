@@ -21,6 +21,10 @@
   outline: none;
 }
 
+.pagination-button:hover {
+  cursor: pointer;
+}
+
 .button-back {
   margin-right: 0.5em;
 
@@ -30,7 +34,9 @@
   background-image: url('/assets/images/pagination_back_inactive.png');
   border: none;
 }
-
+.button-back:disabled:hover {
+  cursor: default;
+}
 .button-forward {
   margin-left: 0.5em;
 
@@ -38,4 +44,7 @@
 }
 .button-forward:disabled {
   background-image: url('/assets/images/pagination_forward_inactive.png');
+}
+.button-forward:disabled:hover {
+  cursor: default;
 }

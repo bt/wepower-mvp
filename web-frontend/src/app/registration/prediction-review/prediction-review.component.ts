@@ -34,7 +34,6 @@ export class PredictionReviewComponent implements OnInit {
 
   public lineChartOptions:any = {
     responsive: false,
-
     legend: { display: false },
     tooltips: {
       enabled: false,
@@ -97,9 +96,9 @@ export class PredictionReviewComponent implements OnInit {
             innerPointerElement.style.position = 'relative'
             innerPointerElement.style.bottom = '-13px'
 
-            innerPointerElement.style.borderLeft = '8px solid transparent'
-            innerPointerElement.style.borderRight = '8px solid transparent'
-            innerPointerElement.style.borderBottom = '8px solid #fff'
+            innerPointerElement.style.borderLeft = '9px solid transparent'
+            innerPointerElement.style.borderRight = '9px solid transparent'
+            innerPointerElement.style.borderBottom = '9px solid #fff'
 
             tooltipEl.appendChild(innerPointerElement);
 
@@ -140,7 +139,7 @@ export class PredictionReviewComponent implements OnInit {
           var bodyLines = tooltipModel.body.map(item => item.lines);
 
           let bodyElement = document.createElement('div');
-          bodyElement.innerText = bodyLines[0] + 'kWh'
+          bodyElement.innerText = bodyLines[0] + ' kWh'
           bodyElement.style.display = 'table' // Allows centering horizontaly without known width
           bodyElement.style.margin = 'auto' // centers horizontaly
           bodyContainerEl.appendChild(bodyElement);
@@ -164,9 +163,9 @@ export class PredictionReviewComponent implements OnInit {
             innerPointerElement.style.position = 'relative'
             innerPointerElement.style.top = '-13px'
 
-            innerPointerElement.style.borderLeft = '8px solid transparent'
-            innerPointerElement.style.borderRight = '8px solid transparent'
-            innerPointerElement.style.borderTop = '8px solid #fff'
+            innerPointerElement.style.borderLeft = '9px solid transparent'
+            innerPointerElement.style.borderRight = '9px solid transparent'
+            innerPointerElement.style.borderTop = '9px solid #fff'
 
             tooltipEl.appendChild(innerPointerElement);
           }
@@ -196,6 +195,7 @@ export class PredictionReviewComponent implements OnInit {
 
           zeroLineColor: '#e0e0e0',
           zeroLineWidth: 3,
+
         }
       }],
       xAxes: [{

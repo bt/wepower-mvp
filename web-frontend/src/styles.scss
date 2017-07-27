@@ -26,6 +26,8 @@
   border-radius: 0;
 }
 .btn-primary.power-button:hover {
+  cursor: pointer;
+
   background-color: $power-white;
   color: $power-blue;
 
@@ -59,10 +61,16 @@
     padding-right: 0.4em;
   }
 }
+
 .power-button.navigation-back:hover {
+  outline: none;
   border: none;
   background-color: transparent;
   color: $power-blue;
+
+  span {
+    text-decoration: underline;
+  }
 }
 
 .power-button.navigation-next {

@@ -56,8 +56,7 @@ export class ProductionPredictionComponent implements OnInit {
   }
 
   activatePlant() {
-    this.ethereumService.activeWallet()
-      .mergeMap(this.plantService.activatePlant)
+    this.plantService.activatePlant(this.walletId)
       .subscribe(
         success => this.router.navigateByUrl('/dashboard/plant'),
         error => console.error(error)
