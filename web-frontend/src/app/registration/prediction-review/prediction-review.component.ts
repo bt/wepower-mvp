@@ -316,10 +316,13 @@ export class PredictionReviewComponent implements OnInit {
 
     let amplitude = max - min
     let lowestPoint = Math.floor(Math.max((min - amplitude), 0))
+    let highestPoint = Math.ceil(Math.max((max + amplitude/10), 0))
 
     let _lineChartData:Array<any> = [{data: predictions}]
 
     this.lineChartOptions.scales.yAxes[0].ticks.suggestedMin = lowestPoint
+    this.lineChartOptions.scales.yAxes[0].ticks.suggestedMax = highestPoint
+
     this.lineChartLabels = dayLabels;
     setTimeout(() => {
       // Timeout required because of angular and chart js integration bug.
