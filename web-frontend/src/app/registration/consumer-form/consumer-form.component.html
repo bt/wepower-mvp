@@ -28,9 +28,22 @@
       </div>
 
       <h6>Meter ID</h6>
-      <input class="form-control" [(ngModel)]="formData.meterId">
+      <input class="form-control" [(ngModel)]="formData.meterId" name="meterId" #meterId="ngModel" required>
+      <div *ngIf="meterId.errors && (meterId.dirty || meterId.touched)"
+           class="alert alert-danger">
+        <div [hidden]="!meterId.errors.required">
+          Meter ID is required
+        </div>
+      </div>
       <h6>Household electricity consumption</h6>
-      <input class="form-control" [(ngModel)]="formData.consumption">
+      <input class="form-control" [(ngModel)]="formData.consumption" name="consumption" #consumption="ngModel" required>
+      <div *ngIf="consumption.errors && (consumption.dirty || consumption.touched)"
+           class="alert alert-danger">
+        <div [hidden]="!consumption.errors.required">
+          Household electricity consumption is required
+        </div>
+      </div>
+
     </div>
     <div class="household-size-block">
       <h6>Household size</h6>
