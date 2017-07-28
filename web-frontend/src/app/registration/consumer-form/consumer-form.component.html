@@ -106,7 +106,10 @@
           <div class="row">
             <div class="col radio-toolbar">
               <div *ngFor="let houseSize of supportedHouseSizes; let i = index"
-                    class="radio-container form-control">
+                    class="radio-container">
+                <input type="radio" name="radios" id="radio{{i}}"
+                       [(ngModel)]="formData.houseSizeCode"
+                       [value]="houseSize.code">
                 <label for="radio{{i}}">
                   <div class="radio-content">
                     <div class="icon-box">
@@ -117,9 +120,6 @@
                     </div>
                   </div>
                 </label>
-                <input type="radio" name="radios" id="radio{{i}}"
-                       [(ngModel)]="formData.houseSizeCode"
-                       [value]="houseSize.code">
               </div>
             </div>
           </div>

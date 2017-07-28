@@ -118,7 +118,6 @@
     font-size: 20px;
 
     text-align: center;
-    cursor: pointer;
 
     display: inline-block;
     float: left;
@@ -128,10 +127,6 @@
       justify-content: center;
       align-items: center;
     }
-  }
-
-  label {
-    display: flex;
   }
 
   .icon-box {
@@ -154,11 +149,19 @@
 
   input[type="radio"] {
     display: none;
-    position: absolute;
   }
 
   input[type="radio"]:checked + label {
     border: 3px solid $power-yellow;
+  }
+
+  label {
+    display: flex;
+    border: 3px solid $power-grey;
+  }
+
+  label:hover {
+    cursor: pointer;
   }
 }
 
