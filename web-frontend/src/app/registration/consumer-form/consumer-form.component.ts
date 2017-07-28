@@ -74,6 +74,7 @@ export class ConsumerFormComponent implements OnInit {
    */
   private updateDefaultForm() {
     this.formData = new ConsumerForm()
+    this.formData.houseSizeCode = 'M'
 
     this.ethereumService.activeWallet()
       .subscribe(
