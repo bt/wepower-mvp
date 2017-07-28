@@ -13,7 +13,7 @@ import { Observable } from "rxjs/Observable";
 import { WalletDetails } from "../../dashboard/wallet-details";
 
 @Injectable()
-export class LandingGuardService implements CanActivate {
+export class ExistingUserGuardService implements CanActivate {
 
   constructor(private registrationState : RegistrationStateService,
               private ethereumService : EthereumService,

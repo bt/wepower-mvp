@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 
 import { LandingComponent } from './landing.component';
 import { SharedModule } from "../shared/shared.module";
-import { LandingGuardService } from "./router-guards/landing-guard.service";
+import { ExistingUserGuardService } from "./router-guards/existing-user-guard.service";
 
 @NgModule({
   imports: [
@@ -16,6 +16,6 @@ import { LandingGuardService } from "./router-guards/landing-guard.service";
     LandingComponent
   ],
   declarations: [LandingComponent],
-  providers: [LandingGuardService]
+  providers: [ExistingUserGuardService]
 })
 export class LandingModule { }

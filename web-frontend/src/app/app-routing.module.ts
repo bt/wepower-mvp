@@ -12,20 +12,20 @@ import { RegistrationLayoutComponent } from "./registration/registration-layout/
 import { DashboardLayoutComponent } from "./dashboard/dashboard-layout/dashboard-layout.component";
 import { PlantDashboardGuardService } from "./dashboard/router-guards/plant-dashboard-guard.service";
 import { ConsumerDashboardGuardService } from "./dashboard/router-guards/consumer-dashboard-guard.service";
-import { LandingGuardService } from "./landing/router-guards/landing-guard.service";
+import { ExistingUserGuardService } from "./landing/router-guards/existing-user-guard.service";
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
-  { path: 'landing', component: LandingComponent, pathMatch: 'full', canActivate: [LandingGuardService] },
+  { path: 'landing', component: LandingComponent, pathMatch: 'full', canActivate: [ExistingUserGuardService] },
 
   { path: 'register',
     children: [
       {
         path: '', component: RegistrationLayoutComponent, children: [
-          { path: 'plant', component: PlantFormComponent, pathMatch: 'full' },
-          { path: 'plant/review', component: ProductionPredictionComponent, pathMatch: 'full'},
-          { path: 'consumer', component: ConsumerFormComponent, pathMatch: 'full'},
-          { path: 'consumer/review', component: ConsumptionPredictionComponent, pathMatch: 'full'}
+          { path: 'plant', component: PlantFormComponent, pathMatch: 'full', canActivate: [ExistingUserGuardService] },
+          { path: 'plant/review', component: ProductionPredictionComponent, pathMatch: 'full', canActivate: [ExistingUserGuardService]},
+          { path: 'consumer', component: ConsumerFormComponent, pathMatch: 'full', canActivate: [ExistingUserGuardService]},
+          { path: 'consumer/review', component: ConsumptionPredictionComponent, pathMatch: 'full', canActivate: [ExistingUserGuardService]}
         ]
       }
     ]
