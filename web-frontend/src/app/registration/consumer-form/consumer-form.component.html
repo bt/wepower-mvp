@@ -41,11 +41,13 @@
                      name="areaName"
                      #areaName="ngModel"
                      required>
+
               <div *ngIf="areaName.errors && (areaName.dirty || areaName.touched)"
                    [hidden]="!areaName.errors.required"
                    class="validation-error">
                 Select Household area
               </div>
+
               <md-autocomplete #auto="mdAutocomplete">
                 <md-option *ngFor="let area of filteredAreas" [value]="area">
                   {{ area }}
@@ -78,20 +80,19 @@
           <div class="row">
             <div class="col">
               <input class="form-control {{consumption.errors && (consumption.dirty || consumption.touched) ? 'failed-validation' : ''}}"
-                     type="number"
                      [(ngModel)]="formData.consumption"
                      name="consumption"
                      #consumption="ngModel"
-                     required>
+                     pattern="^\d+[,.]?\d*">
               <div *ngIf="consumption.errors && (consumption.dirty || consumption.touched)"
                    [hidden]="!consumption.errors.required"
                    class="validation-error">
-                  Enter Plant capacity, kWh
+                  Enter Household electricity consumption, kWh/month
               </div>
               <div *ngIf="consumption.errors && (consumption.dirty || consumption.touched)"
-                   [hidden]="!consumption.invalid"
+                   [hidden]="!consumption.errors.pattern"
                    class="validation-error">
-                The value must be a number
+                Household electricity consumption must be a number
               </div>
             </div>
           </div>

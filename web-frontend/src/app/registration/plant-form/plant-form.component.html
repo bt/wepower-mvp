@@ -10,115 +10,169 @@
 
   <div class="row main-form-block">
     <div class="col">
+      <form #consumerForm="ngForm">
 
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md">
-            <label>Etherium Wallet ID</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md">
-            <input [(ngModel)]="formData.walletId" disabled class="form-control">
-          </div>
-        </div>
-      </div>
 
-      <div class="form-group radio-group">
-        <div class="row">
-          <div class="col">
-            <label>Plant type</label>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md">
+              <label>Etherium Wallet ID</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col radio-toolbar">
-            <div *ngFor="let type of plantTypeValues; let i = index"
-                 class="radio-container">
-              <input type="radio" name="radios" id="radio{{i}}"
-                     [(ngModel)]="formData.type"
-                     [value]="type">
-              <label for="radio{{i}}">
-                <div class="radio-content">
-                  <div class="icon-box" *ngIf="type == plantType.SOLAR">
-                    <img class="img-fluid" src="/assets/images/icon-sun.svg">
-                  </div>
-                  <div class="icon-box"  *ngIf="type == plantType.HYDRO">
-                    <img class="img-fluid" src="/assets/images/icon-hydro.svg">
-                  </div>
-                  <div class="icon-box"  *ngIf="type == plantType.WIND">
-                    <img class="img-fluid" src="/assets/images/icon-wind.svg">
-                  </div>
-                  <div class="description">
-                    {{type | plantType}}
-                  </div>
-                </div>
-              </label>
+          <div class="row">
+            <div class="col-md">
+              <input [(ngModel)]="formData.walletId"
+                     name="walletId"
+                     disabled class="form-control">
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md">
-            <label>Plant name</label>
+        <div class="form-group radio-group">
+          <div class="row">
+            <div class="col">
+              <label>Plant type</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col radio-toolbar">
+              <div *ngFor="let type of plantTypeValues; let i = index"
+                   class="radio-container">
+                <input type="radio"
+                       name="radios"
+                       id="radio{{i}}"
+                       [(ngModel)]="formData.type"
+                       [value]="type">
+                <label for="radio{{i}}">
+                  <div class="radio-content">
+                    <div class="icon-box" *ngIf="type == plantType.SOLAR">
+                      <img class="img-fluid" src="/assets/images/icon-sun.svg">
+                    </div>
+                    <div class="icon-box"  *ngIf="type == plantType.HYDRO">
+                      <img class="img-fluid" src="/assets/images/icon-hydro.svg">
+                    </div>
+                    <div class="icon-box"  *ngIf="type == plantType.WIND">
+                      <img class="img-fluid" src="/assets/images/icon-wind.svg">
+                    </div>
+                    <div class="description">
+                      {{type | plantType}}
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md">
-            <input class="field" [(ngModel)]="formData.name" class="form-control">
-          </div>
-        </div>
-      </div>
 
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md">
-            <label>Plant area</label>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md">
+              <label>Plant name</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md">
-            <input mdInput
-                   (keyup)="updateFilteredAreas(formData.areaName)"
-                   [mdAutocomplete]="auto"
-                   [(ngModel)]="formData.areaName"
-                   class="form-control">
+          <div class="row">
+            <div class="col-md">
 
-            <md-autocomplete #auto="mdAutocomplete">
-              <md-option *ngFor="let area of filteredAreas" [value]="area">
-                {{ area }}
-              </md-option>
-            </md-autocomplete>
+              <input [(ngModel)]="formData.name"
+                     name="name"
+                     #name="ngModel"
+                     class="form-control {{name.errors && (name.dirty || name.touched) ? 'failed-validation' : ''}}"
+                     required
+                     maxlength="250"
+              >
+              <div *ngIf="name.errors && (name.dirty || name.touched)"
+                   [hidden]="!name.errors.required"
+                   class="validation-error">
+                Enter Plant name
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md">
-            <label>Plant capacity, kW</label>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md">
+              <label>Plant area</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md">
-            <input [(ngModel)]="formData.capacity" class="form-control">
-          </div>
-        </div>
-      </div>
+          <div class="row">
+            <div class="col-md">
 
-      <div class="row navigation-block">
-        <div class="col-md">
-          <button routerLink="/landing" type="button" class="btn btn-primary power-button navigation-back">
-            <i class="fa fa-chevron-left"></i> <span>Back</span>
-          </button>
+              <input mdInput
+                     [mdAutocomplete]="auto"
+                     [(ngModel)]="formData.areaName"
+                     (keyup)="updateFilteredAreas(formData.areaName)"
+
+                     class="form-control {{areaName.errors && (areaName.dirty || areaName.touched) ? 'failed-validation' : ''}}"
+                     name="areaName"
+                     #areaName="ngModel"
+                     required
+                     >
+              <div *ngIf="areaName.errors && (areaName.dirty || areaName.touched)"
+                   [hidden]="!areaName.errors.required"
+                   class="validation-error">
+                Select Plant area
+              </div>
+
+              <md-autocomplete #auto="mdAutocomplete">
+                <md-option *ngFor="let area of filteredAreas" [value]="area">
+                  {{ area }}
+                </md-option>
+              </md-autocomplete>
+            </div>
+          </div>
         </div>
-        <div class="col-md">
-          <button (click)="createPlant()" type="button" class="btn btn-primary power-button navigation-next">
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md">
+              <label>Plant capacity, kW</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <input [(ngModel)]="formData.capacity"
+                     name="capacity"
+                     #capacity="ngModel"
+
+                     pattern="^\d+[,.]?\d*"
+                     required
+
+                     class="form-control {{capacity.errors && (capacity.dirty || capacity.touched) ? 'failed-validation' : ''}}"
+              >
+
+              <div *ngIf="capacity.errors && (capacity.dirty || capacity.touched)"
+                   [hidden]="!capacity.errors.required"
+                   class="validation-error">
+                Enter Plant capacity, kW
+              </div>
+
+              <div *ngIf="capacity.errors && (capacity.dirty || capacity.touched)"
+                   [hidden]="!capacity.errors.pattern"
+                   class="validation-error">
+                Plant capacity must be a number
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row navigation-block">
+          <div class="col-md">
+            <button routerLink="/landing" type="button" class="btn btn-primary power-button navigation-back">
+              <i class="fa fa-chevron-left"></i> <span>Back</span>
+            </button>
+          </div>
+          <div class="col-md">
+            <button (click)="createPlant()"
+                    type="button"
+                    [disabled]="!consumerForm.form.valid"
+                    class="btn btn-primary power-button navigation-next"
+            >
             Next <i class="fa fa-chevron-right"></i>
-          </button>
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>
