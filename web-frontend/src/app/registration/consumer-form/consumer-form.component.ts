@@ -74,10 +74,6 @@ export class ConsumerFormComponent implements OnInit {
    */
   private updateDefaultForm() {
     this.formData = new ConsumerForm()
-    this.formData.houseSizeCode = "M";
-
-    // Like really?
-    setTimeout(() => {}, 500)
 
     this.ethereumService.activeWallet()
       .subscribe(
@@ -98,6 +94,7 @@ export class ConsumerFormComponent implements OnInit {
     let selectedArea = this.supportedAreas
       .find(area => area.name == this.formData.areaName)
     this.formData.areaCode = selectedArea.code
+    this.formData.meterId = this.formData.walletId
 
     return this.formData
   }

@@ -23,13 +23,16 @@
 }
 
 .main-form-block {
-  width: 600px;
   padding-top: 2.3em;
+
+  .form-group {
+    width: 600px;
+  }
 
   .form-control {
     padding: 1em;
     margin: 0.3em 0;
-    border: 0.2em solid $power-grey;
+    border: 3px solid $power-grey;
     border-radius: 0;
   }
 
@@ -93,5 +96,82 @@
 
   i {
     padding: 0 0.4em;
+  }
+}
+
+
+// Radio button styling
+.main-form-block {
+  .radio-group {
+    width: 100%;
+  }
+}
+
+.radio-group .radio-toolbar {
+
+  .radio-container {
+    width: 210px;
+    height: 3.7em;
+    padding: 0;
+    margin-right: 0.75em;
+
+    font-size: 20px;
+
+    text-align: center;
+    cursor: pointer;
+
+    display: inline-block;
+    float: left;
+
+    .radio-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  label {
+    display: flex;
+  }
+
+  .icon-box {
+    width: 3em;
+    height: 3em;
+
+    background-color: #e0e0e0;
+
+    margin: 0.2em 0.25em 0.2em 0.25em;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .description {
+    margin-left: 0.3em;
+    display: inline-block;
+  }
+
+  input[type="radio"] {
+    display: none;
+    position: absolute;
+  }
+
+  input[type="radio"]:checked + label {
+    border: 3px solid $power-yellow;
+  }
+}
+
+.icon-box {
+  .fa.size0 {
+    font-size: 26px;
+  }
+
+  .fa.size1 {
+    font-size: 32px;
+  }
+
+  .fa.size2 {
+    font-size: 38px;
   }
 }

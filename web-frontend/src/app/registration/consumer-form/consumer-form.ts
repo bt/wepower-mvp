@@ -2,11 +2,11 @@ export class ConsumerForm {
   public walletId : string;
   public areaName : string;
   public areaCode : string;
-  public meterId : number;
+  public meterId : string;
   public consumption : number;
   public houseSizeCode : string;
 
-  constructor(walletId?: string, areaName?: string, meterId?: number, consumption?: number, houseSizeCode?: string) {
+  constructor(walletId?: string, areaName?: string, meterId?: string, consumption?: number, houseSizeCode?: string) {
     this.walletId = walletId;
     this.areaName = areaName;
     this.meterId = meterId;

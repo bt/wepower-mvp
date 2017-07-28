@@ -20,12 +20,13 @@ export class PlantFormComponent implements OnInit {
   // In typescript enum is based on javascript object, keys array also contains index based keys.
   plantTypeValues = Object.keys(PlantType)
     .filter(key => isNaN(Number(key)))
-    .map(key => PlantType[key]);
+    .map(key => PlantType[key])
 
-  formData : PlantForm;
-  supportedAreas : Array<GeoArea>;
+  formData : PlantForm
+  supportedAreas : Array<GeoArea>
 
-  filteredAreas: string[];
+  filteredAreas: string[]
+  plantType = PlantType
 
 
   constructor(private plantService: PlantManagementService,
