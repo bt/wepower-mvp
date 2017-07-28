@@ -10,98 +10,102 @@
 
   <div class="row">
     <div class="col-md">
-      <div class="row form-group">
-        <div class="col-md">
-          <div class="row">
-            <div class="col-md">
-              <label>Etherium Wallet ID</label>
+      <div class="main-form-block">
+
+        <div class="row form-group">
+          <div class="col-md">
+            <div class="row">
+              <div class="col-md">
+                <label>Etherium Wallet ID</label>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md">
-              <input [(ngModel)]="formData.walletId" disabled class="field">
+            <div class="row">
+              <div class="col-md">
+                <input [(ngModel)]="formData.walletId" disabled class="form-control">
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="row form-group">
-        <div class="col-md">
-          <div class="row">
-            <div class="col-md">
-              <label>Plant type</label>
+        <div class="row form-group">
+          <div class="col-md">
+            <div class="row">
+              <div class="col-md">
+                <label>Plant type</label>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md">
+            <div class="row">
+              <div class="col-md">
               <span *ngFor="let type of plantTypeValues">
                 <input type="radio"
                        [(ngModel)]="formData.type"
                        [value]="type"
+                       class="form-control"
                 >
                 {{type | plantType}}
               </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-md">
+            <div class="row">
+              <div class="col-md">
+                <label>Plant name</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <input class="field" [(ngModel)]="formData.name" class="form-control">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-md">
+            <div class="row">
+              <div class="col-md">
+                <label>Plant area</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <input mdInput
+                       (keyup)="updateFilteredAreas(formData.areaName)"
+                       [mdAutocomplete]="auto"
+                       [(ngModel)]="formData.areaName"
+                       class="form-control">
+
+                <md-autocomplete #auto="mdAutocomplete">
+                  <md-option *ngFor="let area of filteredAreas" [value]="area">
+                    {{ area }}
+                  </md-option>
+                </md-autocomplete>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-md">
+            <div class="row">
+              <div class="col-md">
+                <label>Plant capacity, kW</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <input [(ngModel)]="formData.capacity" class="form-control">
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md">
-          <div class="row">
-            <div class="col-md">
-              <label>Plant name</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md">
-              <input class="field" [(ngModel)]="formData.name">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md">
-          <div class="row">
-            <div class="col-md">
-              <label>Plant area</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md">
-              <input mdInput
-                     (keyup)="updateFilteredAreas(formData.areaName)"
-                     [mdAutocomplete]="auto"
-                     [(ngModel)]="formData.areaName"
-                     class="field">
-
-              <md-autocomplete #auto="mdAutocomplete">
-                <md-option *ngFor="let area of filteredAreas" [value]="area">
-                  {{ area }}
-                </md-option>
-              </md-autocomplete>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md">
-          <div class="row">
-            <div class="col-md">
-              <label>Plant capacity, kW</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md">
-              <input [(ngModel)]="formData.capacity" class="field">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row form-group">
+      <div class="row navigation-block">
         <div class="col-md">
           <button routerLink="/landing" type="button" class="btn btn-primary power-button navigation-back">
             <i class="fa fa-chevron-left"></i> <span>Back</span>

@@ -1,46 +1,9 @@
-@import "../../../styles/shared/variables.scss";
+@import '../form-styles';
 
-.navigation-block {
-  margin-top: 3.6em;
-}
 
-.container {
-  background-color: $power-white;
-
-  padding: 1.8em;
-  width: 930px;
-
-  h1 {
-    font-family: 'Platform Web', 'Sans-serif';
-    font-weight: bold;
-    font-size: 56px
-  }
-}
-
-.main-form-block {
-  width: 600px;
-  padding-top: 2.3em;
-}
-
-.form-control {
-  padding: 1em;
-  margin: 0.8em 0 1.6em 0;
-  border: 0.2em solid $power-grey;
-  border-radius: 0;
-}
-
-h6 {
-  font-family: 'Roboto', Sans-serif;
-  font-size: 17px;
-}
 
 .household-size-block {
   width: 710px;
-}
-
-#paging {
-  text-align: right;
-  padding-top: 2.1em;
 }
 
 .radio-toolbar {
@@ -92,8 +55,4 @@ h6 {
   float: left;
   padding: 1.55em;
 
-}
-
-.navigation-block .form-group {
-  margin-bottom: 0;
 }

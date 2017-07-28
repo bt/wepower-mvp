@@ -43,50 +43,6 @@
   border-color: transparent;
 }
 
-.power-button.navigation-back {
-  border: none;
-  outline: none;
-
-  background-color: transparent;
-  color: $power-blue;
-
-  font-size: 20px;
-  font-weight: 400;
-
-  padding: 0.7em 0em;
-
-  float: left;
-
-  i {
-    padding-right: 0.4em;
-  }
-}
-
-.power-button.navigation-back:hover {
-  outline: none;
-  border: none;
-  background-color: transparent;
-  color: $power-blue;
-
-  span {
-    text-decoration: underline;
-  }
-}
-
-.power-button.navigation-next {
-  outline: none;
-  border-radius: 0;
-
-  font-size: 20px;
-  font-weight: 400;
-
-  float: right;
-
-  i {
-    padding: 0 0.4em;
-  }
-}
-
 html, body, app-root {
   height: 100%;
   font-family: 'Roboto', 'Sans-serif';

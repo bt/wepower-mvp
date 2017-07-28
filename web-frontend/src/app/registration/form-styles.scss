@@ -1,0 +1,97 @@
+@import "../../../styles/shared/variables.scss";
+
+
+.container {
+  background-color: $power-white;
+
+  padding: 1.8em;
+
+  width: 930px;
+
+  h1 {
+    font-family: 'Platform Web', 'Sans-serif';
+    font-weight: bold;
+    font-size: 56px
+  }
+
+  .step-number {
+    padding-top: 1em;
+    float: right;
+
+    font-size: 20px;
+  }
+}
+
+.main-form-block {
+  width: 600px;
+  padding-top: 2.3em;
+
+  .form-control {
+    padding: 1em;
+    margin: 0.3em 0;
+    border: 0.2em solid $power-grey;
+    border-radius: 0;
+  }
+
+  .form-control:disabled {
+    background-color: $power-background-grey;
+  }
+
+  label {
+    font-family: 'Roboto', Sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+
+// Navigation styling
+.navigation-block {
+  margin-top: 3em;
+}
+
+
+.power-button.navigation-back {
+  border: none;
+  outline: none;
+
+  background-color: transparent;
+  color: $power-blue;
+
+  font-size: 20px;
+  font-weight: 400;
+
+  padding: 0.7em 0em;
+
+  float: left;
+
+  i {
+    padding-right: 0.4em;
+  }
+}
+
+.power-button.navigation-back:hover {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  color: $power-blue;
+
+  span {
+    text-decoration: underline;
+  }
+}
+
+.power-button.navigation-next {
+  outline: none;
+  border-radius: 0;
+
+  font-size: 20px;
+  font-weight: 400;
+
+  float: right;
+
+  i {
+    padding: 0 0.4em;
+  }
+}
