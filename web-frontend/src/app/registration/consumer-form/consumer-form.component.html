@@ -20,8 +20,16 @@
                  [(ngModel)]="formData.areaName"
                  (keyup)="updateFilteredAreas(formData.areaName)"
                  class="form-control"
-                 name="areaName">
+                 name="areaName"
+                 #areaName="ngModel"
+                 required>
 
+          <div *ngIf="areaName.errors && (areaName.dirty || areaName.touched)"
+             class="alert alert-danger">
+          <div [hidden]="!areaName.errors.required">
+            Household area is required
+          </div>
+        </div>
           <md-autocomplete #auto="mdAutocomplete">
             <md-option *ngFor="let area of filteredAreas" [value]="area">
               {{ area }}
@@ -51,7 +59,6 @@
                  [value]="houseSize.code">
           <label for="radio{{i}}">
             <div class="icon-box">
-              <!--<i class="fa fa-home size{{i}} fa-stack-1x"></i>-->
               <i class="fa fa-home size{{i}}"></i>
             </div>
             <span class="description">
