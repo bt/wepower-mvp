@@ -91,6 +91,7 @@ export class ConsumerFormComponent implements OnInit {
         },
         error => console.error(error)
       );
+
   }
 
   private getUpdatedForm() : ConsumerForm {

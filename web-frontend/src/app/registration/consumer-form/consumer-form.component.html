@@ -30,13 +30,7 @@
         </div>
 
         <h6>Meter ID</h6>
-        <input class="form-control" [(ngModel)]="formData.meterId" name="meterId" #meterId="ngModel" required>
-        <div *ngIf="meterId.errors && (meterId.dirty || meterId.touched)"
-             class="alert alert-danger">
-          <div [hidden]="!meterId.errors.required">
-            Meter ID is required
-          </div>
-        </div>
+        <input class="form-control" [(ngModel)]="formData.meterId" name="meterId" required>
         <h6>Household electricity consumption</h6>
         <input class="form-control" [(ngModel)]="formData.consumption" name="consumption" #consumption="ngModel"
                required>
@@ -56,11 +50,12 @@
                  [(ngModel)]="formData.houseSizeCode"
                  [value]="houseSize.code">
           <label for="radio{{i}}">
-            <div class="box">
-              <i class="fa fa-home size{{i}} fa-stack-1x"></i>
+            <div class="icon-box">
+              <!--<i class="fa fa-home size{{i}} fa-stack-1x"></i>-->
+              <i class="fa fa-home size{{i}}"></i>
             </div>
             <span class="description">
-              {{houseSize.description}}
+              {{houseSize.description}} m<sup>2</sup>
             </span>
           </label>
         </span>

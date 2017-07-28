@@ -1,20 +1,14 @@
 @import "../../../styles/shared/variables.scss";
 
 .navigation-block {
-  margin-top: 55px;
-}
-
-select.form-control:not([size]):not([multiple]) {
-  height: 57px;
+  margin-top: 3.6em;
 }
 
 .container {
   background-color: $power-white;
 
-  padding: 1.8em 1.5em;
-
+  padding: 1.8em;
   width: 930px;
-  height: 830px;
 
   h1 {
     font-family: 'Platform Web', 'Sans-serif';
@@ -24,15 +18,14 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .main-form-block {
-  //margin-left: -14px;
   width: 600px;
-  padding-top: 40px;
+  padding-top: 2.3em;
 }
 
 .form-control {
-  height: 57px;
-  margin: 13px 0 25px 0;
-  border: 3px solid $power-grey;
+  padding: 1em;
+  margin: 0.8em 0 1.6em 0;
+  border: 0.2em solid $power-grey;
   border-radius: 0;
 }
 
@@ -45,19 +38,14 @@ h6 {
   width: 710px;
 }
 
-.content {
-  padding: 0 0 0 0;
-}
-
 #paging {
   text-align: right;
-  padding-top: 34px;
+  padding-top: 2.1em;
 }
 
 .radio-toolbar {
-  margin-top: 13px;
+  margin-top: 0.8em;
   width: 712px;
-  height: 78px;
 }
 
 .radio-toolbar input[type="radio"] {
@@ -68,52 +56,44 @@ h6 {
   display: inline-block;
   font-size: 16px;
   cursor: pointer;
-  height: 78px;
   width: 222px;
-  margin-right: 12px;
-  border: 3px solid $power-grey;
+  margin-right: 0.75em;
+  border: 0.2em solid $power-grey;
   text-align: center;
   position: relative;
 }
 
 .radio-toolbar input[type="radio"]:checked + label {
-  border: 3px solid $power-yellow;
+  border: 0.2em solid $power-yellow;
 }
 
 .fa-home.size0 {
   font-size: 26px;
-  top: 11px;
-  left: 1px;
 }
 
 .fa-home.size1 {
   font-size: 32px;
-  top: 7px;
-  left: -1px;
 }
 
 .fa-home.size2 {
   font-size: 38px;
-  top: 2px;
-  left: -1px;
 }
 
-.box {
-  position: relative;
-  background-color: $power-grey;
-  width: 26%;
-  height: 88%;
-  margin: 0px;
-  margin: 2%;
-}
-
-.fa-home {
-  position: absolute;
+.icon-box[_ngcontent-c2] {
+  background-color: #e0e0e0;
+  width: 70px;
+  height: 70px;
+  margin: 0.2em 0.25em 0.2em 0.25em;
+  padding: 1.3em;
+  float: left;
 }
 
 .description {
-  position: absolute;
-  left: 89px;
-  top: 23px;
+  float: left;
+  padding: 1.55em;
+
 }
 
+.navigation-block .form-group {
+  margin-bottom: 0;
+}
