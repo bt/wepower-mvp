@@ -13,6 +13,7 @@ import {environment} from "../../environments/environment";
 import {ProductionPredictionService} from "./prediction/production-prediction.service"
 import { EthereumService } from "../shared/ethereum.service";
 import { BlockchainPlantData } from "../shared/blockchain-plant"
+import {PredictionData} from "./prediction/prediction-data";
 
 @Injectable()
 export class PlantManagementService {
@@ -46,7 +47,7 @@ export class PlantManagementService {
 
   activatePlant(wallet: string): Observable<any> {
     this.getBlockchainData(wallet).subscribe(
-        data => this.ethereumService.registerPlant,
+        data => this.ethereumService.registerPlant(data),
         error => this.handleError
     )
 
@@ -58,13 +59,13 @@ export class PlantManagementService {
   }
 
   private getBlockchainData(wallet: string): Observable<BlockchainPlantData> {
-      return this.http.get(`${environment.dataUrls.plant.root}${wallet}${environment.dataUrls.plant.blockchainData}`)
+      return this.http.get(`${environment.dataUrls.plant.root}/${wallet}/${environment.dataUrls.plant.blockchainData}`)
         .map(this.extractBlockchainData)
   }
 
   private extractBlockchainData(response: Response): BlockchainPlantData {
-    return response.json()
-        .map(data => new BlockchainPlantData(data.plant, data.predictions))
+    let preditionData = response.json().predictions.map(predition => new PredictionData(new Date(predition.date), predition.predictedAmount));
+    return new BlockchainPlantData(10, PlantType[PlantType[response.json().plant.type]], preditionData)
   }
 
 

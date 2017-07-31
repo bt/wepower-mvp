@@ -168,7 +168,7 @@ public class Plant {
 
             BigDecimal predictionForDay = predictedProduction.get();
 
-            int absoluteVariation = predictionForDay.multiply(new BigDecimal(variation)).intValue();
+            int absoluteVariation = predictionForDay.multiply(new BigDecimal(variation)).intValue() + 1;
             int randomDeviation = ThreadLocalRandom.current().nextInt(absoluteVariation);
 
             BigDecimal productionPrediction = predictionForDay.add(new BigDecimal(randomDeviation));

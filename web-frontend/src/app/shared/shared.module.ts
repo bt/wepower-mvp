@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import {EthereumService} from "./ethereum.service";
 import { RegistrationStateService } from "./registration-state.service";
+import {TransactionsLogService} from "./transactions-log-service";
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { RegistrationStateService } from "./registration-state.service";
   declarations: [],
   providers: [
     EthereumService,
-    RegistrationStateService
+    RegistrationStateService,
+    TransactionsLogService
   ]
 })
 export class SharedModule { }

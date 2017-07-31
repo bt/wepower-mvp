@@ -43,7 +43,6 @@ export class EthereumService {
         const plantCreatedEvent = this.exchange.CreatePlant({_from: this.web3.eth.coinbase});
         plantCreatedEvent.watch(function(err, result) {
             if (err) {
-                console.log("PLANT CREATED EVENT ERROR")
                 console.log(err)
                 return;
             }
@@ -73,8 +72,8 @@ export class EthereumService {
       this.loadConnection()
     }
 
-  let promise = new Promise((resolve, reject) => {
-      this.web3.eth.getAccounts((error, result) =>{
+    let promise = new Promise((resolve, reject) => {
+      this.web3.eth.getAccounts((error, result) => {
 
 
         if (!result) {
@@ -130,36 +129,29 @@ export class EthereumService {
       });
   }
 
-  registerPlant(data: BlockchainPlantData): Promise<string> {
-     let dates = data.predictions.map(
+  registerPlant(data: BlockchainPlantData): Observable<string> {
+     let dates = data.predictions ? data.predictions.map(
          prediction => prediction.date.getTime()
-     )
+     ) : []
 
-     let amounts = data.predictions.map(
+     let amounts = data.predictions ? data.predictions.map(
          prediction => prediction.energyPrediction
-     )
+     ) : []
 
-      this.web3.eth.filter('latest', function(error, result){
-          if (!error) {
-              console.log("MINED")
-              this.web3.eth.getBlock(result, true, function (error, result) {
-                  console.log("BLOCK");
-                  console.log(result);
-              });
-          } else {
-              console.log("MINED WITH ERROR")
-              console.error(error)
-          }
-          this.web3.eth.filter.stopWatch();
-      });
+      return this.activeWallet()
+          .flatMap(wallet => {
+              if (!wallet) {
+                  return Observable.throw("Wallet is not present")
+              }
 
-      return this.exchange.createPlantContract.sendTransaction(
-              this.activeWallet(),
-              this.ethToWei(data.price),
-              data.source,
-              amounts,
-              dates,
-              {from: this.web3.eth.coinbase})
+              return Observable.of(this.exchange.createPlantContract.sendTransaction(
+                  wallet,
+                  this.ethToWei(data.price),
+                  PlantType[data.source],
+                  amounts,
+                  dates,
+                  {from: this.web3.eth.coinbase}))
+          })
   }
 
   setPrice(price: number): Promise<string> {
@@ -194,5 +186,20 @@ export class EthereumService {
       return this.web3.toWei(ethAmount)
   }
 
+  private waitForMine(): void {
+      this.web3.eth.filter('latest', function(error, result){
+          if (!error) {
+              console.log("MINED")
+              this.web3.eth.getBlock(result, true, function (error, result) {
+                  console.log("BLOCK");
+                  console.log(result);
+              });
+          } else {
+              console.log("MINED WITH ERROR")
+              console.error(error)
+          }
+          this.web3.eth.filter.stopWatch();
+      });
+  }
 
 }

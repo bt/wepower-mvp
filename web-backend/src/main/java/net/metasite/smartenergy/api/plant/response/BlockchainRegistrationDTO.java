@@ -6,14 +6,14 @@ public class BlockchainRegistrationDTO {
 
     private PlantDetailsResponseDTO plant;
 
-    private List<PredictionDTO> preditions;
+    private List<PredictionDTO> predictions;
 
     public BlockchainRegistrationDTO(
             PlantDetailsResponseDTO plant,
-            List<PredictionDTO> preditions) {
+            List<PredictionDTO> predictions) {
 
         this.plant = plant;
-        this.preditions = preditions;
+        this.predictions = predictions;
     }
 
     public PlantDetailsResponseDTO getPlant() {
@@ -24,11 +24,11 @@ public class BlockchainRegistrationDTO {
         this.plant = plant;
     }
 
-    public List<PredictionDTO> getPreditions() {
-        return preditions;
+    public List<PredictionDTO> getPredictions() {
+        return predictions;
     }
 
-    public void setPreditions(List<PredictionDTO> preditions) {
-        this.preditions = preditions;
+    public void setPredictions(List<PredictionDTO> predictions) {
+        this.predictions = predictions;
     }
 }
