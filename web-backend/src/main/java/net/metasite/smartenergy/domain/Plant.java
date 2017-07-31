@@ -99,6 +99,10 @@ public class Plant {
         return type;
     }
 
+    public ActivePeriod getPeriod() {
+        return period;
+    }
+
     public void activate() {
         this.active = true;
     }

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import * as moment from 'moment';
 
-import { PredictionData } from "../prediction-review/prediction-data";
+import { PredictionData } from "../prediction/prediction-data";
 import { Period } from "../../shared/period";
 import { ConsumptionPredictionService } from "../prediction/consumption-prediction.service";
 import { EthereumService } from "../../shared/ethereum.service";

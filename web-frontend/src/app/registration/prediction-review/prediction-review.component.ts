@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core'
 
 import * as moment from 'moment'
-import { PredictionData } from "./prediction-data"
+import { PredictionData } from "../prediction/prediction-data"
 import { Period } from "../../shared/period"
 import { DataFiller } from "../../shared/data-filler.service"
 

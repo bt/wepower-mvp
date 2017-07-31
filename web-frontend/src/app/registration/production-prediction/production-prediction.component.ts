@@ -4,7 +4,7 @@ import "rxjs/add/operator/mergeMap";
 
 import * as moment from 'moment';
 
-import { PredictionData } from "../prediction-review/prediction-data";
+import { PredictionData } from "../prediction/prediction-data";
 import { Period } from "../../shared/period";
 import { ProductionPredictionService } from "../prediction/production-prediction.service";
 import { EthereumService } from "../../shared/ethereum.service";

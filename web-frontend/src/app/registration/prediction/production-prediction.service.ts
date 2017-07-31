@@ -8,7 +8,7 @@ import * as moment from 'moment';
 
 import { Period } from "../../shared/period";
 import { environment } from "../../../environments/environment";
-import { PredictionData } from "../prediction-review/prediction-data";
+import { PredictionData } from "./prediction-data";
 
 @Injectable()
 export class ProductionPredictionService {

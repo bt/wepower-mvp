@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import javax.annotation.Resource;
 
 import net.metasite.smartenergy.api.consumer.response.ConsumptionAvailabilityDTO;
+import net.metasite.smartenergy.api.plant.response.BlockchainRegistrationDTO;
 import net.metasite.smartenergy.api.plant.response.PlantDetailsResponseDTO;
 import net.metasite.smartenergy.api.plant.response.ProductionAvailabilityDTO;
 import net.metasite.smartenergy.domain.Consumer;
@@ -95,12 +96,7 @@ public class PlantController {
             return ResponseEntity.notFound().build();
         }
 
-        PlantDetailsResponseDTO responseDetails = new PlantDetailsResponseDTO(
-                plant.getWalletId(),
-                PlantDetailsResponseDTO.Type.valueOf(plant.getType().name())
-        );
-
-        return ResponseEntity.ok(responseDetails);
+        return ResponseEntity.ok(getPlantDetails(walletId));
     }
 
     @PostMapping("{wallet}/activate")
@@ -117,6 +113,28 @@ public class PlantController {
         plantManager.activate(wallet);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("{wallet}/blockchain/data")
+    public ResponseEntity<BlockchainRegistrationDTO> getBlockchainRegistrationData(
+            @PathVariable(name = "wallet") String walletId) {
+
+        Plant plant = plantRepository.findByWalletIdIgnoreCase(walletId);
+
+        if (plant == null) {
+            LOG.error("Plant {} not found", walletId);
+            return ResponseEntity.notFound().build();
+        }
+
+        PlantDetailsResponseDTO responseDetails = getPlantDetails(walletId);
+        List<PredictionDTO> responsePredictions =
+                getPreditcedProduction(walletId, plant.getPeriod().getFrom(), plant.getPeriod().getTo());
+
+        BlockchainRegistrationDTO result =
+                new BlockchainRegistrationDTO(responseDetails, responsePredictions);
+
+        return new ResponseEntity(result, HttpStatus.OK);
+
     }
 
     @GetMapping("{wallet}/production/predicted/period")
@@ -153,14 +171,8 @@ public class PlantController {
             return ResponseEntity.notFound().build();
         }
 
-        List<ProductionLog> productionPredictions = plant.productionPredictionsForPeriod(
-                Range.closed(LocalDate.parse(from), LocalDate.parse(to))
-        );
-
-        List<PredictionDTO> responsePredictions = productionPredictions.stream()
-                .sorted((o1, o2) -> o1.getDate().isAfter(o2.getDate()) ? 1 : -1)
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        List<PredictionDTO> responsePredictions =
+                getPreditcedProduction(wallet, LocalDate.parse(from), LocalDate.parse(to));
 
         return ResponseEntity.ok(responsePredictions);
     }
@@ -256,4 +268,30 @@ public class PlantController {
             return ImmutableSet.of(Characteristics.IDENTITY_FINISH);
         }
     }
+
+    private List<PredictionDTO> getPreditcedProduction(String walletId, LocalDate from, LocalDate to) {
+        Plant plant = plantRepository.findByWalletIdIgnoreCase(walletId);
+
+
+        List<ProductionLog> productionPredictions = plant.productionPredictionsForPeriod(
+                Range.closed(from, to)
+        );
+
+        return productionPredictions.stream()
+                .sorted((o1, o2) -> o1.getDate().isAfter(o2.getDate()) ? 1 : -1)
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private PlantDetailsResponseDTO getPlantDetails(String walletId) {
+        Plant plant = plantRepository.findByWalletIdIgnoreCase(walletId);
+
+        return new PlantDetailsResponseDTO(
+                plant.getWalletId(),
+                PlantDetailsResponseDTO.Type.valueOf(plant.getType().name()),
+                plant.getPeriod().getFrom(),
+                plant.getPeriod().getTo()
+        );
+    }
+
 }

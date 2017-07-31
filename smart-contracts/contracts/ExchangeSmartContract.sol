@@ -2,24 +2,21 @@ pragma solidity ^0.4.11;
 
 import "./PlantSmartContract.sol";
 
-contract ExchangeSmartContract is Ownable {
+contract ExchangeSmartContract  {
+
+  event CreatePlant(address _plant);
+  event Transfer(address indexed from, address indexed to, uint256 value);
 
   address[] plants;
   mapping (address => address) plantContracts;
 
-  /**
-    source 0 - sun, 1 - water, 2 - wind
-  */
-  function createPlantContract(address _plant, uint256 _price, uint8 _source, uint256[] _amounts, uint[] _dates) {
+  function createPlantContract(address _plant, uint256 _price, uint _source, uint256[] _amounts, uint[] _dates) {
+    CreatePlant(_plant);
     if (plantContracts[_plant] == 0) {
-      plantContracts[_plant] = new PlantSmartContract(_plant, _price, _source);
+      plantContracts[_plant] = new PlantSmartContract(_plant, _price, PlantSmartContract.Source(_source));
       plants.push(_plant);
     }
     addTokens(_plant, _amounts, _dates);
-  }
-
-  function getPlantContract(address _plant) constant returns(address) {
-    return plantContracts[_plant];
   }
 
   function addTokens(address _plant, uint256[] _amounts, uint[] _dates) {
@@ -32,14 +29,22 @@ contract ExchangeSmartContract is Ownable {
     }
   }
 
-  function getBestPrice(uint256 _amount, uint _date, uint8 _source) constant returns (address) {
+  function getLowestPrice(uint256 _amount, uint _date, uint8 _source) constant returns (address) {
+    if (plants.length == 0) {
+      throw;
+    }
+
+    PlantSmartContract.Source source = PlantSmartContract.Source(_source);
     address bestAddress;
-    uint256 bestPrice = 1000000000 ether;
-    for (uint i = 0; i < plants.length; i++) {
+    uint256 bestPrice;
+
+    for (uint i = 1; i < plants.length; i++) {
       PlantSmartContract plantContract = PlantSmartContract(plantContracts[plants[i]]);
 
-      //TODO: check if amount for date is enough
-      if (plantContract.source() == _source && plantContract.price() < bestPrice) {
+      if (plantContract.balanceOf(plants[i], _date) >= _amount &&
+      plantContract.source() == source &&
+      (plantContract.price() < bestPrice || bestPrice == 0)) {
+
         bestAddress = plants[i];
         bestPrice = plantContract.price();
       }
@@ -62,31 +67,41 @@ contract ExchangeSmartContract is Ownable {
     return plantContract.balanceOf(_plant, _date);
   }
 
-  function getTotalPrice(address _plant, uint256 _amount) returns (uint256) {
-    PlantSmartContract plantContract = PlantSmartContract(plantContracts[_plant]);
-    return _amount * plantContract.price();
-  }
-
   function setPrice(address _plant, uint256 _price) {
+    if (plantContracts[_plant] == 0) {
+      throw;
+    }
+
     PlantSmartContract plantContract = PlantSmartContract(plantContracts[_plant]);
     plantContract.setPrice(_price);
   }
 
   function getPrice(address _plant) constant returns (uint256) {
+    if (plantContracts[_plant] == 0) {
+      throw;
+    }
+
     PlantSmartContract plantContract = PlantSmartContract(plantContracts[_plant]);
     return plantContract.price();
   }
 
-  function send(address _plant, uint _date, uint256 _amount) returns (uint256) {
+  function send(address _plant, address _to, uint _date, uint256 _amount) returns (uint256) {
+    Transfer(msg.sender, _to, _amount);
+    if (plantContracts[_plant] == 0) {
+      throw;
+    }
+
     PlantSmartContract plantContract = PlantSmartContract(plantContracts[_plant]);
 
     if (plantContract.balanceOf(_plant, _date) < _amount) {
       throw;
     }
-    plantContract.transfer(_plant, msg.sender, _amount, _date);
+
+    plantContract.transfer(msg.sender, _to, _amount, _date);
   }
 
   function buy(address _plant, uint _date, uint256 _amount) payable returns (uint256) {
+    Transfer(_plant, msg.sender, _amount);
     PlantSmartContract plantContract = PlantSmartContract(plantContracts[_plant]);
 
     if (plantContract.balanceOf(_plant, _date) < _amount) {

@@ -9,6 +9,11 @@ import 'rxjs/add/operator/timeoutWith';
 import 'rxjs/add/operator/toPromise';
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/filter";
+import { default as contract } from 'truffle-contract'
+import {BlockchainPlantData} from "./blockchain-plant";
+import {PlantType} from "../registration/plant-form/plant-form";
+import {TransactionsLogService} from "./transactions-log-service";
+
 
 var Web3 = require('web3');
 
@@ -17,12 +22,12 @@ var exchange_artifact = require('../../../compiled_contracts/ExchangeSmartContra
 @Injectable()
 export class EthereumService {
 
-  private walletLoading : Observable< string>
-  private web3 : any;
+  private walletLoading: Observable< string>
+  private web3: any
 
   private exchange: any;
 
-  constructor() { }
+  constructor(private transactionsLog: TransactionsLogService) { }
 
   loadConnection()  {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
@@ -35,7 +40,30 @@ export class EthereumService {
 
     contract(exchange_artifact).deployed().then(function(instance) {
         this.exchange = instance;
+        const plantCreatedEvent = this.exchange.CreatePlant({_from: this.web3.eth.coinbase});
+        plantCreatedEvent.watch(function(err, result) {
+            if (err) {
+                console.log("PLANT CREATED EVENT ERROR")
+                console.log(err)
+                return;
+            }
+            console.log("PLANT CREATED EVENT")
+            console.log(result.args._value)
+        })
+        const transferEvent = this.exchange.Transfer({_from: this.web3.eth.coinbase});
+        transferEvent.watch(function(err, result) {
+            if (err) {
+                console.log("TRANSFER EVENT ERROR")
+                console.log(err)
+                return;
+            }
+            console.log("TRANSFER EVENT")
+            console.log(result.args._value)
+            this.logTransaction(result.transactionHash);
+        })
     });
+
+
 
     return true;
   }
@@ -65,7 +93,7 @@ export class EthereumService {
       })
   }
 
-  walletBalance() : Observable<number> {
+  walletBalance(): Observable<number> {
     return this.activeWallet()
       .mergeMap(wallet => {
         if (!wallet) {
@@ -81,7 +109,7 @@ export class EthereumService {
       })
   }
 
-  private observeBalance(walletId : string) : Observable<any> {
+  private observeBalance(walletId: string): Observable<any> {
     let executor = Observable.bindCallback(this.web3.eth.getBalance)
 
     return executor()
@@ -91,18 +119,67 @@ export class EthereumService {
       })
   }
 
-  registerPlant(price: number, source: number, amounts: number[], dates: number[]): Promise<string> {
+  private logTransaction(transactionId: string): void {
+      this.web3.eth.getTransaction(transactionId, function(error, result) {
+         if (error) {
+             console.log(error);
+             return;
+         }
+
+         this.transactionsLog.log(result.from, result.to, transactionId);
+      });
+  }
+
+  registerPlant(data: BlockchainPlantData): Promise<string> {
+     let dates = data.predictions.map(
+         prediction => prediction.date.getTime()
+     )
+
+     let amounts = data.predictions.map(
+         prediction => prediction.energyPrediction
+     )
+
+      this.web3.eth.filter('latest', function(error, result){
+          if (!error) {
+              console.log("MINED")
+              this.web3.eth.getBlock(result, true, function (error, result) {
+                  console.log("BLOCK");
+                  console.log(result);
+              });
+          } else {
+              console.log("MINED WITH ERROR")
+              console.error(error)
+          }
+          this.web3.eth.filter.stopWatch();
+      });
+
       return this.exchange.createPlantContract.sendTransaction(
               this.activeWallet(),
-              this.EthToWei(price),
-              source,
+              this.ethToWei(data.price),
+              data.source,
               amounts,
               dates,
-              {from: this.web3.eth.coinbase});
+              {from: this.web3.eth.coinbase})
   }
 
   setPrice(price: number): Promise<string> {
-    return this.exchange.setPrice.sendTransaction(price, {from: this.web3.eth.coinbase});
+    return this.exchange.setPrice.sendTransaction(price, {from: this.web3.eth.coinbase})
+  }
+
+  buy(plant: string, amount: number, date: Date): void {
+      this.exchange.buy.sendTransaction(plant, amount, date, {from: this.web3.eth.coinbase})
+  }
+
+  transfer(to: string, amount: number, date: Date): void {
+      this.exchange.transfer.sendTransaction(to, amount, date, {from: this.web3.eth.coinbase})
+  }
+
+  getOwned(date: Date): number {
+      return 0;
+  }
+
+  getBestPrice(amount: number, date: Date, type: PlantType): number {
+      return 0
   }
 
   isActiveConnection(): boolean {
@@ -113,7 +190,7 @@ export class EthereumService {
     return this.web3.fromWei(weiAmount, 'ether')
   }
 
-  EthToWei(ethAmount: number): number {
+  ethToWei(ethAmount: number): number {
       return this.web3.toWei(ethAmount)
   }
 

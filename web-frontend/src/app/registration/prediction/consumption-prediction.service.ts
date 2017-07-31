@@ -5,7 +5,7 @@ import { Observable } from "rxjs/Observable";
 
 import * as moment from 'moment';
 
-import { PredictionData } from "../prediction-review/prediction-data";
+import { PredictionData } from "./prediction-data";
 import { Period } from "../../shared/period";
 import { environment } from "../../../environments/environment";
 

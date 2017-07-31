@@ -11,6 +11,7 @@ export const environment = {
     plant: {
       root: '/api/v1/plant',
       activate: 'activate',
+      blockchainData: 'blockchain/data',
       predictionData: 'production/predicted',
       predictionPeriod: 'production/predicted/period',
       predictionTotal: 'production/predicted/total',
@@ -30,6 +31,11 @@ export const environment = {
     },
     wallet: {
       root: '/api/v1/wallet'
+    },
+    transactions: {
+      root: '/api/v1/transaction/log',
+      from: 'from',
+      to: 'to'
     }
   }
 };

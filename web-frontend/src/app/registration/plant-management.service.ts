@@ -10,12 +10,17 @@ import * as moment from 'moment'
 
 import {PlantForm, PlantType} from "./plant-form/plant-form";
 import {environment} from "../../environments/environment";
+import {ProductionPredictionService} from "./prediction/production-prediction.service"
 import { EthereumService } from "../shared/ethereum.service";
+import { BlockchainPlantData } from "../shared/blockchain-plant"
 
 @Injectable()
 export class PlantManagementService {
 
-  constructor(private http: Http, private ethereumService: EthereumService) {
+  constructor(
+      private http: Http,
+      private ethereumService: EthereumService,
+      private predictionService: ProductionPredictionService) {
   }
 
   createPlant(plantData: PlantForm): Observable<number> {
@@ -36,20 +41,32 @@ export class PlantManagementService {
   }
 
   private extractData(response: Response): Observable<number> {
-    return response.json()
+      return response.json()
   }
 
   activatePlant(wallet: string): Observable<any> {
+    this.getBlockchainData(wallet).subscribe(
+        data => this.ethereumService.registerPlant,
+        error => this.handleError
+    )
+
     let plantUrl = environment.dataUrls.plant;
-
-    this.ethereumService.registerPlant().catch(this.handleError());
-
     return this.http.post(`${plantUrl.root}/${wallet}/${plantUrl.activate}`, null)
       .map(() => null)
       .catch(this.handleError)
 
-
   }
+
+  private getBlockchainData(wallet: string): Observable<BlockchainPlantData> {
+      return this.http.get(`${environment.dataUrls.plant.root}${wallet}${environment.dataUrls.plant.blockchainData}`)
+        .map(this.extractBlockchainData)
+  }
+
+  private extractBlockchainData(response: Response): BlockchainPlantData {
+    return response.json()
+        .map(data => new BlockchainPlantData(data.plant, data.predictions))
+  }
+
 
   // TODO: Implement
   private handleError(error: Response): Observable<number> {
