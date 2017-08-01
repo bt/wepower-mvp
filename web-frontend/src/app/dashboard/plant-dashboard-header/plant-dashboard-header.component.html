@@ -34,13 +34,13 @@
   </div>
   <div class="col-md-7">
     <div class="row header-data-container right">
-      <div class="col-md-10">
+      <div class="col-md-9">
         <div class="row">
           <div class="col">
             Market price vs your plant price, Eur/MWh
           </div>
         </div>
-        <canvas baseChart width="750" height="182"
+        <canvas baseChart width="700" height="182"
                 [datasets]="lineChartData"
                 [labels]="lineChartLabels"
                 [colors]="lineChartColors"
@@ -48,9 +48,17 @@
                 chartType="line"
                 ></canvas>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-3">
         <input class="form-control" type="text">
         <button type="button" class="btn btn-primary">Set price</button>
+        <div class="chart-legend">
+          <ng-container *ngFor="let data of lineChartData; let i = index">
+            <span class="item">
+              <i [ngStyle]="{color: lineChartColors[i].borderColor}" class="fa fa-circle" aria-hidden="true"></i>
+              <span class="label">{{data.label}}</span>
+            </span>
+          </ng-container>
+        </div>
       </div>
     </div>
   </div>
