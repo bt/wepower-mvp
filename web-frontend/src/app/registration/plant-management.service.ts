@@ -46,15 +46,17 @@ export class PlantManagementService {
   }
 
   activatePlant(wallet: string): Observable<any> {
-    this.getBlockchainData(wallet).subscribe(
-        data => this.ethereumService.registerPlant(data),
-        error => this.handleError
-    )
 
     let plantUrl = environment.dataUrls.plant;
-    return this.http.post(`${plantUrl.root}/${wallet}/${plantUrl.activate}`, null)
-      .map(() => null)
-      .catch(this.handleError)
+
+    let promise = Promise.all(
+        [
+            this.getBlockchainData(wallet).mergeMap(data => this.ethereumService.registerPlant(wallet, data)).toPromise(),
+            this.http.post(`${plantUrl.root}/${wallet}/${plantUrl.activate}`, null).toPromise()
+        ]
+    )
+
+    return Observable.fromPromise(promise);
 
   }
 

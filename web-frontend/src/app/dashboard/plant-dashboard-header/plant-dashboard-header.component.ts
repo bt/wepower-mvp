@@ -6,6 +6,7 @@ import { MarketPriceRow } from "../market-price-row";
 import { ProductionPredictionService } from "../../registration/prediction/production-prediction.service";
 import { EthereumService } from "../../shared/ethereum.service";
 import { ElectricityMarketPriceService } from "../electricity-market-price.service";
+import {BlockchainPlantData} from "../../shared/blockchain-plant";
 
 @Component({
   selector: 'app-plant-dashboard-header',

@@ -3,7 +3,6 @@ import {EthereumService} from "./shared/ethereum.service";
 
 
 const contract = require('truffle-contract');
-const metaincoinArtifacts = require('../../compiled_contracts/MetaCoin.json');
 
 @Component({
   selector: 'app-root',
@@ -12,7 +11,6 @@ const metaincoinArtifacts = require('../../compiled_contracts/MetaCoin.json');
 })
 export class AppComponent {
   title = 'app';
-  MetaCoin = contract(metaincoinArtifacts);
 
   account: any;
   accounts: any;

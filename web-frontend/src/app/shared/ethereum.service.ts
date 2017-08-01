@@ -13,6 +13,7 @@ import { default as contract } from 'truffle-contract'
 import {BlockchainPlantData} from "./blockchain-plant";
 import {PlantType} from "../registration/plant-form/plant-form";
 import {TransactionsLogService} from "./transactions-log-service";
+import {error} from "util";
 
 
 var Web3 = require('web3');
@@ -27,6 +28,8 @@ export class EthereumService {
 
   private exchange: any;
 
+  private ExchangeContract = contract(exchange_artifact);
+
   constructor(private transactionsLog: TransactionsLogService) { }
 
   loadConnection()  {
@@ -38,9 +41,12 @@ export class EthereumService {
     // Use Mist/MetaMask's provider
     this.web3 = new Web3(window['web3'].currentProvider);
 
-    contract(exchange_artifact).deployed().then(function(instance) {
-        this.exchange = instance;
-        const plantCreatedEvent = this.exchange.CreatePlant({_from: this.web3.eth.coinbase});
+    this.ExchangeContract.setProvider(new this.web3.providers.HttpProvider('http://localhost:8545'));
+
+    let _self = this;
+    this.ExchangeContract.deployed().then(function(instance) {
+        _self.exchange = instance;
+        const plantCreatedEvent = _self.exchange.CreatePlant({_from: _self.web3.eth.coinbase});
         plantCreatedEvent.watch(function(err, result) {
             if (err) {
                 console.log(err)
@@ -49,7 +55,7 @@ export class EthereumService {
             console.log("PLANT CREATED EVENT")
             console.log(result.args._value)
         })
-        const transferEvent = this.exchange.Transfer({_from: this.web3.eth.coinbase});
+        const transferEvent = _self.exchange.Transfer({_from: _self.web3.eth.coinbase});
         transferEvent.watch(function(err, result) {
             if (err) {
                 console.log("TRANSFER EVENT ERROR")
@@ -58,7 +64,7 @@ export class EthereumService {
             }
             console.log("TRANSFER EVENT")
             console.log(result.args._value)
-            this.logTransaction(result.transactionHash);
+            _self.logTransaction(result.transactionHash);
         })
     });
 
@@ -74,11 +80,10 @@ export class EthereumService {
 
     let promise = new Promise((resolve, reject) => {
       this.web3.eth.getAccounts((error, result) => {
-
-
         if (!result) {
           resolve(null)
         } else {
+          this.web3.eth.defaultAccount = result[0];
           resolve(result[0]);
         }
       })
@@ -93,29 +98,37 @@ export class EthereumService {
   }
 
   walletBalance(): Observable<number> {
+
     return this.activeWallet()
       .mergeMap(wallet => {
         if (!wallet) {
           return Observable.throw("Wallet is not present")
         }
-
-        return Observable.of(wallet)
+        return this.observeBalance(wallet);
       })
-      .map(wallet => 5)
       .catch(error => {
         console.error(error)
         return Observable.of(0)
       })
   }
 
-  private observeBalance(walletId: string): Observable<any> {
-    let executor = Observable.bindCallback(this.web3.eth.getBalance)
+  private observeBalance(walletId: string): Observable<number> {
+      let promise = new Promise((resolve, reject) => {
+          this.web3.eth.getBalance(walletId, (error, result) => {
+              if (!result) {
+                  resolve(null)
+              } else {
+                  resolve(result);
+              }
+          })
+      });
 
-    return executor()
-      .map(result => {
-        // Returns [Error, Array<Account>]
-        return result[1][0]
-      })
+      return Observable.fromPromise(promise)
+          .timeout(1000)
+          .catch((error) => {
+              console.log(error)
+              return Observable.of(null)
+          })
   }
 
   private logTransaction(transactionId: string): void {
@@ -129,28 +142,30 @@ export class EthereumService {
       });
   }
 
-  registerPlant(data: BlockchainPlantData): Observable<string> {
-     let dates = data.predictions ? data.predictions.map(
-         prediction => prediction.date.getTime()
-     ) : []
+  registerPlant(wallet: string, data: BlockchainPlantData): Observable<string> {
+      console.log("REGISTER")
 
-     let amounts = data.predictions ? data.predictions.map(
-         prediction => prediction.energyPrediction
-     ) : []
+      let dates = data.predictions ? data.predictions.map(
+          prediction => prediction.date.getTime()
+      ) : []
 
-      return this.activeWallet()
-          .flatMap(wallet => {
-              if (!wallet) {
-                  return Observable.throw("Wallet is not present")
-              }
+      let amounts = data.predictions ? data.predictions.map(
+          prediction => prediction.energyPrediction
+      ) : []
 
-              return Observable.of(this.exchange.createPlantContract.sendTransaction(
-                  wallet,
-                  this.ethToWei(data.price),
-                  PlantType[data.source],
-                  amounts,
-                  dates,
-                  {from: this.web3.eth.coinbase}))
+      let promise = this.exchange.createPlantContract.sendTransaction(
+              wallet,
+              this.ethToWei(data.price),
+              PlantType[data.source],
+              amounts,
+              dates,
+              {from: this.web3.eth.coinbase})
+
+      return Observable.fromPromise(promise)
+          .timeout(1000)
+          .catch((error) => {
+              console.log(error)
+              return Observable.of(null)
           })
   }
 

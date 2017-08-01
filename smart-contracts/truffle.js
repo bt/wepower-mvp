@@ -8,7 +8,7 @@ module.exports = {
     demo : {
       host: "192.168.50.157",
       port: 8545,
-      network_id: "8888"
+      network_id: "*"
     }
   }
 };
