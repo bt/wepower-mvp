@@ -40,11 +40,11 @@
             Market price vs your plant price, Eur/MWh
           </div>
         </div>
-        <canvas baseChart width="400" height="400"
+        <canvas baseChart width="750" height="182"
                 [datasets]="lineChartData"
                 [labels]="lineChartLabels"
                 [colors]="lineChartColors"
-                legend="false"
+                [options]="lineChartOptions"
                 chartType="line"
                 ></canvas>
       </div>

@@ -23,8 +23,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
     {data: [], label: 'Your price'}
   ];
 
-  public lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
+  public lineChartLabels:Array<any>;
 
   public lineChartColors:Array<any> = [
     {
@@ -36,6 +35,44 @@ export class PlantDashboardHeaderComponent implements OnInit {
       backgroundColor: 'rgba(0,0,0,0)'
     }
   ];
+
+    public lineChartOptions:any = {
+        responsive: false,
+        legend: { display: false },
+        scales: {
+            yAxes: [{
+                display: true,
+                ticks: {
+                    suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
+                    fontFamily: "'Roboto', 'Sans-serif'",
+                    fontSize: 16,
+                    fontColor: '#000',
+
+                    padding: 30
+                },
+                gridLines: {
+                    color: '#e0e0e0',
+                    lineWidth: 3,
+                    drawBorder: false,
+
+                    zeroLineColor: '#e0e0e0',
+                    zeroLineWidth: 3,
+
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    fontFamily: "'Roboto', 'Sans-serif'",
+                    fontSize: 16,
+                    fontColor: '#000',
+                    padding: 10
+                },
+                gridLines: {
+                    display:false
+                }
+            }]
+        }
+    };
 
   constructor(private predictionService : ProductionPredictionService,
               private ethereum : EthereumService,
@@ -57,6 +94,16 @@ export class PlantDashboardHeaderComponent implements OnInit {
       moment().startOf('isoWeek').toDate(),
       moment().startOf('isoWeek').add(6, 'day').toDate()
     );
+
+    let dayLabels: Array<string> = []
+
+    let date = this.headerPeriod.from;
+    while (moment(date).isBefore(this.headerPeriod.to)) {
+        dayLabels.push(moment(date).format('MM-DD'))
+        date = moment(date).add(1, 'day').toDate()
+    }
+    this.lineChartLabels = dayLabels;
+
     this.loadTotalPrediction(this.headerPeriod);
     this.loadMarketReview();
   }
@@ -102,10 +149,13 @@ export class PlantDashboardHeaderComponent implements OnInit {
     let _lineChartData:Array<any> = new Array(this.lineChartData.length);
 
     _lineChartData[0] = {data: new Array(7), label: 'Market price'};
+    _lineChartData[1] = {data: new Array(7), label: 'Your price'};
     for (let j = 0; j < marketPrices.length; j++) {
       _lineChartData[0].data[j] = marketPrices[j][1];
     }
-
-    this.lineChartData = _lineChartData;
+    setTimeout(() => {
+      // Timeout required because of angular and chart js integration bug.
+      this.lineChartData = _lineChartData;
+    }, 50);
   }
 }
