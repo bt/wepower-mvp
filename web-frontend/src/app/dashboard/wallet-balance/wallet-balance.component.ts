@@ -23,11 +23,18 @@ export class WalletBalanceComponent implements OnInit {
         this.exchangeMarket.exchangeRate().toPromise()
       ]
     ).then(values => {
-        this.walletBalance = this.ethereum.weiToETH(values[0])
+        this.walletBalance = this.round(this.ethereum.weiToETH(values[0]), 6)
         this.exchangeRate = values[1]
-        this.walletBalanceEur = this.walletBalance * this.exchangeRate
+        this.walletBalanceEur = this.round(this.walletBalance * this.exchangeRate, 6)
       }
     )
   }
+
+    private round(number: number, precision: number) {
+        var factor = Math.pow(10, precision);
+        var tempNumber = number * factor;
+        var roundedTempNumber = Math.round(tempNumber);
+        return roundedTempNumber / factor;
+    };
 
 }
