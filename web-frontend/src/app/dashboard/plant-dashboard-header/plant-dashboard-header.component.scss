@@ -27,6 +27,36 @@
   vertical-align: middle;
 }
 
+.input-group.set-price {
+  top: 25px;
+}
+
+.power-input.set-price {
+  border-color: $power-grey;
+  border-width: 2px;
+  border-radius: 0;
+}
+
+.power-input.set-price:active {
+  border-width: 2px;
+  border-color: $power-grey;
+}
+
+.power-button.set-price {
+  font-size: 14px;
+  color: $power-white;
+  font-weight: 500;
+}
+
+.power-button.set-price:hover {
+  cursor: pointer;
+
+  background-color: $power-white;
+  color: $power-blue;
+
+  border-color: $power-blue;
+}
+
 .chart-legend {
   position: absolute;
   bottom: 25px;
@@ -34,6 +64,7 @@
   .item {
     padding: 5px;
   }
+
 }
 
 
