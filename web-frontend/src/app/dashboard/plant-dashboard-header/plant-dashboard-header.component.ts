@@ -37,7 +37,8 @@ export class PlantDashboardHeaderComponent implements OnInit {
   ];
 
     public lineChartOptions:any = {
-        responsive: false,
+        responsive: true,
+        maintainAspectRatio: false,
         legend: { display: false },
         scales: {
             yAxes: [{

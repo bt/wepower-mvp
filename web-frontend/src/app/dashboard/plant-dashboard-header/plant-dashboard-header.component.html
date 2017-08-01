@@ -40,13 +40,15 @@
             Market price vs your plant price, Eur/MWh
           </div>
         </div>
-        <canvas baseChart width="700" height="182"
+        <div>
+        <canvas baseChart height="182"
                 [datasets]="lineChartData"
                 [labels]="lineChartLabels"
                 [colors]="lineChartColors"
                 [options]="lineChartOptions"
                 chartType="line"
                 ></canvas>
+        </div>
       </div>
       <div class="col-md-3">
         <div class="input-group set-price">
