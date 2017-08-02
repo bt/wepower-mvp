@@ -83,7 +83,8 @@
                      [(ngModel)]="formData.consumption"
                      name="consumption"
                      #consumption="ngModel"
-                     pattern="^\d+[,.]?\d*">
+                     pattern="^\d+[,.]?\d*"
+                     required>
               <div *ngIf="consumption.errors && (consumption.dirty || consumption.touched)"
                    [hidden]="!consumption.errors.required"
                    class="validation-error">
