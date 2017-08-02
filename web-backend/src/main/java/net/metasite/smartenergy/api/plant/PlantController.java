@@ -25,6 +25,7 @@ import net.metasite.smartenergy.api.plant.request.PlantDetailsDTO;
 import net.metasite.smartenergy.api.plant.response.CreatedPlantDTO;
 import net.metasite.smartenergy.api.plant.response.DailyPlantReviewDTO;
 import net.metasite.smartenergy.api.plant.response.PredictionDTO;
+import net.metasite.smartenergy.externalmarkets.electricity.ElectricityPricesManager;
 import net.metasite.smartenergy.plant.PlantManager;
 import net.metasite.smartenergy.repositories.PlantRepository;
 
@@ -54,6 +55,9 @@ public class PlantController {
 
     @Resource
     private PlantRepository plantRepository;
+
+    @Resource
+    private ElectricityPricesManager electricityPricesManager;
 
     /**
      * Controller is, and will be used only by Front-end,
@@ -130,8 +134,10 @@ public class PlantController {
         List<PredictionDTO> responsePredictions =
                 getPreditcedProduction(walletId, plant.getPeriod().getFrom(), plant.getPeriod().getTo());
 
+        BigDecimal price = electricityPricesManager.getPriceForDate(LocalDate.now());
+
         BlockchainRegistrationDTO result =
-                new BlockchainRegistrationDTO(responseDetails, responsePredictions);
+                new BlockchainRegistrationDTO(responseDetails, responsePredictions, price);
 
         return new ResponseEntity(result, HttpStatus.OK);
 

@@ -13,4 +13,6 @@ public interface ElectricityDailyPriceRepository extends BaseRepository<Electric
 
     List<ElectricityDailyPrice> findAllByDateIsBetween(LocalDate from, LocalDate to);
 
+    ElectricityDailyPrice findDistinctFirstByDate(LocalDate date);
+
 }

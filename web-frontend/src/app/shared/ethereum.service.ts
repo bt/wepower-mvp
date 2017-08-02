@@ -163,9 +163,37 @@ export class EthereumService {
           })
   }
 
-  setPrice(price: number): Promise<string> {
-    return this.exchange.setPrice.sendTransaction(price, {from: this.web3.eth.coinbase})
+  setPrice(wallet: string, price: number): Observable<string> {
+    let promise = this.exchange.setPrice.sendTransaction(wallet, price, {from: this.web3.eth.coinbase, gas: 2000000})
+    return Observable.fromPromise(promise)
+      .timeout(1000)
+      .catch((error) => {
+          console.log(error)
+          return Observable.throw(error)
+      })
   }
+
+  getPrice(wallet: string): Observable<any> {
+      let promise = this.exchange.getPrice.call(wallet, {from: this.web3.eth.coinbase})
+
+      return Observable.fromPromise(promise)
+          .timeout(1000)
+          .catch((error) => {
+              console.log(error)
+              return Observable.throw(error)
+          })
+  }
+
+   getTotalAmount(wallet: string, date: number): Observable<number> {
+        let promise = this.exchange.getTotalAmount.call(wallet, date, {from: this.web3.eth.coinbase})
+
+        return Observable.fromPromise(promise)
+            .timeout(1000)
+            .catch((error) => {
+                console.log(error)
+                return Observable.throw(error)
+            })
+   }
 
   buy(plant: string, amount: number, date: Date): void {
       this.exchange.buy.sendTransaction(plant, amount, date, {from: this.web3.eth.coinbase})

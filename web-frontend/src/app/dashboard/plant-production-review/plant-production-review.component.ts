@@ -10,6 +10,7 @@ import { ProductionReviewService } from "../production-review.service";
 import { DataFiller } from "../../shared/data-filler.service";
 import { ProductionDetails } from "../production-details";
 import {ProductionPredictionService} from "../../registration/prediction/production-prediction.service";
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'app-plant-production-review',
@@ -79,6 +80,10 @@ export class PlantProductionReviewComponent implements OnInit {
             )
     }
 
+  totalAmount(date: Date): Observable<number> {
+    return this.ethereum.getTotalAmount(this.walletId, date.getTime());
+  }
+
   private loadTable(period : Period) {
     Promise.all(
       [
@@ -94,6 +99,7 @@ export class PlantProductionReviewComponent implements OnInit {
       let price: number = 25
 
       let reviewDetails = productionDetails.map(productionForDay => {
+
           return new ProductionReviewRow(
             productionForDay.date,
             productionForDay.prediction,
@@ -102,6 +108,7 @@ export class PlantProductionReviewComponent implements OnInit {
             price,
             price / exchangeRate,
             price * sold,
+            0
           )
         }
       )

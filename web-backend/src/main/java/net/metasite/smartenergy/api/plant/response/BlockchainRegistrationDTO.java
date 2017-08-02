@@ -1,5 +1,6 @@
 package net.metasite.smartenergy.api.plant.response;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class BlockchainRegistrationDTO {
@@ -8,12 +9,16 @@ public class BlockchainRegistrationDTO {
 
     private List<PredictionDTO> predictions;
 
+    private BigDecimal currentMarketPrice;
+
     public BlockchainRegistrationDTO(
             PlantDetailsResponseDTO plant,
-            List<PredictionDTO> predictions) {
+            List<PredictionDTO> predictions,
+            BigDecimal currentMarketPrice) {
 
         this.plant = plant;
         this.predictions = predictions;
+        this.currentMarketPrice = currentMarketPrice;
     }
 
     public PlantDetailsResponseDTO getPlant() {
@@ -30,5 +35,13 @@ public class BlockchainRegistrationDTO {
 
     public void setPredictions(List<PredictionDTO> predictions) {
         this.predictions = predictions;
+    }
+
+    public BigDecimal getCurrentMarketPrice() {
+        return currentMarketPrice;
+    }
+
+    public void setCurrentMarketPrice(BigDecimal currentMarketPrice) {
+        this.currentMarketPrice = currentMarketPrice;
     }
 }

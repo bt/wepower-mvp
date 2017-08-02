@@ -1,13 +1,14 @@
 import { DayDataRow } from "../shared/day-data-row";
 
 export class ProductionReviewRow implements DayDataRow {
-  constructor(public date : Date,
-              public prediction : number,
-              public production : number,
-              public sold : number,
-              public priceEth : number,
-              public priceEur : number,
-              public receivedEth : number) {
+  constructor(public date: Date,
+              public prediction: number,
+              public production: number,
+              public sold: number,
+              public priceEth: number,
+              public priceEur: number,
+              public receivedEth: number,
+              public totalTokens: number) {
 
   }
 
@@ -19,7 +20,8 @@ export class ProductionReviewRow implements DayDataRow {
       0,
       null,
       null,
-      null
+      null,
+      0
     )
   }
 }

@@ -9,6 +9,7 @@ contract PlantSmartContract {
   struct Wepwr {
     uint date;
     uint256 amount;
+    uint256 totalAmount;
     address plant;
   }
 
@@ -40,8 +41,8 @@ contract PlantSmartContract {
   }
 
   function mint(uint256 _amount, uint _date) {
-    tokens[plant][_date] = Wepwr(_date, _amount, plant);
-    Transfer(this, plant, _amount);
+    tokens[plant][_date] = Wepwr(_date, _amount, _amount, plant);
+    /*Transfer(this, plant, _amount);*/
   }
 
   function balanceOf(address _address, uint _date) returns(uint256) {
@@ -51,6 +52,14 @@ contract PlantSmartContract {
 
     Wepwr token = tokens[_address][_date];
     return token.amount;
+  }
+
+  function totalOf(address _address, uint _date) returns(uint256) {
+    if (_date < now) {
+      throw;
+    }
+    Wepwr token = tokens[_address][_date];
+    return token.totalAmount;
   }
 
   function transfer(address _from, address _to, uint256 _amount, uint _date) onlyOwner {
@@ -64,7 +73,7 @@ contract PlantSmartContract {
     }
 
     token.amount = token.amount - _amount;
-    tokens[_to][_date] = Wepwr(token.date, _amount, token.plant);
+    tokens[_to][_date] = Wepwr(token.date, _amount, token.totalAmount, token.plant);
 
     Transfer(_from, _to, _amount);
   }

@@ -62,7 +62,7 @@ export class PlantManagementService {
 
   private extractBlockchainData(response: Response): BlockchainPlantData {
     let preditionData = response.json().predictions.map(predition => new PredictionData(new Date(predition.date), predition.predictedAmount));
-    return new BlockchainPlantData(10, PlantType[PlantType[response.json().plant.type]], preditionData)
+    return new BlockchainPlantData(response.json().currentMarketPrice, PlantType[PlantType[response.json().plant.type]], preditionData)
   }
 
 

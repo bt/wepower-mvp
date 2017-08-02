@@ -41,6 +41,11 @@ public class ElectricityPricesManager {
         this.nordPoolHTTPPriceService = nordPoolHTTPPriceService;
     }
 
+    public BigDecimal getPriceForDate(LocalDate date) {
+        ElectricityDailyPrice dailyPrice = electricityDailyPriceRepository.findDistinctFirstByDate(date);
+        return dailyPrice.getUnitPrice();
+    }
+
     public ImmutableMap<LocalDate, BigDecimal> getPricesForPeriod(Range<LocalDate> period) {
         List<ElectricityDailyPrice> alreadyChachedDailyPrices =
                 electricityDailyPriceRepository.findAllByDateIsBetween(

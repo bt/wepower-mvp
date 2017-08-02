@@ -52,8 +52,8 @@
       </div>
       <div class="col-md-3">
         <div class="input-group set-price">
-          <input class="form-control power-input set-price" type="text">
-          <span class="input-group-addon btn btn-primary power-button set-price" id="basic-addon1">Set price</span>
+          <input class="form-control power-input set-price" type="text" [value]="price" (input)="price = $event.target.value">
+          <span class="input-group-addon btn btn-primary power-button set-price" id="basic-addon1" (click)="setPrice()">Set price</span>
         </div>
         <div class="chart-legend">
           <ng-container *ngFor="let data of lineChartData; let i = index">

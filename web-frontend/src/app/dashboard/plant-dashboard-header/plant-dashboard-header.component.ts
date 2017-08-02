@@ -18,6 +18,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
   producedTotal: number
   headerPeriod: Period
   walletId: string
+  price : number = 0
 
   public lineChartData: Array<any> = [
     {data: [], label: 'Market price'},
@@ -218,9 +219,9 @@ export class PlantDashboardHeaderComponent implements OnInit {
         }
     };
 
-  constructor(private predictionService : ProductionPredictionService,
-              private ethereum : EthereumService,
-              private electricityPriceService : ElectricityMarketPriceService) { }
+  constructor(private predictionService: ProductionPredictionService,
+              private ethereum: EthereumService,
+              private electricityPriceService: ElectricityMarketPriceService) { }
 
   ngOnInit() {
     this.ethereum.activeWallet()
@@ -233,7 +234,21 @@ export class PlantDashboardHeaderComponent implements OnInit {
       )
   }
 
+  setPrice(): void {
+      const priceInEth = this.ethereum.ethToWei(this.price)
+      this.ethereum.setPrice(this.walletId, priceInEth).subscribe(
+          data => null,
+          error => {
+              console.log(error)
+              this.loadPrice()
+          }
+      )
+  }
+
   private loadData() {
+
+    this.loadPrice()
+
     this.headerPeriod = new Period(
       moment().startOf('isoWeek').toDate(),
       moment().startOf('isoWeek').add(6, 'day').toDate()
@@ -273,6 +288,13 @@ export class PlantDashboardHeaderComponent implements OnInit {
         predictions => this.producedTotal = predictions,
         error => console.error(error)
       );
+  }
+
+  private loadPrice() {
+      this.ethereum.getPrice(this.walletId).subscribe(
+          data => this.price = this.ethereum.weiToETH(data),
+          error => console.error(error)
+      )
   }
 
   public setChartData(marketPrices: Array<[Date, number]>): void {
