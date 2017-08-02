@@ -20,28 +20,34 @@
     <table class="table dashboard-table">
       <thead>
       <tr>
-        <th>Date</th>
-        <th>Predicted, kWh</th>
-        <th>Produced, kWh</th>
-        <th>Price, ETH/kWh</th>
-        <th>Price, EUR/kWh</th>
-        <th>kWh produced/sold</th>
-        <th>Received payment</th>
+        <th class="text-right">Date</th>
+        <th class="text-right">Predicted, kWh</th>
+        <th class="text-right">Produced, kWh</th>
+        <th class="text-right">Price, ETH/kWh</th>
+        <th class="text-right">Price, EUR/kWh</th>
+        <th class="text-right">kWh produced/sold</th>
+        <th class="text-right">Received payment</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let row of productionReview">
-        <td>{{row.date}}</td>
-        <td>{{row.prediction}}</td>
-        <td>{{row.production}}</td>
-        <td>{{row.priceEth}}</td>
-        <td>{{row.priceEur}}</td>
-        <td>
-          <div *ngIf="row.production">{{row.sold}}/{{row.production}}</div>
-          <div *ngIf="!(row.production) && row.prediction">{{row.sold}}/{{row.prediction}}</div>
+        <td class="text-right">{{row.date | date: 'MM-dd'}}</td>
+        <td class="text-right">{{row.prediction}}</td>
+        <td class="text-right">{{row.production}}</td>
+        <td class="text-right">{{row.priceEth}} ETH</td>
+        <td class="text-right">{{row.priceEur}} Eur</td>
+        <td class="text-right">
+          <div class="progressBarContainer" *ngIf="(row.production) || row.prediction">
+            <div class="progressbar">
+              <div [ngStyle]="{width: (!(row.production) && row.prediction ? (row.prediction/row.sold) : (row.production/row.sold))*100 + '%'}"></div>
+            </div>
+            <span *ngIf="row.production">{{row.sold}}/{{row.production}}</span>
+            <span *ngIf="!(row.production) && row.prediction">{{row.sold}}/{{row.prediction}}</span>
+          </div>
+
         </td>
-        <td>
-          <div *ngIf="row.receivedEth">{{row.receivedEth}}</div>
+        <td class="text-right">
+          <div *ngIf="row.receivedEth">{{row.receivedEth}} ETH</div>
         </td>
       </tr>
       </tbody>

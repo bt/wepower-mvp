@@ -67,6 +67,23 @@
           border-top: 3px solid $power-background-grey;
         }
       }
+
+      .progressbar {
+        background-color: $power-grey;
+        max-width: 150px;
+        font-size: 9px;
+        width: 100px;
+        display: inline-block;
+        margin-bottom: 4px;
+      }
+      .progressbar > div {
+        background-color: $power-green;
+        height: 4px;
+        font-size: 12px;
+      }
+      .progressBarContainer span {
+        display: inline-block;
+      }
     }
   }
 }
