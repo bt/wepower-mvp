@@ -40,6 +40,148 @@ export class PlantDashboardHeaderComponent implements OnInit {
         responsive: true,
         maintainAspectRatio: false,
         legend: { display: false },
+        tooltips: {
+            enabled: false,
+            custom: (tooltipModel) => {
+                // Tooltip Element
+                var tooltipEl = document.getElementById('chart-tooltip');
+
+                // Create element on first render
+                if (!tooltipEl) {
+                    tooltipEl = document.createElement('div');
+                    tooltipEl.id = 'chart-tooltip';
+                    document.body.appendChild(tooltipEl);
+                }
+
+                // Hide if no tooltip
+                if (tooltipModel.opacity === 0) {
+                    tooltipEl.style.display = 'none';
+                    return;
+                }
+
+                // Set caret Position
+                tooltipEl.classList.remove('above', 'below', 'no-transform');
+                if (tooltipModel.yAlign) {
+                    tooltipEl.classList.add(tooltipModel.yAlign);
+                } else {
+                    tooltipEl.classList.add('no-transform');
+                }
+
+                const position = document.getElementById("plant-dashboard-chart").getBoundingClientRect();
+
+                // Find Y Location on page
+
+                let pointDown = true
+                let top = 0
+
+                if (tooltipModel.yAlign) {
+                    if (tooltipModel.yAlign == 'top') {
+                        // If div is aligned at top - we add some pixels, to push it down to back to canvas
+                        top = tooltipModel.y + 5
+                        pointDown = false
+                    } else {
+                        // Position over value
+                        top = tooltipModel.y - 75
+                        pointDown = true
+                    }
+                }
+
+                // Set Text
+                if (tooltipModel.body) {
+                    // Clears tooltip
+                    while (tooltipEl.firstChild) {
+                        tooltipEl.removeChild(tooltipEl.firstChild);
+                    }
+
+                    if (!pointDown) {
+                        let innerPointerElement = document.createElement('div');
+                        innerPointerElement.style.width = '0'
+                        innerPointerElement.style.height = '0'
+                        innerPointerElement.style.margin = 'auto'
+                        innerPointerElement.style.position = 'relative'
+                        innerPointerElement.style.bottom = '-13px'
+
+                        innerPointerElement.style.borderLeft = '9px solid transparent'
+                        innerPointerElement.style.borderRight = '9px solid transparent'
+                        innerPointerElement.style.borderBottom = '9px solid #fff'
+
+                        tooltipEl.appendChild(innerPointerElement);
+
+                        let pointerElement = document.createElement('div');
+                        pointerElement.style.width = '0'
+                        pointerElement.style.height = '0'
+                        pointerElement.style.margin = 'auto'
+
+                        pointerElement.style.borderLeft = '10px solid transparent'
+                        pointerElement.style.borderRight = '10px solid transparent'
+                        pointerElement.style.borderBottom = '10px solid #e0e0e0'
+
+                        tooltipEl.appendChild(pointerElement);
+                    }
+
+                    let bodyContainerEl = document.createElement('div');
+
+                    bodyContainerEl.style.fontFamily = "'Roboto'";
+                    bodyContainerEl.style.fontSize = '16px';
+                    bodyContainerEl.style.padding = '10px 10px 10px 10px';
+                    bodyContainerEl.style.backgroundColor = '#fff'
+                    bodyContainerEl.style.borderColor = '#e0e0e0'
+                    bodyContainerEl.style.borderStyle = 'solid'
+                    bodyContainerEl.style.borderWidth = '3px'
+                    bodyContainerEl.style.minWidth = '120px'
+
+                    tooltipEl.appendChild(bodyContainerEl)
+
+                    let titleLines = tooltipModel.title;
+
+                    let titleElement = document.createElement('div');
+                    titleElement.innerText = moment(this.lineChartLabels[titleLines[0]]).format('YYYY-MM-DD')
+                    titleElement.style.display = 'table' // Allows centering horizontaly without known width
+                    titleElement.style.margin = 'auto' // centers horizontaly
+
+                    bodyContainerEl.appendChild(titleElement);
+
+                    var bodyLines = tooltipModel.body.map(item => item.lines);
+
+                    let bodyElement = document.createElement('div');
+                    bodyElement.innerText = bodyLines[0] + ' kWh'
+                    bodyElement.style.display = 'table' // Allows centering horizontaly without known width
+                    bodyElement.style.margin = 'auto' // centers horizontaly
+                    bodyContainerEl.appendChild(bodyElement);
+
+                    if (pointDown) {
+                        let pointerElement = document.createElement('div');
+                        pointerElement.style.width = '0'
+                        pointerElement.style.height = '0'
+                        pointerElement.style.margin = 'auto'
+
+                        pointerElement.style.borderLeft = '10px solid transparent'
+                        pointerElement.style.borderRight = '10px solid transparent'
+                        pointerElement.style.borderTop = '10px solid #e0e0e0'
+
+                        tooltipEl.appendChild(pointerElement);
+
+                        let innerPointerElement = document.createElement('div');
+                        innerPointerElement.style.width = '0'
+                        innerPointerElement.style.height = '0'
+                        innerPointerElement.style.margin = 'auto'
+                        innerPointerElement.style.position = 'relative'
+                        innerPointerElement.style.top = '-13px'
+
+                        innerPointerElement.style.borderLeft = '9px solid transparent'
+                        innerPointerElement.style.borderRight = '9px solid transparent'
+                        innerPointerElement.style.borderTop = '9px solid #fff'
+
+                        tooltipEl.appendChild(innerPointerElement);
+                    }
+                }
+
+                tooltipEl.style.display = 'inline';
+                tooltipEl.style.position = 'absolute';
+                tooltipEl.style.left = (position.left + tooltipModel.caretX - 82) + 'px';
+                tooltipEl.style.top = position.top + top + 'px';
+            }
+        },
         scales: {
             yAxes: [{
                 display: true,
