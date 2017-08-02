@@ -49,10 +49,10 @@ export class PlantManagementService {
 
     let plantUrl = environment.dataUrls.plant;
 
-    return this.getBlockchainData(wallet).mergeMap(data => this.ethereumService.registerPlant(wallet, data))
-        .mergeMap(data =>
-            this.http.post(`${plantUrl.root}/${wallet}/${plantUrl.activate}`, null)
-        ).catch(error => Observable.throw(error))
+    return this.getBlockchainData(wallet)
+        .mergeMap(data => this.ethereumService.registerPlant(wallet, data))
+        .mergeMap(data => this.http.post(`${plantUrl.root}/${wallet}/${plantUrl.activate}`, null))
+        .catch(error => Observable.throw(error))
   }
 
   private getBlockchainData(wallet: string): Observable<BlockchainPlantData> {

@@ -45,17 +45,8 @@ export class EthereumService {
 
     let _self = this;
     this.ExchangeContract.deployed().then(function(instance) {
-        _self.exchange = instance;
-        const plantCreatedEvent = _self.exchange.CreatePlant({_from: _self.web3.eth.coinbase});
-        plantCreatedEvent.watch(function(err, result) {
-            if (err) {
-                console.log(err)
-                return;
-            }
-            console.log("PLANT CREATED EVENT")
-            console.log(result.args._value)
-        })
-        const transferEvent = _self.exchange.Transfer({_from: _self.web3.eth.coinbase});
+        _self.exchange = instance
+        const transferEvent = _self.exchange.Transfer({_from: _self.web3.eth.coinbase})
         transferEvent.watch(function(err, result) {
             if (err) {
                 console.log("TRANSFER EVENT ERROR")
@@ -153,13 +144,16 @@ export class EthereumService {
           prediction => prediction.energyPrediction
       ) : []
 
+      let self_ = this;
+
+
       let promise = this.exchange.createPlantContract.sendTransaction(
               wallet,
               this.ethToWei(data.price),
               PlantType[data.source],
               amounts,
               dates,
-              {from: this.web3.eth.coinbase})
+              {from: this.web3.eth.coinbase, gas: 2000000})
 
       return Observable.fromPromise(promise)
           .timeout(1000)

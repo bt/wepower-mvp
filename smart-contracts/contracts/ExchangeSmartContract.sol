@@ -16,7 +16,7 @@ contract ExchangeSmartContract  {
       plantContracts[_plant] = new PlantSmartContract(_plant, _price, PlantSmartContract.Source(_source));
       plants.push(_plant);
     }
-    addTokens(_plant, _amounts, _dates);
+    /*addTokens(_plant, _amounts, _dates);*/
   }
 
   function addTokens(address _plant, uint256[] _amounts, uint[] _dates) {
