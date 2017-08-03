@@ -292,10 +292,12 @@ export class PlantDashboardHeaderComponent implements OnInit {
     let _lineChartData:Array<any> = new Array(this.lineChartData.length);
 
     _lineChartData[0] = {data: new Array(7), label: 'Market price'};
-    _lineChartData[1] = {data: new Array(7), label: 'Your price'};
     for (let j = 0; j < marketPrices.length; j++) {
       _lineChartData[0].data[j] = marketPrices[j][1];
     }
+
+     _lineChartData[1] = {data: new Array(7), label: 'Your price'};
+
     setTimeout(() => {
       // Timeout required because of angular and chart js integration bug.
       this.lineChartData = _lineChartData;
