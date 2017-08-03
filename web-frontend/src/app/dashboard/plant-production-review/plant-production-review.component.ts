@@ -9,6 +9,7 @@ import { ExchangeRateService } from "../exchange-rate.service";
 import { ProductionReviewService } from "../production-review.service";
 import { DataFiller } from "../../shared/data-filler.service";
 import { ProductionDetails } from "../production-details";
+import {ProductionPredictionService} from "../../registration/prediction/production-prediction.service";
 
 @Component({
   selector: 'app-plant-production-review',
@@ -17,13 +18,19 @@ import { ProductionDetails } from "../production-details";
 })
 export class PlantProductionReviewComponent implements OnInit {
 
+  backDisabled: boolean
+  frontDisabled: boolean
+
   productionReview: Array<ProductionReviewRow>
   tableReviewPeriod: Period = new Period(new Date(), new Date())
   walletId: string
 
-  constructor(private ethereum : EthereumService,
-              private exchangeMarket : ExchangeRateService,
-              private productionReviewService : ProductionReviewService) { }
+  availableRange: Period
+
+  constructor(private ethereum: EthereumService,
+              private exchangeMarket: ExchangeRateService,
+              private predictionService: ProductionPredictionService,
+              private productionReviewService: ProductionReviewService) { }
 
   ngOnInit() {
     this.ethereum.activeWallet()
@@ -44,18 +51,33 @@ export class PlantProductionReviewComponent implements OnInit {
       periodStart.clone().add(6, 'day').toDate()
     );
 
+    this.loadAvailablePeriod()
     this.loadTable(this.tableReviewPeriod);
+
+
   }
 
   previousPeriod() {
     this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(-1)
     this.loadTable(this.tableReviewPeriod);
+    this.adjustButtonActivity()
   }
 
   nextPeriod() {
     this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(1)
     this.loadTable(this.tableReviewPeriod);
+    this.adjustButtonActivity()
   }
+
+    private loadAvailablePeriod() {
+        this.predictionService.getPredictedPeriod(this.walletId)
+            .subscribe(
+                period => {
+                    this.availableRange = period
+                    this.adjustButtonActivity()},
+                error => console.error(error)
+            )
+    }
 
   private loadTable(period : Period) {
     Promise.all(
@@ -90,4 +112,21 @@ export class PlantProductionReviewComponent implements OnInit {
   private fillForWeek(reviews: Array<ProductionReviewRow>) : Array<ProductionReviewRow> {
     return (DataFiller.fillForWeek(reviews, ProductionReviewRow.emptyForDay) as Array<ProductionReviewRow>)
   }
+
+    private adjustButtonActivity() {
+        if (this.tableReviewPeriod == null || this.availableRange) {
+            this.backDisabled = true
+            this.frontDisabled = true
+        }
+
+        this.backDisabled = false
+        if (this.tableReviewPeriod.from <= this.availableRange.from) {
+            this.backDisabled = true
+        }
+
+        this.frontDisabled = false
+        if (this.tableReviewPeriod.to >= this.availableRange.to) {
+            this.frontDisabled = true
+        }
+    }
 }
