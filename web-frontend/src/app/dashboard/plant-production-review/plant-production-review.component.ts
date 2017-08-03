@@ -17,9 +17,9 @@ import { ProductionDetails } from "../production-details";
 })
 export class PlantProductionReviewComponent implements OnInit {
 
-  productionReview : Array<ProductionReviewRow>
-  tableReviewPeriod: Period
-  walletId : string
+  productionReview: Array<ProductionReviewRow>
+  tableReviewPeriod: Period = new Period(new Date(), new Date())
+  walletId: string
 
   constructor(private ethereum : EthereumService,
               private exchangeMarket : ExchangeRateService,
