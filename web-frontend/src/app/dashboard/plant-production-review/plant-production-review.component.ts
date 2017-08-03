@@ -109,7 +109,7 @@ export class PlantProductionReviewComponent implements OnInit {
     })
   }
 
-  private fillForWeek(reviews: Array<ProductionReviewRow>) : Array<ProductionReviewRow> {
+  private fillForWeek(reviews: Array<ProductionReviewRow>): Array<ProductionReviewRow> {
     return (DataFiller.fillForWeek(reviews, ProductionReviewRow.emptyForDay) as Array<ProductionReviewRow>)
   }
 

@@ -5,7 +5,7 @@ export class DataFiller {
 
   constructor() { }
 
-  static fillForWeek(entries: Array<DayDataRow>, factory: (forDay : Date) => DayDataRow) : Array<DayDataRow> {
+  static fillForWeek(entries: Array<DayDataRow>, factory: (forDay : Date) => DayDataRow): Array<DayDataRow> {
     if (typeof entries === 'undefined' || entries.length == 0) {
       return []
     }
@@ -16,8 +16,8 @@ export class DataFiller {
     let firstEntryDate = entries[0].date
     let firstEntryDayOfWeek = moment(firstEntryDate).isoWeekday()
 
-    for (let index = 1; index < firstEntryDayOfWeek; index++) {
-      let dayToFill = moment(firstEntryDate).startOf('isoWeek').toDate()
+    for (let index = 0; index < firstEntryDayOfWeek - 1; index++) {
+      let dayToFill = moment(firstEntryDate).startOf('isoWeek').add(index, 'day').toDate()
 
       paddedRows.push(factory(dayToFill))
     }

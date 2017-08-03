@@ -32,10 +32,10 @@
       <tbody>
       <tr *ngFor="let row of productionReview">
         <td class="text-right">{{row.date | date: 'MM-dd'}}</td>
-        <td class="text-right">{{row.prediction}}</td>
-        <td class="text-right">{{row.production}}</td>
-        <td class="text-right">{{row.priceEth}} ETH</td>
-        <td class="text-right">{{row.priceEur}} Eur</td>
+        <td class="text-right"><span *ngIf="(row.production) || row.prediction">{{row.prediction}}</span></td>
+        <td class="text-right"><span *ngIf="(row.production) || row.prediction">{{row.production}}</span></td>
+        <td class="text-right"><span *ngIf="(row.production) || row.prediction">{{row.priceEth}} ETH</span></td>
+        <td class="text-right"><span *ngIf="(row.production) || row.prediction">{{row.priceEur}} Eur</span></td>
         <td class="text-right">
           <div class="progressBarContainer" *ngIf="(row.production) || row.prediction">
             <div class="progressbar">
