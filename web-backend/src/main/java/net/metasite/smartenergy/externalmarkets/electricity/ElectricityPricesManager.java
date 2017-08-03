@@ -20,8 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 
 @Service
@@ -43,7 +45,18 @@ public class ElectricityPricesManager {
 
     public BigDecimal getPriceForDate(LocalDate date) {
         ElectricityDailyPrice dailyPrice = electricityDailyPriceRepository.findDistinctFirstByDate(date);
-        return dailyPrice.getUnitPrice();
+
+        if (dailyPrice != null) {
+            return dailyPrice.getUnitPrice();
+        }
+
+        List<PriceForDay> receivedPrices = fetchRemainingFromNordPool(ImmutableList.of(date));
+        cacheMissingPrices(receivedPrices);
+        if (receivedPrices.size() > 0) {
+            return receivedPrices.get(0).getPrice();
+        }
+
+        return BigDecimal.ZERO;
     }
 
     public ImmutableMap<LocalDate, BigDecimal> getPricesForPeriod(Range<LocalDate> period) {

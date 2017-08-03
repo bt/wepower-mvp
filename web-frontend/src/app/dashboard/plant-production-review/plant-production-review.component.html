@@ -41,10 +41,10 @@
             <div class="progressbar">
               <div [ngStyle]="{width: (!(row.production) && row.prediction ? (row.prediction/row.sold) : (row.production/row.sold))*100 + '%'}"></div>
             </div>
+            <span>{{row.totalTokens}}</span>
             <span *ngIf="row.production">{{row.sold}}/{{row.production}}</span>
             <span *ngIf="!(row.production) && row.prediction">{{row.sold}}/{{row.prediction}}</span>
           </div>
-
         </td>
         <td class="text-right">
           <div *ngIf="row.receivedEth">{{row.receivedEth}} ETH</div>

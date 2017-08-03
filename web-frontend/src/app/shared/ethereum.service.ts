@@ -137,7 +137,7 @@ export class EthereumService {
       console.log("REGISTER")
 
       let dates = data.predictions ? data.predictions.map(
-          prediction => prediction.date.getTime()
+          prediction => { return prediction.date.getTime() / 1000 }
       ) : []
 
       let amounts = data.predictions ? data.predictions.map(
@@ -153,7 +153,7 @@ export class EthereumService {
               PlantType[data.source],
               amounts,
               dates,
-              {from: this.web3.eth.coinbase, gas: 2000000})
+              {from: this.web3.eth.coinbase, gas: 4000000})
 
       return Observable.fromPromise(promise)
           .timeout(1000)
@@ -185,7 +185,8 @@ export class EthereumService {
   }
 
    getTotalAmount(wallet: string, date: number): Observable<number> {
-        let promise = this.exchange.getTotalAmount.call(wallet, date, {from: this.web3.eth.coinbase})
+       const dateInSeconds: number = date / 1000
+       const promise = this.exchange.getTotalAmount.call(wallet, dateInSeconds, {from: this.web3.eth.coinbase}, {gas:4500000})
 
         return Observable.fromPromise(promise)
             .timeout(1000)

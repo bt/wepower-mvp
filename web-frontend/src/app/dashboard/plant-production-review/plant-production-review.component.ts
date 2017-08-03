@@ -94,12 +94,12 @@ export class PlantProductionReviewComponent implements OnInit {
       let productionDetails: Array<ProductionDetails> = values[0]
       let exchangeRate = values[1]
       // Hardcoded
-      let produced: number = 3000
       let sold: number = 1000
       let price: number = 25
 
-      let reviewDetails = productionDetails.map(productionForDay => {
 
+
+      let reviewDetails = productionDetails.map(productionForDay => {
           return new ProductionReviewRow(
             productionForDay.date,
             productionForDay.prediction,
@@ -112,7 +112,23 @@ export class PlantProductionReviewComponent implements OnInit {
           )
         }
       )
-      this.productionReview = this.fillForWeek(reviewDetails)
+
+        let updates:Array<any> = [];
+
+        reviewDetails.forEach(productionForDay =>
+            updates.push(new Promise((resolve, reject) => {
+                this.totalAmount(productionForDay.date).subscribe(
+                    data => {
+                        productionForDay.totalTokens = data
+                        resolve(true)
+                    },
+                    error => reject
+                )
+            })))
+
+        Promise.all(updates)
+            .then(values => { this.productionReview = this.fillForWeek(reviewDetails) })
+
     })
   }
 

@@ -11,21 +11,15 @@ contract ExchangeSmartContract  {
   mapping (address => address) plantContracts;
 
   function createPlantContract(address _plant, uint256 _price, uint _source, uint256[] _amounts, uint[] _dates) {
-    CreatePlant(_plant);
-    if (plantContracts[_plant] == 0) {
-      plantContracts[_plant] = new PlantSmartContract(_plant, _price, PlantSmartContract.Source(_source));
-      plants.push(_plant);
-    }
-    addTokens(_plant, _amounts, _dates);
-  }
-
-  function addTokens(address _plant, uint256[] _amounts, uint[] _dates) {
     if (_amounts.length != _dates.length) {
       throw;
     }
-    PlantSmartContract plantContract = PlantSmartContract(plantContracts[_plant]);
-    for (uint256 i = 0; i < _amounts.length; i++) {
-      plantContract.mint(_amounts[i], _dates[i]);
+    CreatePlant(_plant);
+    if (plantContracts[_plant] == 0) {
+      PlantSmartContract plantContract =
+        new PlantSmartContract(_plant, _price, PlantSmartContract.Source(_source), _amounts, _dates);
+      plantContracts[_plant] = plantContract;
+      plants.push(_plant);
     }
   }
 
@@ -69,7 +63,7 @@ contract ExchangeSmartContract  {
 
   function getTotalAmount(address _plant, uint _date) returns (uint256) {
     PlantSmartContract plantContract = PlantSmartContract(plantContracts[_plant]);
-    return plantContract.totalOf(_plant, _date);
+    return plantContract.totalOf(_date);
   }
 
   function setPrice(address _plant, uint256 _price) {
