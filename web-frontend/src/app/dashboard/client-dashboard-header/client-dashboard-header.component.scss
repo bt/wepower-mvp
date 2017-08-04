@@ -2,4 +2,32 @@
 
 .header-data-container {
   background-color: $power-white;
+  padding: 1.2em;
+}
+.header-data-container.right {
+  margin: 0 0em 1em 0
+}
+.header-data-container.left {
+  margin: 0 0em 1em 0em
+}
+
+.header-data-title {
+  font-size: 16px;
+}
+
+.header-data-info {
+  font-size: 34px;
+}
+
+.chart-legend {
+  margin-top: 20px;
+
+  .fa-circle {
+    font-size: 10px;
+  }
+
+  .item {
+    padding: 5px;
+  }
+
 }

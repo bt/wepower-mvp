@@ -1,0 +1,89 @@
+@import "../../../styles/shared/variables";
+
+.pagination {
+  padding: 1.5em 0;
+
+  .review-period {
+    font-size: 34px;
+  }
+
+  .selector {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: 20px;
+  }
+}
+
+.pagination-button {
+  padding: 1.8em;
+  background-color: transparent;
+  background-size: 100%;
+
+  border: none;
+  outline: none;
+}
+
+.pagination-button:hover {
+  cursor: pointer;
+}
+
+.button-back {
+  margin-right: 0.5em;
+
+  background-image: url('/assets/images/pagination_back.png');
+}
+.button-back:disabled {
+  background-image: url('/assets/images/pagination_back_inactive.png');
+  border: none;
+}
+.button-back:disabled:hover {
+  cursor: default;
+}
+.button-forward {
+  margin-left: 0.5em;
+
+  background-image: url('/assets/images/pagination_forward.png');
+}
+.button-forward:disabled {
+  background-image: url('/assets/images/pagination_forward_inactive.png');
+}
+.button-forward:disabled:hover {
+  cursor: default;
+}
+
+.dashboard-container {
+  .dashboard-table {
+
+    thead th {
+      font-weight: normal;
+      border-top: 0px;
+      border-bottom: 0px;
+    }
+    tbody {
+      tr {
+        background-color: $power-white;
+        td {
+          border-top: 3px solid $power-background-grey;
+        }
+      }
+
+      .progressbar {
+        background-color: $power-grey;
+        max-width: 150px;
+        font-size: 9px;
+        width: 100px;
+        display: inline-block;
+        margin-bottom: 4px;
+      }
+      .progressbar > div {
+        background-color: $power-green;
+        height: 4px;
+        font-size: 12px;
+      }
+      .progressBarContainer span {
+        display: inline-block;
+      }
+    }
+  }
+}

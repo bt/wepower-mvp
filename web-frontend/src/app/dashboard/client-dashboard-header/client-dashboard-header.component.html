@@ -1,41 +1,63 @@
 <div class="row">
-  <div class="col-md">
-    <div class="row header-data-container">
+  <div class="col-md-5">
+    <div class="row header-data-container left">
       <app-wallet-balance></app-wallet-balance>
     </div>
-    <div class="row">
-      <div class="col-md header-data-container">
+    <div class="row header-data-container left">
+      <div class="col-md ">
         <div class="row">
-          Needs to buy this week
+          <div class="col-md">
+            Need to buy this week
+          </div>
         </div>
         <div class="row">
-          {{consumedTotal}} kWh
-        </div>
-      </div>
-      <div class="col-md header-data-container">
-        <div class="row">
-          Already bought this week
-        </div>
-        <div class="row">
-          150 kWh
+          <div class="col-md header-data-info">
+            {{consumedTotal}} kWh
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="col-md">
-    <div class="row header-data-container">
       <div class="col-md">
-        Paveikslėlis
         <div class="row">
-          Market price vs paid price, Eur/MWh
+          <div class="col-md">
+            Already bought this week
+          </div>
         </div>
-        Paveikslėlis.
-        <div class="row" *ngFor="let row of marketPricesReview">
-          <div class="md">{{row.date}}</div>
-          <div class="md">{{row.marketPrice}}</div>
-          <div class="md">{{row.myPrice}}</div>
+        <div class="row">
+          <div class="col-md header-data-info">
+            150 kWh
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="col-md-7">
+    <div class="row header-data-container right">
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col">
+            Market price vs paid price, Eur/MWh
+          </div>
+        </div>
+        <div>
+          <canvas id="plant-dashboard-chart" baseChart height="182"
+                  [datasets]="lineChartData"
+                  [labels]="lineChartLabels"
+                  [colors]="lineChartColors"
+                  [options]="lineChartOptions"
+                  chartType="line"
+      ></canvas>
+        </div>
+    </div>
+      <div class="col-md-3">
+        <div class="chart-legend">
+          <ng-container *ngFor="let data of lineChartData; let i = index">
+            <div class="item" *ngIf="data.data.length > 0">
+              <i [ngStyle]="{color: lineChartColors[i].borderColor}" class="fa fa-circle" aria-hidden="true"></i>
+              <span class="label">{{data.label}}</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+  </div>
+</div>
 </div>

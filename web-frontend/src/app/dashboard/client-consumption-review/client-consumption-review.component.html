@@ -1,86 +1,98 @@
-<div class="row">
-  <div class="col-md">
-    <button (click)="previousPeriod()" type="button" class="btn btn-primary">Previous period</button>
+<div class="row pagination">
+  <div class="col-md-1 selector">
+    <button type="button"
+            class="pagination-button button-back"
+            (click)="previousPeriod()"
+            [disabled]="backDisabled"
+    ></button>
+    <button type="button"
+            class="pagination-button button-forward"
+            (click)="nextPeriod()"
+            [disabled]="frontDisabled"
+    ></button>
   </div>
-  <div class="col-md">
-    <button (click)="nextPeriod()" type="button" class="btn btn-primary">Next period</button>
+  <div class="col-md ">
+    <span class="review-period">{{tableReviewPeriod.from | date:'MMM dd' }} – {{tableReviewPeriod.to | date:'MMM dd'}}, {{tableReviewPeriod.to | date:'y'}}</span>
   </div>
 </div>
-<div class="row">
-  <table class="table">
-    <thead>
-    <tr>
-      <th>Date</th>
-      <th>Usage</th>
-      <th>Tokens</th>
-      <th>Price, ETH/kWh</th>
-      <th>Price, EUR/kWh</th>
-      <th>Sum</th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <ng-container *ngFor="let row of consumptionReview">
+<div class="row dashboard-container">
+  <div class="col-md ">
+    <table class="table dashboard-table">
+      <thead>
       <tr>
-        <td>{{row.date}}</td>
-        <td>{{row.consumption}}/{{row.prediction}}</td>
-        <td>{{row.prediction}}</td>
-        <td>{{row.priceEth}}</td>
-        <td>{{row.priceEur}}</td>
-        <td>
-          <div *ngIf="row.paidEth">{{row.paidEth}}</div>
-        </td>
-        <td>
-          <div *ngIf="row.paidEth; else detailsButton">
+        <th class="text-right" style="width: 70px">Date</th>
+        <th class="text-right">Usage</th>
+        <th class="text-right">Tokens</th>
+        <th class="text-right">Price, ETH/kWh</th>
+        <th class="text-right">Price, EUR/kWh</th>
+        <th class="text-right">Sum</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngFor="let row of consumptionReview">
+        <tr>
+          <td class="text-right">{{row.date | date: 'MM-dd'}}</td>
+          <td class="text-right">{{row.consumption}}/{{row.prediction}}</td>
+          <td class="text-right">{{row.prediction}}</td>
+          <td class="text-right">{{row.priceEth}}</td>
+          <td class="text-right">{{row.priceEur}}</td>
+          <td class="text-right">
+            <div *ngIf="row.paidEth">{{row.paidEth}}</div>
+          </td>
+          <td class="text-right">
+            <div *ngIf="row.paidEth; else detailsButton">
+              <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
+              <i class="fa fa-gift"></i> Send</button>
+            </div>
+            <ng-template #detailsButton>
+              <a *ngIf="!row.expanded" (click)="row.expanded = true">
+                + <u>Show details</u>
+              </a>
+              <a *ngIf="row.expanded" (click)="row.expanded = false">
+                - Hide details
+              </a>
+            </ng-template>
+          </td>
+        </tr>
+        <tr *ngIf="row.expanded">
+          <td class="text-right"></td>
+          <td class="text-right"></td>
+          <td class="text-right">WIND 16 kWh</td>
+          <td class="text-right">0.00025 ETH</td>
+          <td class="text-right">0.045 EUR</td>
+          <td class="text-right">0.8 ETH</td>
+          <td class="text-right">
             <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
-            <i class="fa fa-gift"></i> Send</button>
-          </div>
-          <ng-template #detailsButton>
-            <a *ngIf="!row.expanded" (click)="row.expanded = true">
-              + <u>Show details</u>
-            </a>
-            <a *ngIf="row.expanded" (click)="row.expanded = false">
-              - Hide details
-            </a>
-          </ng-template>
-        </td>
-      </tr>
-      <tr *ngIf="row.expanded">
-        <td></td>
-        <td></td>
-        <td>WIND 16 kWh</td>
-        <td>0.00025 ETH</td>
-        <td>0.045 EUR</td>
-        <td>0.8 ETH</td>
-        <td>
-          <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
-            <i class="fa fa-cart-arrow-down"></i> Buy</button>
-        </td>
-      </tr>
-      <tr *ngIf="row.expanded">
-        <td></td>
-        <td></td>
-        <td>SUN 16 kWh</td>
-        <td>0.00025 ETH</td>
-        <td>0.045 EUR</td>
-        <td>0.8 ETH</td>
-        <td>
-          <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
-            <i class="fa fa-cart-arrow-down"></i> Buy</button>
-        </td>
-      </tr>
-      <tr *ngIf="row.expanded">
-        <td></td>
-        <td></td>
-        <td>WATER 16 kWh</td>
-        <td>0.00025 ETH</td>
-        <td>0.045 EUR</td>
-        <td>0.8 ETH</td>
-        <td>
-          <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
-            <i class="fa fa-cart-arrow-down"></i> Buy</button>
-        </td>
-      </tr>
-    </ng-container>
-    </tbody>
-  </table>
+              <i class="fa fa-cart-arrow-down"></i> Buy</button>
+          </td>
+        </tr>
+        <tr *ngIf="row.expanded">
+          <td class="text-right"></td>
+          <td class="text-right"></td>
+          <td class="text-right">SUN 16 kWh</td>
+          <td class="text-right">0.00025 ETH</td>
+          <td class="text-right">0.045 EUR</td>
+          <td class="text-right">0.8 ETH</td>
+          <td class="text-right">
+            <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
+              <i class="fa fa-cart-arrow-down"></i> Buy</button>
+          </td>
+        </tr>
+        <tr *ngIf="row.expanded">
+          <td class="text-right"></td>
+          <td class="text-right"></td>
+          <td class="text-right">WATER 16 kWh</td>
+          <td class="text-right">0.00025 ETH</td>
+          <td class="text-right">0.045 EUR</td>
+          <td class="text-right">0.8 ETH</td>
+          <td class="text-right">
+            <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
+              <i class="fa fa-cart-arrow-down"></i> Buy</button>
+          </td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

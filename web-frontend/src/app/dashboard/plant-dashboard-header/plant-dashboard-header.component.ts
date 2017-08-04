@@ -261,26 +261,12 @@ export class PlantDashboardHeaderComponent implements OnInit {
     );
 
     // Expected to add prices from contracts, which will have to be merged.
-    Promise.all(
-      [
-        this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise()
-      ]
-    ).then(values => {
-      this.setChartData(values[0])
-      // let upadatedData = [
-      //   {data: [], label: 'Market price'},
-      //   {data: [28, 48, 40, 19, 86, 27, 90], label: 'Your price'}
-      // ]
-      // // Prices from contract will have to be added later
-      // upadatedData[1].data = marketPrices
-      //   .map(priceForDay => {
-      //     return priceForDay[1]
-      //   })
-      // this.lineChartData = upadatedData
-    }).catch(error => console.error(error))
+    Promise.all([this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise()])
+        .then(values => this.setChartData(values[0]))
+        .catch(error => console.error(error))
   }
 
-  private loadTotalPrediction(reviewPeriod : Period) {
+  private loadTotalPrediction(reviewPeriod: Period) {
     this.predictionService.getPredictionTotal(this.walletId, reviewPeriod)
       .subscribe(
         predictions => this.producedTotal = predictions,
@@ -288,8 +274,8 @@ export class PlantDashboardHeaderComponent implements OnInit {
       );
   }
 
-  public setChartData(marketPrices : Array<[Date, number]>):void {
-    let _lineChartData:Array<any> = new Array(this.lineChartData.length);
+  public setChartData(marketPrices: Array<[Date, number]>): void {
+    let _lineChartData: Array<any> = new Array(this.lineChartData.length);
 
     _lineChartData[0] = {data: new Array(7), label: 'Market price'};
     for (let j = 0; j < marketPrices.length; j++) {
