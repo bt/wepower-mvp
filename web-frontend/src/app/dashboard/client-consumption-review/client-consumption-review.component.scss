@@ -61,10 +61,29 @@
       border-bottom: 0px;
     }
     tbody {
+
+      .circle {
+        border-radius: 50%;
+        background-color: $power-yellow;
+      }
+
+      .power-button {
+        font-size: inherit;
+      }
+
+      .expanded-row td {
+        border-top: 1px solid $power-background-grey;
+      }
+
       tr {
         background-color: $power-white;
         td {
           border-top: 3px solid $power-background-grey;
+        }
+
+        .row-action {
+          color: $power-blue;
+          cursor: pointer;
         }
       }
 

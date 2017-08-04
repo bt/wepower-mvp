@@ -42,52 +42,64 @@
           </td>
           <td class="text-right">
             <div *ngIf="row.paidEth; else detailsButton">
-              <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
-              <i class="fa fa-gift"></i> Send</button>
+              <button (click)="sendTokens()" type="button" class="btn btn-primary power-button" id="send-button">
+              <i class="fa fa-exchange"></i> Transfer</button>
             </div>
             <ng-template #detailsButton>
-              <a *ngIf="!row.expanded" (click)="row.expanded = true">
-                + <u>Show details</u>
+              <a [hidden]="row.expanded" class="row-action" (click)="row.expanded = true">
+                <strong>+</strong> <u>Show details</u>
               </a>
-              <a *ngIf="row.expanded" (click)="row.expanded = false">
-                - Hide details
+              <a [hidden]="!row.expanded" class="row-action" (click)="row.expanded = false">
+                <strong>&mdash;</strong> Hide details
               </a>
             </ng-template>
           </td>
         </tr>
-        <tr *ngIf="row.expanded">
+        <tr [hidden]="!row.expanded" class="expanded-row">
           <td class="text-right"></td>
           <td class="text-right"></td>
-          <td class="text-right">WIND 16 kWh</td>
+          <td class="text-right">
+            <span>
+              <img class="img-fluid circle" src="/assets/images/icon-sun.svg">
+            </span>
+            16 kWh</td>
           <td class="text-right">0.00025 ETH</td>
           <td class="text-right">0.045 EUR</td>
           <td class="text-right">0.8 ETH</td>
           <td class="text-right">
-            <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
+            <button (click)="sendTokens()" type="button" class="btn btn-primary power-button" id="send-button">
               <i class="fa fa-cart-arrow-down"></i> Buy</button>
           </td>
         </tr>
-        <tr *ngIf="row.expanded">
+        <tr [hidden]="!row.expanded" class="expanded-row">
           <td class="text-right"></td>
           <td class="text-right"></td>
-          <td class="text-right">SUN 16 kWh</td>
+          <td class="text-right">
+            <span>
+              <img class="img-fluid circle" src="/assets/images/icon-wind.svg">
+            </span>
+            16 kWh</td>
           <td class="text-right">0.00025 ETH</td>
           <td class="text-right">0.045 EUR</td>
           <td class="text-right">0.8 ETH</td>
           <td class="text-right">
-            <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
+            <button (click)="sendTokens()" type="button" class="btn btn-primary power-button" id="send-button">
               <i class="fa fa-cart-arrow-down"></i> Buy</button>
           </td>
         </tr>
-        <tr *ngIf="row.expanded">
+        <tr [hidden]="!row.expanded" class="expanded-row">
           <td class="text-right"></td>
           <td class="text-right"></td>
-          <td class="text-right">WATER 16 kWh</td>
+          <td class="text-right">
+            <span>
+              <img class="img-fluid circle" src="/assets/images/icon-hydro.svg">
+            </span>
+            16 kWh</td>
           <td class="text-right">0.00025 ETH</td>
           <td class="text-right">0.045 EUR</td>
           <td class="text-right">0.8 ETH</td>
           <td class="text-right">
-            <button (click)="sendTokens()" type="button" class="btn btn-primary" id="send-button">
+            <button (click)="sendTokens()" type="button" class="btn btn-primary power-button" id="send-button">
               <i class="fa fa-cart-arrow-down"></i> Buy</button>
           </td>
         </tr>
