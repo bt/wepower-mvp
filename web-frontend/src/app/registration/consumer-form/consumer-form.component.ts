@@ -1,20 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
-import { FormControl } from '@angular/forms';
-
-
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/startWith';
 
-import { ConsumerForm } from "./consumer-form";
-import { GeoArea } from "../../shared/geo-area";
-import { AreaOptionsService } from "../area-options.service";
-import { HouseSizeOptionsService } from "../house-size-options.service";
-import { HouseSize } from "../../shared/house-size";
-import { ConsumerManagementService } from "../consumer-management.service";
-import { EthereumService} from "../../shared/ethereum.service";
+import {ConsumerForm} from "./consumer-form";
+import {GeoArea} from "../../shared/geo-area";
+import {AreaOptionsService} from "../area-options.service";
+import {HouseSizeOptionsService} from "../house-size-options.service";
+import {HouseSize} from "../../shared/house-size";
+import {ConsumerManagementService} from "../consumer-management.service";
+import {EthereumService} from "../../shared/ethereum.service";
+
 
 @Component({
   selector: 'app-consumer-form',

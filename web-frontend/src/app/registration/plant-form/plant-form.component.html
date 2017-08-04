@@ -106,12 +106,19 @@
                      class="form-control {{areaName.errors && (areaName.dirty || areaName.touched) ? 'failed-validation' : ''}}"
                      name="areaName"
                      #areaName="ngModel"
+                     [correctArea]="supportedAreas"
                      required
                      >
               <div *ngIf="areaName.errors && (areaName.dirty || areaName.touched)"
                    [hidden]="!areaName.errors.required"
                    class="validation-error">
                 Select Plant area
+              </div>
+
+              <div *ngIf="areaName.errors && (areaName.dirty || areaName.touched)"
+                   [hidden]="!areaName.errors.correctArea"
+                   class="validation-error">
+                Enter a valid Plant area
               </div>
 
               <md-autocomplete #auto="mdAutocomplete">

@@ -12,6 +12,7 @@ import { HouseSizeOptionsService } from "./house-size-options.service";
 import { ConsumerManagementService } from "./consumer-management.service";
 import { PlantTypePipe } from './plant-type.pipe';
 import { SharedModule } from "../shared/shared.module";
+import { CUSTOM_VALIDATORS } from "../shared/custom.validators";
 import { ConsumptionPredictionComponent } from './consumption-prediction/consumption-prediction.component';
 import { ProductionPredictionComponent } from './production-prediction/production-prediction.component';
 import { PredictionReviewComponent } from './prediction-review/prediction-review.component';
@@ -48,7 +49,8 @@ import {FormsModule } from '@angular/forms';
     ConsumptionPredictionComponent,
     ProductionPredictionComponent,
     PredictionReviewComponent,
-    RegistrationLayoutComponent
+    RegistrationLayoutComponent,
+    CUSTOM_VALIDATORS
   ],
   providers: [
     AreaOptionsService,
