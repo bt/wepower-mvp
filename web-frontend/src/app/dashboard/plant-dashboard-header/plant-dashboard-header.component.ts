@@ -14,18 +14,18 @@ import { ElectricityMarketPriceService } from "../electricity-market-price.servi
 })
 export class PlantDashboardHeaderComponent implements OnInit {
 
-  producedTotal : number
-  headerPeriod : Period
-  walletId : string
+  producedTotal: number
+  headerPeriod: Period
+  walletId: string
 
-  public lineChartData:Array<any> = [
+  public lineChartData: Array<any> = [
     {data: [], label: 'Market price'},
     {data: [], label: 'Your price'}
   ];
 
-  public lineChartLabels:Array<any>;
+  public lineChartLabels: Array<any>;
 
-  public lineChartColors:Array<any> = [
+  public lineChartColors: Array<any> = [
     {
       borderColor: '#001cff',
       backgroundColor: 'rgba(0,0,0,0)'
@@ -36,7 +36,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
     }
   ];
 
-    public lineChartOptions:any = {
+    public lineChartOptions: any = {
         responsive: true,
         maintainAspectRatio: false,
         legend: { display: false },

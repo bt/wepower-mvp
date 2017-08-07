@@ -41,18 +41,20 @@
             <div *ngIf="row.paidEth">{{row.paidEth}}</div>
           </td>
           <td class="text-right">
-            <div *ngIf="row.paidEth; else detailsButton">
-              <button (click)="sendTokens()" type="button" class="btn btn-primary power-button" id="send-button">
-              <i class="fa fa-exchange"></i> Transfer</button>
+            <div *ngIf="isAfter(row.date)">
+              <div *ngIf="row.paidEth; else detailsButton">
+                <button type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" data-target="#tokensTransaction">
+                <i class="fa fa-exchange"></i> Transfer</button>
+              </div>
+              <ng-template #detailsButton>
+                <a [hidden]="row.expanded" class="row-action" (click)="row.expanded = true">
+                  <strong>+</strong> <u>Show details</u>
+                </a>
+                <a [hidden]="!row.expanded" class="row-action" (click)="row.expanded = false">
+                  <strong>&mdash;</strong> Hide details
+                </a>
+              </ng-template>
             </div>
-            <ng-template #detailsButton>
-              <a [hidden]="row.expanded" class="row-action" (click)="row.expanded = true">
-                <strong>+</strong> <u>Show details</u>
-              </a>
-              <a [hidden]="!row.expanded" class="row-action" (click)="row.expanded = false">
-                <strong>&mdash;</strong> Hide details
-              </a>
-            </ng-template>
           </td>
         </tr>
         <tr [hidden]="!row.expanded" class="expanded-row">
@@ -106,5 +108,50 @@
       </ng-container>
       </tbody>
     </table>
+  </div>
+</div>
+
+<div id="tokensTransaction" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Transfer tokens as a gift</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="main-form-block">
+          <div class="form-group">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md">
+                  <label>Recipient Etherium Wallet ID</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md">
+                  <input name="walletId" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md">
+                  <label>Amount of tokens</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md">
+                  <input name="amountOfTokens" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary power-button mr-auto" data-dismiss="modal">
+        <i class="fa fa-exchange"></i> Transfer</button>
+      </div>
+    </div>
   </div>
 </div>

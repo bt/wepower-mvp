@@ -9,6 +9,7 @@ import { ExchangeRateService } from "../exchange-rate.service";
 import { ConsumptionReviewService } from "../consumption-review.service";
 import { ConsumptionDetails } from "../consumption-details";
 import { DataFiller } from "../../shared/data-filler.service";
+import {ProductionPredictionService} from "../../registration/prediction/production-prediction.service";
 
 @Component({
   selector: 'app-client-consumption-review',
@@ -17,13 +18,16 @@ import { DataFiller } from "../../shared/data-filler.service";
 })
 export class ClientConsumptionReviewComponent implements OnInit {
 
-  consumptionReview : Array<ConsumptionReviewRow>
-  tableReviewPeriod: Period
-  walletId : string
+  consumptionReview: Array<ConsumptionReviewRow>
+  tableReviewPeriod: Period = new Period(new Date(), new Date())
+  walletId: string
 
-  constructor(private ethereum : EthereumService,
-              private exchangeMarket : ExchangeRateService,
-              private consumptionReviewService : ConsumptionReviewService) { }
+  availableRange: Period
+
+  constructor(private ethereum: EthereumService,
+              private exchangeMarket: ExchangeRateService,
+              private predictionService: ProductionPredictionService,
+              private consumptionReviewService: ConsumptionReviewService) { }
 
 
   ngOnInit() {
@@ -51,6 +55,13 @@ export class ClientConsumptionReviewComponent implements OnInit {
 
   }
 
+  isAfter(date: Date): boolean {
+    let currentDate = moment()
+    let dateToCompare = moment(date)
+
+    return dateToCompare.isAfter(currentDate)
+  }
+
   private initializeTable() {
     let periodStart = moment().startOf('week').add(1, 'days')
 
@@ -59,10 +70,10 @@ export class ClientConsumptionReviewComponent implements OnInit {
       periodStart.clone().add(6, 'day').toDate()
     );
 
-    this.loadTable(this.tableReviewPeriod);
+    this.loadTable(this.tableReviewPeriod)
   }
 
-  private loadTable(period : Period) {
+  private loadTable(period: Period) {
     Promise.all(
       [
         this.consumptionReviewService.getConsumptionDetails(this.walletId, period).toPromise(),
@@ -94,4 +105,5 @@ export class ClientConsumptionReviewComponent implements OnInit {
   private fillEmptyForWeek(reviews: Array<ConsumptionReviewRow>) : Array<ConsumptionReviewRow> {
     return (DataFiller.fillForWeek(reviews, ConsumptionReviewRow.emptyForDay) as Array<ConsumptionReviewRow>)
   }
+
 }

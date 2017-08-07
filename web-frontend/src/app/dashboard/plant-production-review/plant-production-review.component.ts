@@ -52,7 +52,7 @@ export class PlantProductionReviewComponent implements OnInit {
     );
 
     this.loadAvailablePeriod()
-    this.loadTable(this.tableReviewPeriod);
+    this.loadTable(this.tableReviewPeriod)
 
 
   }
