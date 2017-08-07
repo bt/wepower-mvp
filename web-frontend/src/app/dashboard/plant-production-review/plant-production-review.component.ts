@@ -54,19 +54,17 @@ export class PlantProductionReviewComponent implements OnInit {
 
     this.loadAvailablePeriod()
     this.loadTable(this.tableReviewPeriod)
-
-
   }
 
   previousPeriod() {
     this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(-1)
-    this.loadTable(this.tableReviewPeriod);
+    this.loadTable(this.tableReviewPeriod)
     this.adjustButtonActivity()
   }
 
   nextPeriod() {
     this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(1)
-    this.loadTable(this.tableReviewPeriod);
+    this.loadTable(this.tableReviewPeriod)
     this.adjustButtonActivity()
   }
 
@@ -81,10 +79,10 @@ export class PlantProductionReviewComponent implements OnInit {
     }
 
   totalAmount(date: Date): Observable<number> {
-    return this.ethereum.getTotalAmount(this.walletId, date.getTime());
+    return this.ethereum.getTotalAmount(this.walletId, date.getTime())
   }
 
-  private loadTable(period : Period) {
+  private loadTable(period: Period) {
     Promise.all(
       [
         this.productionReviewService.getProductionDetails(this.walletId, period).toPromise(),
@@ -113,7 +111,7 @@ export class PlantProductionReviewComponent implements OnInit {
         }
       )
 
-        let updates:Array<any> = [];
+        let updates: Array<any> = [];
 
         reviewDetails.forEach(productionForDay =>
             updates.push(new Promise((resolve, reject) => {

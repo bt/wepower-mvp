@@ -10,6 +10,10 @@ import { ConsumptionReviewService } from "../consumption-review.service";
 import { ConsumptionDetails } from "../consumption-details";
 import { DataFiller } from "../../shared/data-filler.service";
 import {ProductionPredictionService} from "../../registration/prediction/production-prediction.service";
+import {reject} from "q";
+import {PlantType} from "../../registration/plant-form/plant-form";
+import {toPromise} from "rxjs/operator/toPromise";
+import {BuyTokensRow} from "../buy-tokens-row";
 
 @Component({
   selector: 'app-client-consumption-review',
@@ -23,6 +27,8 @@ export class ClientConsumptionReviewComponent implements OnInit {
   walletId: string
 
   availableRange: Period
+
+  details: { [key: number]: Array<BuyTokensRow>; } = {};
 
   constructor(private ethereum: EthereumService,
               private exchangeMarket: ExchangeRateService,
@@ -93,16 +99,51 @@ export class ClientConsumptionReviewComponent implements OnInit {
             consumptionForDay.consumption,
             price,
             price / exchangeRate,
-            price * consumptionForDay.prediction,
+            price * consumptionForDay.prediction
           )
         }
       )
 
-      this.consumptionReview = this.fillEmptyForWeek(consumptionRows)
+      let updates: Array<any> = [];
+
+      consumptionRows.forEach(consumptionForDay =>
+            updates.push(new Promise((resolve, reject) => {
+                this.ethereum.getOwned(this.walletId, consumptionForDay.date).subscribe(
+                    data => {
+                        consumptionForDay.prediction = data
+                        resolve(true)
+                    },
+                    error => reject
+                )})))
+
+        Promise.all(updates)
+            .then(values => { this.consumptionReview = this.fillEmptyForWeek(consumptionRows) })
     })
   }
 
-  private fillEmptyForWeek(reviews: Array<ConsumptionReviewRow>) : Array<ConsumptionReviewRow> {
+  loadDetails(date: Date, amount: number): void {
+    if (this.details[date.getTime()]) {
+        return
+    }
+    Promise.all([
+        this.bestPrice(amount, date, PlantType.HYDRO),
+        this.bestPrice(amount, date, PlantType.SOLAR),
+        this.bestPrice(amount, date, PlantType.WIND)
+    ]).then(values => {
+        this.details[date.getTime()] = values;
+    })
+  }
+
+  bestPrice(amount: number, date: Date, type: PlantType): Promise<BuyTokensRow> {
+    return this.ethereum.getBestPrice(amount, date, type)
+        .mergeMap(data => {
+            return this.ethereum.getPrice(data)
+        }).map(data => {
+            return new BuyTokensRow(date, amount, type, data, 0, data * amount, null)
+        }).toPromise()
+  }
+
+  private fillEmptyForWeek(reviews: Array<ConsumptionReviewRow>): Array<ConsumptionReviewRow> {
     return (DataFiller.fillForWeek(reviews, ConsumptionReviewRow.emptyForDay) as Array<ConsumptionReviewRow>)
   }
 

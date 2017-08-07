@@ -24,10 +24,6 @@ contract ExchangeSmartContract  {
   }
 
   function getLowestPrice(uint256 _amount, uint _date, uint8 _source) constant returns (address) {
-    if (plants.length == 0) {
-      throw;
-    }
-
     PlantSmartContract.Source source = PlantSmartContract.Source(_source);
     address bestAddress;
     uint256 bestPrice;

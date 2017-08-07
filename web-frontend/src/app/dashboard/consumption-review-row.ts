@@ -1,12 +1,12 @@
 import { DayDataRow } from "../shared/day-data-row";
 
 export class ConsumptionReviewRow implements DayDataRow {
-  constructor(public date : Date,
-              public prediction : number,
-              public consumed : number,
-              public priceEth : number,
-              public priceEur : number,
-              public paidEth : number) {
+  constructor(public date: Date,
+              public prediction: number,
+              public consumed: number,
+              public priceEth: number,
+              public priceEur: number,
+              public paidEth: number) {
 
   }
 

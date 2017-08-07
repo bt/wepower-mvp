@@ -47,7 +47,7 @@
                 <i class="fa fa-exchange"></i> Transfer</button>
               </div>
               <ng-template #detailsButton>
-                <a [hidden]="row.expanded" class="row-action" (click)="row.expanded = true">
+                <a [hidden]="row.expanded" class="row-action" (click)="loadDetails(row.date, row.prediction); row.expanded = true;">
                   <strong>+</strong> <u>Show details</u>
                 </a>
                 <a [hidden]="!row.expanded" class="row-action" (click)="row.expanded = false">
@@ -57,54 +57,27 @@
             </div>
           </td>
         </tr>
-        <tr [hidden]="!row.expanded" class="expanded-row">
-          <td class="text-right"></td>
-          <td class="text-right"></td>
-          <td class="text-right">
-            <span>
-              <img class="img-fluid circle" src="/assets/images/icon-sun.svg">
-            </span>
-            16 kWh</td>
-          <td class="text-right">0.00025 ETH</td>
-          <td class="text-right">0.045 EUR</td>
-          <td class="text-right">0.8 ETH</td>
-          <td class="text-right">
-            <button (click)="sendTokens()" type="button" class="btn btn-primary power-button" id="send-button">
-              <i class="fa fa-cart-arrow-down"></i> Buy</button>
-          </td>
-        </tr>
-        <tr [hidden]="!row.expanded" class="expanded-row">
-          <td class="text-right"></td>
-          <td class="text-right"></td>
-          <td class="text-right">
-            <span>
-              <img class="img-fluid circle" src="/assets/images/icon-wind.svg">
-            </span>
-            16 kWh</td>
-          <td class="text-right">0.00025 ETH</td>
-          <td class="text-right">0.045 EUR</td>
-          <td class="text-right">0.8 ETH</td>
-          <td class="text-right">
-            <button (click)="sendTokens()" type="button" class="btn btn-primary power-button" id="send-button">
-              <i class="fa fa-cart-arrow-down"></i> Buy</button>
-          </td>
-        </tr>
-        <tr [hidden]="!row.expanded" class="expanded-row">
-          <td class="text-right"></td>
-          <td class="text-right"></td>
-          <td class="text-right">
-            <span>
-              <img class="img-fluid circle" src="/assets/images/icon-hydro.svg">
-            </span>
-            16 kWh</td>
-          <td class="text-right">0.00025 ETH</td>
-          <td class="text-right">0.045 EUR</td>
-          <td class="text-right">0.8 ETH</td>
-          <td class="text-right">
-            <button (click)="sendTokens()" type="button" class="btn btn-primary power-button" id="send-button">
-              <i class="fa fa-cart-arrow-down"></i> Buy</button>
-          </td>
-        </tr>
+        <ng-container *ngFor="let detail of details[row.date.getTime()]">
+          <tr [hidden]="!row.expanded" class="expanded-row">
+            <td class="text-right"></td>
+            <td class="text-right"></td>
+            <td class="text-right">
+              <span>
+                <img *ngIf="detail.source == 0" class="img-fluid circle" src="/assets/images/icon-sun.svg">
+                <img *ngIf="detail.source == 2" class="img-fluid circle" src="/assets/images/icon-hydro.svg">
+                <img *ngIf="detail.source == 1" class="img-fluid circle" src="/assets/images/icon-wind.svg">
+              </span>
+              {{detail.tokens}} kWh</td>
+            <td class="text-right"><span *ngIf="row.priceEth != 0">{{row.priceEth}} ETH</span></td>
+            <td class="text-right"><span *ngIf="row.priceEth != 0">{{row.priceEur}} EUR</span></td>
+            <td class="text-right"><span *ngIf="row.priceEth != 0">{{row.sum}} ETH</span></td>
+            <td class="text-right">
+              <button (click)="sendTokens()" [disabled]="detail.priceEth == 0"
+                      type="button" class="btn btn-primary power-button" id="send-button">
+                <i class="fa fa-cart-arrow-down"></i> Buy</button>
+            </td>
+          </tr>
+        </ng-container>
       </ng-container>
       </tbody>
     </table>

@@ -174,6 +174,9 @@ export class EthereumService {
   }
 
   getPrice(wallet: string): Observable<any> {
+      if (wallet === '0x0000000000000000000000000000000000000000') {
+          return Observable.of(0)
+      }
       let promise = this.exchange.getPrice.call(wallet, {from: this.web3.eth.coinbase})
 
       return Observable.fromPromise(promise)
@@ -188,7 +191,7 @@ export class EthereumService {
        const dateInSeconds: number = date / 1000
        const promise = this.exchange.getTotalAmount.call(wallet, dateInSeconds, {from: this.web3.eth.coinbase}, {gas:4500000})
 
-        return Observable.fromPromise(promise)
+      return Observable.fromPromise(promise)
             .timeout(1000)
             .catch((error) => {
                 console.log(error)
@@ -204,12 +207,28 @@ export class EthereumService {
       this.exchange.transfer.sendTransaction(to, amount, date, {from: this.web3.eth.coinbase})
   }
 
-  getOwned(date: Date): number {
-      return 0;
+  getOwned(wallet: string, date: Date): Observable<number> {
+      const promise =
+          this.exchange.getBalance(wallet, date.getTime() / 1000, {from: this.web3.eth.coinbase})
+
+      return Observable.fromPromise(promise)
+          .timeout(1000)
+          .catch((error) => {
+              console.log(error)
+              return Observable.throw(error)
+          })
   }
 
-  getBestPrice(amount: number, date: Date, type: PlantType): number {
-      return 0
+  getBestPrice(amount: number, date: Date, type: PlantType): Observable<string> {
+      const promise =
+          this.exchange.getLowestPrice(amount, date.getTime() / 1000, type, {from: this.web3.eth.coinbase})
+
+      return Observable.fromPromise(promise)
+          .timeout(1000)
+          .catch((error) => {
+              console.log(error)
+              return Observable.throw(error)
+          })
   }
 
   isActiveConnection(): boolean {
