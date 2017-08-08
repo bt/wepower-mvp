@@ -129,7 +129,8 @@ export class EthereumService {
              return;
          }
 
-         this.transactionsLog.log(result.from, result.to, transactionId);
+         /*this.transactionsLog.log(result.from, result.to, transactionId);*/
+          console.log(result.from, result.to, transactionId);
       });
   }
 
@@ -177,7 +178,7 @@ export class EthereumService {
       if (wallet === '0x0000000000000000000000000000000000000000') {
           return Observable.of(0)
       }
-      let promise = this.exchange.getPrice.call(wallet, {from: this.web3.eth.coinbase})
+      let promise = this.exchange.getPrice.call(wallet, {from: this.web3.eth.coinbase, gas:4500000})
 
       return Observable.fromPromise(promise)
           .timeout(1000)
@@ -189,7 +190,7 @@ export class EthereumService {
 
    getTotalAmount(wallet: string, date: number): Observable<number> {
        const dateInSeconds: number = date / 1000
-       const promise = this.exchange.getTotalAmount.call(wallet, dateInSeconds, {from: this.web3.eth.coinbase}, {gas:4500000})
+       const promise = this.exchange.getTotalAmount.call(wallet, dateInSeconds, {from: this.web3.eth.coinbase, gas:4500000})
 
       return Observable.fromPromise(promise)
             .timeout(1000)
@@ -199,8 +200,18 @@ export class EthereumService {
             })
    }
 
-  buy(plant: string, amount: number, date: Date): void {
-      this.exchange.buy.sendTransaction(plant, amount, date, {from: this.web3.eth.coinbase})
+  buy(plant: string, amount: number, date: Date, price: number): Observable<any> {
+      const promise =
+          this.exchange.buy.sendTransaction(plant, date.getTime() / 1000, amount,
+              {from: this.web3.eth.coinbase, gas:4710000, value: this.ethToWei(price)})
+
+      return Observable.fromPromise(promise)
+          .timeout(1000)
+          .catch((error) => {
+              console.log(error)
+              return Observable.throw(error)
+          })
+
   }
 
   transfer(to: string, amount: number, date: Date): void {
@@ -209,7 +220,7 @@ export class EthereumService {
 
   getOwned(wallet: string, date: Date): Observable<number> {
       const promise =
-          this.exchange.getBalance(wallet, date.getTime() / 1000, {from: this.web3.eth.coinbase})
+          this.exchange.getBalance.call(wallet, date.getTime() / 1000, {from: this.web3.eth.coinbase, gas:4710000})
 
       return Observable.fromPromise(promise)
           .timeout(1000)
@@ -221,7 +232,7 @@ export class EthereumService {
 
   getBestPrice(amount: number, date: Date, type: PlantType): Observable<string> {
       const promise =
-          this.exchange.getLowestPrice(amount, date.getTime() / 1000, type, {from: this.web3.eth.coinbase})
+          this.exchange.getLowestPrice(amount, date.getTime() / 1000, type, {from: this.web3.eth.coinbase, gas:4500000})
 
       return Observable.fromPromise(promise)
           .timeout(1000)

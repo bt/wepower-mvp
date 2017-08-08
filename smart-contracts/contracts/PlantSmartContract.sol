@@ -49,7 +49,7 @@ contract PlantSmartContract {
 
   function balanceOf(address _address, uint _date) returns(uint256) {
     if (_date < now) {
-      throw;
+      return 0;
     }
 
     Wepwr token = tokens[_address][_date];
@@ -71,6 +71,8 @@ contract PlantSmartContract {
     }
 
     token.amount = token.amount - _amount;
+
+    tokens[_from][_date] = token;
     tokens[_to][_date] = Wepwr(token.date, _amount, token.plant);
 
     Transfer(_from, _to, _amount);

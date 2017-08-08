@@ -33,16 +33,19 @@
       <ng-container *ngFor="let row of consumptionReview">
         <tr>
           <td class="text-right">{{row.date | date: 'MM-dd'}}</td>
-          <td class="text-right">{{row.consumption}}/{{row.prediction}}</td>
-          <td class="text-right">{{row.prediction}}</td>
-          <td class="text-right">{{row.priceEth}}</td>
-          <td class="text-right">{{row.priceEur}}</td>
           <td class="text-right">
-            <div *ngIf="row.paidEth">{{row.paidEth}}</div>
+            <span *ngIf="row.tokens > 0">{{row.consumption}}/{{row.prediction}}</span>
+            <span *ngIf="row.tokens <= 0">{{row.prediction}} kWh predicted</span>
+          </td>
+          <td class="text-right"><span *ngIf="row.tokens > 0">{{row.prediction}}</span></td>
+          <td class="text-right"><span *ngIf="row.tokens > 0">{{row.priceEth}}</span></td>
+          <td class="text-right"><span *ngIf="row.tokens > 0">{{row.priceEur}}</span></td>
+          <td class="text-right">
+            <div *ngIf="row.tokens > 0 && row.paidEth">{{row.paidEth}}</div>
           </td>
           <td class="text-right">
             <div *ngIf="isAfter(row.date)">
-              <div *ngIf="row.paidEth; else detailsButton">
+              <div *ngIf="row.tokens > 0; else detailsButton">
                 <button type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" data-target="#tokensTransaction">
                 <i class="fa fa-exchange"></i> Transfer</button>
               </div>
@@ -68,11 +71,11 @@
                 <img *ngIf="detail.source == 1" class="img-fluid circle" src="/assets/images/icon-wind.svg">
               </span>
               {{detail.tokens}} kWh</td>
-            <td class="text-right"><span *ngIf="row.priceEth != 0">{{row.priceEth}} ETH</span></td>
-            <td class="text-right"><span *ngIf="row.priceEth != 0">{{row.priceEur}} EUR</span></td>
-            <td class="text-right"><span *ngIf="row.priceEth != 0">{{row.sum}} ETH</span></td>
+            <td class="text-right"><span *ngIf="detail.priceEth != 0">{{detail.priceEth}} ETH</span></td>
+            <td class="text-right"><span *ngIf="detail.priceEth != 0">{{detail.priceEur}} EUR</span></td>
+            <td class="text-right"><span *ngIf="detail.priceEth != 0">{{detail.sum}} ETH</span></td>
             <td class="text-right">
-              <button (click)="sendTokens()" [disabled]="detail.priceEth == 0"
+              <button (click)="buyTokens(detail.address, detail.tokens, detail.date, detail.sum)" [disabled]="detail.priceEth == 0"
                       type="button" class="btn btn-primary power-button" id="send-button">
                 <i class="fa fa-cart-arrow-down"></i> Buy</button>
             </td>

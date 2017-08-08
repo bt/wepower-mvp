@@ -61,6 +61,13 @@ export class ClientConsumptionReviewComponent implements OnInit {
 
   }
 
+  buyTokens(plant: string, amount: number, date: Date, price: number) {
+      this.ethereum.buy(plant, amount, date, price).subscribe(
+          data => console.log(data),
+          error => console.error(error)
+      )
+  }
+
   isAfter(date: Date): boolean {
     let currentDate = moment()
     let dateToCompare = moment(date)
@@ -96,6 +103,7 @@ export class ClientConsumptionReviewComponent implements OnInit {
           return new ConsumptionReviewRow(
             consumptionForDay.date,
             consumptionForDay.prediction,
+            0,
             consumptionForDay.consumption,
             price,
             price / exchangeRate,
@@ -110,7 +118,7 @@ export class ClientConsumptionReviewComponent implements OnInit {
             updates.push(new Promise((resolve, reject) => {
                 this.ethereum.getOwned(this.walletId, consumptionForDay.date).subscribe(
                     data => {
-                        consumptionForDay.prediction = data
+                        consumptionForDay.tokens = data
                         resolve(true)
                     },
                     error => reject
@@ -125,26 +133,40 @@ export class ClientConsumptionReviewComponent implements OnInit {
     if (this.details[date.getTime()]) {
         return
     }
-    Promise.all([
-        this.bestPrice(amount, date, PlantType.HYDRO),
-        this.bestPrice(amount, date, PlantType.SOLAR),
-        this.bestPrice(amount, date, PlantType.WIND)
-    ]).then(values => {
-        this.details[date.getTime()] = values;
-    })
+    this.exchangeMarket.exchangeRate().toPromise()
+        .then(rate =>
+             Promise.all([
+                this.bestPrice(amount, date, PlantType.HYDRO, rate),
+                this.bestPrice(amount, date, PlantType.SOLAR, rate),
+                this.bestPrice(amount, date, PlantType.WIND, rate)
+            ]))
+        .then(values => {
+            this.details[date.getTime()] = values;
+        })
   }
 
-  bestPrice(amount: number, date: Date, type: PlantType): Promise<BuyTokensRow> {
+  bestPrice(amount: number, date: Date, type: PlantType, exchangeRate: number): Promise<BuyTokensRow> {
+    let bestPriceAddr: string
     return this.ethereum.getBestPrice(amount, date, type)
         .mergeMap(data => {
+            bestPriceAddr = data
             return this.ethereum.getPrice(data)
-        }).map(data => {
-            return new BuyTokensRow(date, amount, type, data, 0, data * amount, null)
+        }).map(price => {
+            const priceInEth: number = this.ethereum.weiToETH(price)
+            return new BuyTokensRow(date, amount, type, this.round(priceInEth, 6),
+                this.round(priceInEth * exchangeRate, 6), this.round(priceInEth * amount, 6), bestPriceAddr)
         }).toPromise()
   }
 
   private fillEmptyForWeek(reviews: Array<ConsumptionReviewRow>): Array<ConsumptionReviewRow> {
     return (DataFiller.fillForWeek(reviews, ConsumptionReviewRow.emptyForDay) as Array<ConsumptionReviewRow>)
   }
+
+    private round(number: number, precision: number) {
+        var factor = Math.pow(10, precision);
+        var tempNumber = number * factor;
+        var roundedTempNumber = Math.round(tempNumber);
+        return roundedTempNumber / factor;
+    };
 
 }

@@ -26,12 +26,12 @@ contract ExchangeSmartContract  {
   function getLowestPrice(uint256 _amount, uint _date, uint8 _source) constant returns (address) {
     PlantSmartContract.Source source = PlantSmartContract.Source(_source);
     address bestAddress;
-    uint256 bestPrice;
+    uint256 bestPrice = 0;
 
-    for (uint i = 1; i < plants.length; i++) {
+    for (uint i = 0; i < plants.length; i++) {
       PlantSmartContract plantContract = PlantSmartContract(plantContracts[plants[i]]);
 
-      if (plantContract.balanceOf(plants[i], _date) >= _amount &&
+      if (/*plantContract.balanceOf(plants[i], _date) >= _amount &&*/
       plantContract.source() == source &&
       (plantContract.price() < bestPrice || bestPrice == 0)) {
 
@@ -46,7 +46,9 @@ contract ExchangeSmartContract  {
   function getBalance(address _consumer, uint _date) constant returns(uint256){
     uint256 balance = 0;
     for (uint i = 0; i < plants.length; i++) {
-      PlantSmartContract plantContract = PlantSmartContract(plantContracts[plants[i]]);
+      address plant = plants[i];
+      address contractAddress = plantContracts[plant];
+      PlantSmartContract plantContract = PlantSmartContract(contractAddress);
       balance = balance + plantContract.balanceOf(_consumer, _date);
     }
     return balance;

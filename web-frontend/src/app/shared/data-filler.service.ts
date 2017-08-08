@@ -28,7 +28,7 @@ export class DataFiller {
     let lastEntryDayOfWeek = moment(lastEntryDate).isoWeekday()
 
     for (let index = lastEntryDayOfWeek; index < 7 ; index++) {
-      let dayToFill = moment(lastEntryDate).startOf('isoWeek').toDate()
+      let dayToFill = moment(lastEntryDate).startOf('isoWeek').add(index, 'day').toDate()
 
       paddedRows.push(factory(dayToFill))
     }
