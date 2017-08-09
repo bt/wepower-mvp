@@ -237,6 +237,12 @@ export class PredictionReviewComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    let periodStart = moment().startOf('week').add(1, 'days')
+
+    this.visiblePeriod = new Period(
+      periodStart.toDate(),
+      periodStart.clone().add(6, 'day').toDate()
+    );
 
   }
 
