@@ -80,7 +80,7 @@
         <div class="form-group">
           <div class="row">
             <div class="col">
-              <label>Household electricity consumption, kWh/month</label>
+              <label>Household electricity consumption, kWh/year</label>
             </div>
           </div>
 
@@ -95,7 +95,7 @@
               <div *ngIf="consumption.errors && (consumption.dirty || consumption.touched)"
                    [hidden]="!consumption.errors.required"
                    class="validation-error">
-                  Enter Household electricity consumption, kWh/month
+                  Enter Household electricity consumption, kWh/year
               </div>
               <div *ngIf="consumption.errors && (consumption.dirty || consumption.touched)"
                    [hidden]="!consumption.errors.pattern"
