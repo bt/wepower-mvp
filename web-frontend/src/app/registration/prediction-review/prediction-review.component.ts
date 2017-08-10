@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core'
-import {ActivatedRoute} from "@angular/router";
 
 import * as moment from 'moment'
 import { PredictionData } from "./prediction-data"
@@ -185,7 +184,8 @@ export class PredictionReviewComponent implements OnInit {
           fontFamily: "'Roboto', 'Sans-serif'",
           fontSize: 20,
           fontColor: '#000',
-          padding: 30
+          padding: 30,
+          callback: (value) => (value + ' kWh'),
         },
         gridLines: {
           color: '#e0e0e0',
@@ -233,9 +233,7 @@ export class PredictionReviewComponent implements OnInit {
   public lineChartType:string = 'line';
 
 
-  constructor(private route: ActivatedRoute) {
-    this.route = route;
-  }
+  constructor() {}
 
   ngOnInit() {
     let periodStart = moment().startOf('week').add(1, 'days')
@@ -329,17 +327,6 @@ export class PredictionReviewComponent implements OnInit {
 
     this.lineChartOptions.scales.yAxes[0].ticks.suggestedMin = lowestPoint
     this.lineChartOptions.scales.yAxes[0].ticks.suggestedMax = highestPoint
-
-    // get current route
-    const url = this.route.snapshot.url.join('/');
-
-    // change ticks callback function to display units of measure
-    this.lineChartOptions.scales.yAxes[0].ticks.callback = function (value) {
-      var units: string = ' kW'
-      url.includes('consumer') ? units += 'h' : null;
-
-      return value + units;
-    };
 
     this.lineChartLabels = dayLabels;
     setTimeout(() => {
