@@ -25,20 +25,14 @@ export class TransactionsLogService {
 
     transactionsFrom(from: string, date: Date): Observable<Array<number>> {
         return this.http.get(`
-                ${environment.dataUrls.transactions.root}/
-                ${environment.dataUrls.transactions.from}/
-                ${from}/
-                ${date.toString()}`)
+                ${environment.dataUrls.transactions.from}?from=${from}&date=${date.toISOString().split('T')[0]}`)
             .map(this.extractData)
             .catch(this.handleError)
     }
 
     transactionsTo(to: string, date: Date): Observable<Array<number>> {
         return this.http.get(`
-                ${environment.dataUrls.transactions.root}/
-                ${environment.dataUrls.transactions.to}/
-                ${to}/
-                ${date.toString()}`)
+                ${environment.dataUrls.transactions.to}?to=${to}&date=${date.toISOString().split('T')[0]}`)
             .map(this.extractData)
             .catch(this.handleError)
     }
@@ -50,7 +44,8 @@ export class TransactionsLogService {
     }
 
     private handleError(error: Response): Observable<Array<number>> {
-        return Observable.throw("Error while interacting with transactions log")
+        console.error("Error while interacting with transactions log", error)
+        return Observable.of([0])
     }
 
 }

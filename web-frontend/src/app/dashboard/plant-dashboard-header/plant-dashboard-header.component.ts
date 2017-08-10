@@ -7,6 +7,7 @@ import { ProductionPredictionService } from "../../registration/prediction/produ
 import { EthereumService } from "../../shared/ethereum.service";
 import { ElectricityMarketPriceService } from "../electricity-market-price.service";
 import {BlockchainPlantData} from "../../shared/blockchain-plant";
+import {PriceLogService} from "../../shared/price-log-service";
 
 @Component({
   selector: 'app-plant-dashboard-header',
@@ -221,7 +222,8 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
   constructor(private predictionService: ProductionPredictionService,
               private ethereum: EthereumService,
-              private electricityPriceService: ElectricityMarketPriceService) { }
+              private electricityPriceService: ElectricityMarketPriceService,
+              private priceLog: PriceLogService) { }
 
   ngOnInit() {
     this.ethereum.activeWallet()
@@ -277,8 +279,11 @@ export class PlantDashboardHeaderComponent implements OnInit {
     );
 
     // Expected to add prices from contracts, which will have to be merged.
-    Promise.all([this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise()])
-        .then(values => this.setChartData(values[0]))
+    Promise.all([
+        this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise(),
+        this.priceLog.getForPeriod(this.walletId, marketReviewPeriod).toPromise()
+    ])
+        .then(values => this.setChartData(values[0], values[1]))
         .catch(error => console.error(error))
   }
 
@@ -297,7 +302,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
       )
   }
 
-  public setChartData(marketPrices: Array<[Date, number]>): void {
+  public setChartData(marketPrices: Array<[Date, number]>, yourPrices: Array<[Date, number]>): void {
     let _lineChartData: Array<any> = new Array(this.lineChartData.length);
 
     _lineChartData[0] = {data: new Array(7), label: 'Market price'};
@@ -306,6 +311,9 @@ export class PlantDashboardHeaderComponent implements OnInit {
     }
 
      _lineChartData[1] = {data: new Array(7), label: 'Your price'};
+      for (let j = 0; j < yourPrices.length; j++) {
+          _lineChartData[1].data[j] = yourPrices[j][1];
+      }
 
     setTimeout(() => {
       // Timeout required because of angular and chart js integration bug.

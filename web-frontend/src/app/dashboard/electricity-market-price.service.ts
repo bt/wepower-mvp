@@ -22,7 +22,7 @@ export class ElectricityMarketPriceService {
       .catch(this.handleError)
   }
 
-  private extractData(response : Response) : Observable<Array<[Date, number]>> {
+  private extractData(response: Response): Observable<Array<[Date, number]>> {
     return response.json()
       .map(priceForDay =>
         [
@@ -32,7 +32,7 @@ export class ElectricityMarketPriceService {
       )
   }
 
-  private handleError(error : Response) : Observable<Array<[Date, number]>> {
+  private handleError(error: Response): Observable<Array<[Date, number]>> {
     return Observable.throw("Failed to get plant data")
   }
 

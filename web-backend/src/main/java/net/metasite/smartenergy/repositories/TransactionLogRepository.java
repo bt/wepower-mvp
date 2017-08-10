@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TransactionLogRepository extends BaseRepository<TransactionLog> {
 
-    List<TransactionLog> findByFromAndAndDate(String from, LocalDate date);
+    List<TransactionLog> findAllByFromAndDateIs(String from, LocalDate date);
 
-    List<TransactionLog> findByToAndAndDate(String to, LocalDate date);
+    List<TransactionLog> findAllByToAndDateIs(String to, LocalDate date);
 
 }

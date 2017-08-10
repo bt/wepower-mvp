@@ -13,6 +13,7 @@ import {BlockchainPlantData} from "./blockchain-plant";
 import {PlantType} from "../registration/plant-form/plant-form";
 import {TransactionsLogService} from "./transactions-log-service";
 import {error} from "util";
+import {PriceLogService} from "./price-log-service";
 
 
 var Web3 = require('web3');
@@ -27,7 +28,8 @@ export class EthereumService {
 
     private contract: any
 
-    constructor(private transactionsLog: TransactionsLogService) {
+    constructor(private transactionsLog: TransactionsLogService,
+                private pricesLog: PriceLogService) {
     }
 
     loadConnection(): Promise<any> {
@@ -133,7 +135,14 @@ export class EthereumService {
                     console.log(err)
                     reject(err)
                 }
-                resolve(result)
+                self_.pricesLog.log(wallet, self_.weiToETH(price))
+                    .subscribe(
+                        data => resolve(result),
+                        error => {
+                            console.log(error)
+                            resolve(result)
+                        }
+                    )
             })
         })
         return Observable.fromPromise(promise).catch(error => Observable.throw(error))
@@ -291,6 +300,5 @@ export class EthereumService {
             _self.transactionsLog.log(result.from, result.to, transactionId, result.value);
         });
     }
-
 
 }

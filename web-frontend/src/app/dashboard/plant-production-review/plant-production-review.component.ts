@@ -120,6 +120,8 @@ export class PlantProductionReviewComponent implements OnInit {
                 ]).then(values => {
                     productionForDay.totalTokens = Number(values[0])
                     productionForDay.sold = Number(values[0]) - Number(values[1])
+                    values[2].forEach((val) => productionForDay.receivedEth + Number(val))
+
                 })
             ))
 

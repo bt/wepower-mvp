@@ -46,7 +46,7 @@
           </div>
         </td>
         <td class="text-right">
-          <div *ngIf="row.receivedEth">{{row.receivedEth}} ETH</div>
+          <div *ngIf="row.receivedEth || row.receivedEth === 0">{{row.receivedEth}} ETH</div>
         </td>
       </tr>
       </tbody>

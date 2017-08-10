@@ -25,11 +25,11 @@ public class TransactionLogManager {
     }
 
     public List<TransactionLog> getFrom(String from, LocalDate date) {
-        return transactionLogRepository.findByFromAndAndDate(from, date);
+        return transactionLogRepository.findAllByFromAndDateIs(from, date);
     }
 
     public List<TransactionLog> getTo(String to, LocalDate date) {
-        return transactionLogRepository.findByFromAndAndDate(to, date);
+        return transactionLogRepository.findAllByToAndDateIs(to, date);
     }
 
 }
