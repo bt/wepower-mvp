@@ -25,7 +25,7 @@
         <th class="text-right">Produced, kWh</th>
         <th class="text-right">Price, ETH/kWh</th>
         <th class="text-right">Price, EUR/kWh</th>
-        <th class="text-right">kWh produced/sold</th>
+        <th class="text-right">kWh sold/produced</th>
         <th class="text-right">Received payment</th>
       </tr>
       </thead>
@@ -39,11 +39,10 @@
         <td class="text-right">
           <div class="progressBarContainer" *ngIf="(row.production) || row.prediction">
             <div class="progressbar">
-              <div [ngStyle]="{width: (!(row.production) && row.prediction ? (row.prediction/row.sold) : (row.production/row.sold))*100 + '%'}"></div>
+              <div [ngStyle]="{width: (row.totalTokens ? (row.sold/row.totalTokens)*100 : 0) + '%'}"></div>
             </div>
-            <span>{{row.totalTokens}}</span>
-            <span *ngIf="row.production">{{row.sold}}/{{row.production}}</span>
-            <span *ngIf="!(row.production) && row.prediction">{{row.sold}}/{{row.prediction}}</span>
+            <span *ngIf="row.totalTokens">{{row.sold}}/{{row.totalTokens}}</span>
+            <!--<span *ngIf="!(row.totalTokens) && row.prediction">{{row.sold}}/{{row.prediction}}</span>-->
           </div>
         </td>
         <td class="text-right">

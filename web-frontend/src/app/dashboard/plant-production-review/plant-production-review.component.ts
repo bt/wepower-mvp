@@ -11,6 +11,7 @@ import { DataFiller } from "../../shared/data-filler.service";
 import { ProductionDetails } from "../production-details";
 import {ProductionPredictionService} from "../../registration/prediction/production-prediction.service";
 import {Observable} from "rxjs/Observable";
+import {TransactionsLogService} from "../../shared/transactions-log-service";
 
 @Component({
   selector: 'app-plant-production-review',
@@ -31,7 +32,8 @@ export class PlantProductionReviewComponent implements OnInit {
   constructor(private ethereum: EthereumService,
               private exchangeMarket: ExchangeRateService,
               private predictionService: ProductionPredictionService,
-              private productionReviewService: ProductionReviewService) { }
+              private productionReviewService: ProductionReviewService,
+              private transactionLog: TransactionsLogService) { }
 
   ngOnInit() {
     this.ethereum.activeWallet()
@@ -89,40 +91,37 @@ export class PlantProductionReviewComponent implements OnInit {
         this.exchangeMarket.exchangeRate().toPromise()
       ]
     ).then(values => {
-      let productionDetails: Array<ProductionDetails> = values[0]
-      let exchangeRate = values[1]
-      // Hardcoded
-      let sold: number = 1000
-      let price: number = 25
+      const productionDetails: Array<ProductionDetails> = values[0]
+      const exchangeRate = values[1]
+      const price = 0
 
-
-
-      let reviewDetails = productionDetails.map(productionForDay => {
+      const reviewDetails = productionDetails.map(productionForDay => {
           return new ProductionReviewRow(
             productionForDay.date,
             productionForDay.prediction,
             productionForDay.production,
-            sold,
+            0,
             price,
             price / exchangeRate,
-            price * sold,
+            price * 0,
             0
           )
         }
       )
 
-        let updates: Array<any> = [];
+        const updates: Array<any> = [];
 
         reviewDetails.forEach(productionForDay =>
-            updates.push(new Promise((resolve, reject) => {
-                this.totalAmount(productionForDay.date).subscribe(
-                    data => {
-                        productionForDay.totalTokens = data
-                        resolve(true)
-                    },
-                    error => reject
-                )
-            })))
+            updates.push(
+                Promise.all([
+                    this.totalAmount(productionForDay.date).toPromise(),
+                    this.ethereum.getOwned(this.walletId, productionForDay.date).toPromise(),
+                    this.transactionLog.transactionsTo(this.walletId, productionForDay.date).toPromise()
+                ]).then(values => {
+                    productionForDay.totalTokens = Number(values[0])
+                    productionForDay.sold = Number(values[0]) - Number(values[1])
+                })
+            ))
 
         Promise.all(updates)
             .then(values => { this.productionReview = this.fillForWeek(reviewDetails) })

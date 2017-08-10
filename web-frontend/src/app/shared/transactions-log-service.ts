@@ -9,12 +9,13 @@ export class TransactionsLogService {
 
     constructor(private http: Http) { }
 
-    log(from: string, to: string, transaction: string): void {
+    log(from: string, to: string, transaction: string, amount: number): void {
 
         let body = {
             "from": from,
             "to":  to,
             "transactionId": transaction,
+            "amount": amount,
             "date": new Date().toString()
         }
 
@@ -22,7 +23,7 @@ export class TransactionsLogService {
             .catch(this.handleError);
     }
 
-    transactionsFrom(from: string, date: Date): Observable<Array<string>> {
+    transactionsFrom(from: string, date: Date): Observable<Array<number>> {
         return this.http.get(`
                 ${environment.dataUrls.transactions.root}/
                 ${environment.dataUrls.transactions.from}/
@@ -32,7 +33,7 @@ export class TransactionsLogService {
             .catch(this.handleError)
     }
 
-    transactionsTo(to: string, date: Date): Observable<Array<string>> {
+    transactionsTo(to: string, date: Date): Observable<Array<number>> {
         return this.http.get(`
                 ${environment.dataUrls.transactions.root}/
                 ${environment.dataUrls.transactions.to}/
@@ -43,12 +44,12 @@ export class TransactionsLogService {
     }
 
 
-    private extractData(response: Response): Observable<Array<string>> {
+    private extractData(response: Response): Observable<Array<number>> {
         return response.json()
-            .map(transaction => transaction.transactionId)
+            .map(transaction => transaction.amount)
     }
 
-    private handleError(error: Response): Observable<Array<string>> {
+    private handleError(error: Response): Observable<Array<number>> {
         return Observable.throw("Error while interacting with transactions log")
     }
 

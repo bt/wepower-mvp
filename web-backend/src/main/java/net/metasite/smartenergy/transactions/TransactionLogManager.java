@@ -1,5 +1,6 @@
 package net.metasite.smartenergy.transactions;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class TransactionLogManager {
     private TransactionLogRepository transactionLogRepository;
 
     @Transactional
-    public void log(String from, String to, LocalDate date, String transactionId) {
-        TransactionLog transactionLog = new TransactionLog(from, to, date, transactionId);
+    public void log(String from, String to, LocalDate date, String transactionId, BigDecimal amount) {
+        TransactionLog transactionLog = new TransactionLog(from, to, date, transactionId, amount);
         transactionLogRepository.save(transactionLog);
     }
 

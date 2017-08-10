@@ -31,7 +31,8 @@ public class TransactionLogController {
                 logDTO.getFrom(),
                 logDTO.getTo(),
                 logDTO.getDate(),
-                logDTO.getTransactionId());
+                logDTO.getTransactionId(),
+                logDTO.getAmount());
 
         return ResponseEntity.ok().build();
     }
@@ -69,7 +70,8 @@ public class TransactionLogController {
                 log.getFrom(),
                 log.getTo(),
                 log.getDate(),
-                log.getTransaction()
+                log.getTransaction(),
+                log.getAmount()
         );
     }
 

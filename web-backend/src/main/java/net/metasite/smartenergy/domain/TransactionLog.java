@@ -1,5 +1,6 @@
 package net.metasite.smartenergy.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -29,14 +30,24 @@ public class TransactionLog {
     @Column
     private String transaction;
 
+    @Column
+    private BigDecimal amount;
+
     public TransactionLog() {
     }
 
-    public TransactionLog(String from, String to, LocalDate date, String transaction) {
+    public TransactionLog(
+            String from,
+            String to,
+            LocalDate date,
+            String transaction,
+            BigDecimal amount) {
+
         this.from = from;
         this.to = to;
         this.date = date;
         this.transaction = transaction;
+        this.amount = amount;
     }
 
     public Long getId() {
@@ -77,5 +88,13 @@ public class TransactionLog {
 
     public void setTransaction(String transaction) {
         this.transaction = transaction;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }
