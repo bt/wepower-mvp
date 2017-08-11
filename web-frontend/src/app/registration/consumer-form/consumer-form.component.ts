@@ -109,4 +109,10 @@ export class ConsumerFormComponent implements OnInit {
         .test(area.name))
       .map(area => area.name);
   }
+
+  setConsumption(choiceIndex: number): void {
+    const consumptionValues = [2000, 3500, 5000]
+    this.formData.consumption = consumptionValues[choiceIndex]
+  }
 }
+
