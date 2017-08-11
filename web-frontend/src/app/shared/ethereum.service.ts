@@ -197,12 +197,13 @@ export class EthereumService {
                         console.log(err)
                         reject(err)
                     }
-                    self_.logTransaction(result)
                     resolve(result)
             })
         })
 
-        return Observable.fromPromise(promise).catch(error => Observable.throw(error))
+        return Observable.fromPromise(promise)
+            .mergeMap(data => self_.logTransaction(data.toString(), plant, price, amount, date))
+            .catch(error => Observable.throw(error))
     }
 
     transfer(to: string, amount: number, date: Date): void {
@@ -289,16 +290,10 @@ export class EthereumService {
         return address
     }
 
-    private logTransaction(transactionId: string): void {
+    private logTransaction(transactionId: string, plant: string, price: number, amountKwh: number, date: Date): Observable<any> {
         const _self = this
-        this.web3.eth.getTransaction(transactionId, function (error, result) {
-            if (error) {
-                console.log(error);
-                return;
-            }
-
-            _self.transactionsLog.log(result.from, result.to, transactionId, result.value);
-        });
+        return _self.activeWallet()
+            .mergeMap(data => _self.transactionsLog.log(plant, data, transactionId, price, amountKwh, date))
     }
 
 }

@@ -19,17 +19,24 @@ public class TransactionLogManager {
     private TransactionLogRepository transactionLogRepository;
 
     @Transactional
-    public void log(String from, String to, LocalDate date, String transactionId, BigDecimal amount) {
-        TransactionLog transactionLog = new TransactionLog(from, to, date, transactionId, amount);
+    public void log(
+            String plant,
+            String consumer,
+            LocalDate date,
+            String transactionId,
+            BigDecimal amountEth,
+            BigDecimal amountKwh) {
+
+        TransactionLog transactionLog = new TransactionLog(plant, consumer, date, transactionId, amountEth, amountKwh);
         transactionLogRepository.save(transactionLog);
     }
 
-    public List<TransactionLog> getFrom(String from, LocalDate date) {
-        return transactionLogRepository.findAllByFromAndDateIs(from, date);
+    public List<TransactionLog> getForPlant(String plant, LocalDate date) {
+        return transactionLogRepository.findAllByPlantAndDate(plant, date);
     }
 
-    public List<TransactionLog> getTo(String to, LocalDate date) {
-        return transactionLogRepository.findAllByToAndDateIs(to, date);
+    public List<TransactionLog> getForConsumer(String consumer, LocalDate date) {
+        return transactionLogRepository.findAllByConsumerAndDate(consumer, date);
     }
 
 }

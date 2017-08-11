@@ -19,10 +19,10 @@ public class TransactionLog {
     private Long id;
 
     @Column
-    private String from;
+    private String plant;
 
     @Column
-    private String to;
+    private String consumer;
 
     @Column
     private LocalDate date;
@@ -31,23 +31,44 @@ public class TransactionLog {
     private String transaction;
 
     @Column
-    private BigDecimal amount;
+    private BigDecimal amountEth;
+
+    @Column
+    private BigDecimal amountKwh;
 
     public TransactionLog() {
     }
 
     public TransactionLog(
-            String from,
-            String to,
+            String plant,
+            String consumer,
             LocalDate date,
             String transaction,
-            BigDecimal amount) {
+            BigDecimal amountEth,
+            BigDecimal amountKwh) {
 
-        this.from = from;
-        this.to = to;
+        this.plant = plant;
+        this.consumer = consumer;
         this.date = date;
         this.transaction = transaction;
-        this.amount = amount;
+        this.amountEth = amountEth;
+        this.amountKwh = amountKwh;
+    }
+
+    public String getPlant() {
+        return plant;
+    }
+
+    public void setPlant(String plant) {
+        this.plant = plant;
+    }
+
+    public String getConsumer() {
+        return consumer;
+    }
+
+    public void setConsumer(String consumer) {
+        this.consumer = consumer;
     }
 
     public Long getId() {
@@ -56,22 +77,6 @@ public class TransactionLog {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
     }
 
     public LocalDate getDate() {
@@ -90,11 +95,19 @@ public class TransactionLog {
         this.transaction = transaction;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public BigDecimal getAmountEth() {
+        return amountEth;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setAmountEth(BigDecimal amountEth) {
+        this.amountEth = amountEth;
+    }
+
+    public BigDecimal getAmountKwh() {
+        return amountKwh;
+    }
+
+    public void setAmountKwh(BigDecimal amountKwh) {
+        this.amountKwh = amountKwh;
     }
 }

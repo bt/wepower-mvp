@@ -5,35 +5,38 @@ import java.time.LocalDate;
 
 public class TransactionLogDTO {
 
-    private String from;
-    private String to;
+    private String plant;
+    private String consumer;
     private LocalDate date;
     private String transactionId;
-    private BigDecimal amount;
+    private BigDecimal amountEth;
+    private BigDecimal amountKwh;
 
     public TransactionLogDTO() {
     }
 
     public TransactionLogDTO(
-            String from,
-            String to,
+            String plant,
+            String consumer,
             LocalDate date,
             String transactionId,
-            BigDecimal amount) {
+            BigDecimal amountEth,
+            BigDecimal amountKwh) {
 
-        this.from = from;
-        this.to = to;
+        this.plant = plant;
+        this.consumer = consumer;
         this.date = date;
         this.transactionId = transactionId;
-        this.amount = amount;
+        this.amountEth = amountEth;
+        this.amountKwh = amountKwh;
     }
 
-    public String getFrom() {
-        return from;
+    public String getPlant() {
+        return plant;
     }
 
-    public String getTo() {
-        return to;
+    public String getConsumer() {
+        return consumer;
     }
 
     public LocalDate getDate() {
@@ -44,7 +47,11 @@ public class TransactionLogDTO {
         return transactionId;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public BigDecimal getAmountEth() {
+        return amountEth;
+    }
+
+    public BigDecimal getAmountKwh() {
+        return amountKwh;
     }
 }

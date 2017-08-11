@@ -9,30 +9,32 @@ export class TransactionsLogService {
 
     constructor(private http: Http) { }
 
-    log(from: string, to: string, transaction: string, amount: number): void {
+    log(plant: string, consumer: string, transaction: string, amountEth: number, amountKwh: number, date: Date): Observable<any> {
 
         let body = {
-            "from": from,
-            "to":  to,
+            "plant": plant,
+            "consumer":  consumer,
             "transactionId": transaction,
-            "amount": amount,
-            "date": new Date().toString()
+            "amountEth": amountEth,
+            "amountKwh": amountKwh,
+            "date": date
         }
 
-        this.http.post(`${environment.dataUrls.transactions.root}`, body)
+        return this.http.post(`${environment.dataUrls.transactions.root}`, body)
+            .map(() => null)
             .catch(this.handleError);
     }
 
-    transactionsFrom(from: string, date: Date): Observable<Array<number>> {
+    transactionsConsumer(from: string, date: Date): Observable<Array<number>> {
         return this.http.get(`
-                ${environment.dataUrls.transactions.from}?from=${from}&date=${date.toISOString().split('T')[0]}`)
+                ${environment.dataUrls.transactions.consumer}?consumer=${from}&date=${date.toISOString().split('T')[0]}`)
             .map(this.extractData)
             .catch(this.handleError)
     }
 
-    transactionsTo(to: string, date: Date): Observable<Array<number>> {
+    transactionsPlant(to: string, date: Date): Observable<Array<number>> {
         return this.http.get(`
-                ${environment.dataUrls.transactions.to}?to=${to}&date=${date.toISOString().split('T')[0]}`)
+                ${environment.dataUrls.transactions.plant}?plant=${to}&date=${date.toISOString().split('T')[0]}`)
             .map(this.extractData)
             .catch(this.handleError)
     }
@@ -40,7 +42,7 @@ export class TransactionsLogService {
 
     private extractData(response: Response): Observable<Array<number>> {
         return response.json()
-            .map(transaction => transaction.amount)
+            .map(transaction => transaction.amountEth)
     }
 
     private handleError(error: Response): Observable<Array<number>> {

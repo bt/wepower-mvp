@@ -34,8 +34,8 @@ export const environment = {
     },
     transactions: {
       root: '/api/v1/transaction/log',
-      from: '/api/v1/transaction/log/from',
-      to: '/api/v1/transaction/log/to'
+      consumer: '/api/v1/transaction/log/consumer',
+      plant: '/api/v1/transaction/log/plant'
     },
     prices: {
       root: '/api/v1/price/log',

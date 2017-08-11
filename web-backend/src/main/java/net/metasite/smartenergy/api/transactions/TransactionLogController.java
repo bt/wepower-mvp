@@ -1,5 +1,6 @@
 package net.metasite.smartenergy.api.transactions;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,22 +33,23 @@ public class TransactionLogController {
     public ResponseEntity<Void> log(@RequestBody TransactionLogDTO logDTO) {
 
         transactionLogManager.log(
-                logDTO.getFrom(),
-                logDTO.getTo(),
+                logDTO.getPlant(),
+                logDTO.getConsumer(),
                 logDTO.getDate(),
                 logDTO.getTransactionId(),
-                logDTO.getAmount());
+                logDTO.getAmountEth(),
+                logDTO.getAmountKwh());
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("from")
+    @GetMapping("consumer")
     public ResponseEntity<List<TransactionLogDTO>> getLogsFrom(
-            @RequestParam("from") String from,
+            @RequestParam("consumer") String consumer,
             @RequestParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date) {
 
         List<TransactionLogDTO> transactionLogs =
-            transactionLogManager.getFrom(from, date)
+            transactionLogManager.getForConsumer(consumer, date)
                 .stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
@@ -55,27 +57,30 @@ public class TransactionLogController {
         return ResponseEntity.ok(transactionLogs);
     }
 
-    @GetMapping("to")
-    public ResponseEntity<List<TransactionLogDTO>> getLogsTo(
-            @RequestParam("to") String to,
+    @GetMapping("plant")
+    public ResponseEntity<List<TransactionLogDTO>> getPlantLogs(
+            @RequestParam("plant") String to,
             @RequestParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date) {
 
-        List<TransactionLogDTO> transactionLogs = new LinkedList<>();
-       /*         transactionLogManager.getTo(to, date)
+        List<TransactionLogDTO> transactionLogs = transactionLogManager.getForPlant(to, date)
                         .stream()
                         .map(this::convert)
-                        .collect(Collectors.toList());*/
+                        .collect(Collectors.toList());
 
         return ResponseEntity.ok(transactionLogs);
     }
 
     private TransactionLogDTO convert(TransactionLog log) {
+        if (!log.getAmountEth().equals(BigDecimal.ZERO)) {
+            System.out.println("!");
+        }
         return new TransactionLogDTO(
-                log.getFrom(),
-                log.getTo(),
+                log.getPlant(),
+                log.getConsumer(),
                 log.getDate(),
                 log.getTransaction(),
-                log.getAmount()
+                log.getAmountEth(),
+                log.getAmountKwh()
         );
     }
 
