@@ -25,6 +25,14 @@ export class TransactionsLogService {
             .catch(this.handleError);
     }
 
+    transactionsConsumerPlant(from: string, date: Date): Observable<Array<number>> {
+        return this.http.get(`
+                ${environment.dataUrls.transactions.consumer}?consumer=${from}&date=${date.toISOString().split('T')[0]}`)
+            .map(response => response.json()
+                .map(transaction => transaction.plant))
+            .catch(this.handleError)
+    }
+
     transactionsConsumer(from: string, date: Date): Observable<Array<number>> {
         return this.http.get(`
                 ${environment.dataUrls.transactions.consumer}?consumer=${from}&date=${date.toISOString().split('T')[0]}`)

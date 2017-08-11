@@ -75,9 +75,12 @@
             <td class="text-right"><span *ngIf="detail.priceEth != 0">{{detail.priceEur}} EUR</span></td>
             <td class="text-right"><span *ngIf="detail.priceEth != 0">{{detail.sum}} ETH</span></td>
             <td class="text-right">
-              <button (click)="buyTokens(detail.address, detail.tokens, detail.date, detail.sum)" [disabled]="detail.priceEth == 0"
+              <button (click)="buyTokens(detail.address, detail.tokens, detail.date, detail.sum)"
+                      [disabled]="detail.priceEth == 0 || buying"
                       type="button" class="btn btn-primary power-button" id="send-button">
-                <i class="fa fa-cart-arrow-down"></i> Buy</button>
+                <i *ngIf="!buying" class="fa fa-cart-arrow-down"></i>
+                <i *ngIf="buying" class="fa fa-circle-o-notch fa-spin"></i>
+                Buy</button>
             </td>
           </tr>
         </ng-container>
@@ -105,7 +108,7 @@
               </div>
               <div class="row">
                 <div class="col-md">
-                  <input name="walletId" class="form-control">
+                  <input name="walletId" class="form-control" (ngModel)="tranfferData.address">
                 </div>
               </div>
             </div>
@@ -117,7 +120,7 @@
               </div>
               <div class="row">
                 <div class="col-md">
-                  <input name="amountOfTokens" class="form-control">
+                  <input name="amountOfTokens" class="form-control" (ngModel)="tranfferData.value">
                 </div>
               </div>
             </div>
@@ -125,7 +128,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary power-button mr-auto" data-dismiss="modal">
+        <button type="button" (click)="transferTokens()" class="btn btn-primary power-button mr-auto" data-dismiss="modal">
         <i class="fa fa-exchange"></i> Transfer</button>
       </div>
     </div>

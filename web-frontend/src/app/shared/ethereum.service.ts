@@ -122,6 +122,8 @@ export class EthereumService {
                     resolve(result)
                 })
         })
+            .then(txHash => self_.getTransactionReceiptMined(txHash, 500))
+            .then(receipt => console.log(receipt))
 
         return Observable.fromPromise(promise).catch(error => Observable.throw(error))
     }
@@ -136,7 +138,8 @@ export class EthereumService {
                 }
                 resolve(result)
             })
-        })
+        }).then(txHash => self_.getTransactionReceiptMined(txHash, 500))
+            .then(receipt => console.log(receipt))
         return Observable.fromPromise(promise).catch(error => Observable.throw(error))
     }
 
@@ -191,15 +194,32 @@ export class EthereumService {
                     }
                     resolve(result)
             })
-        })
+        }).then(txHash => self_.getTransactionReceiptMined(txHash, 500))
+          .then(receipt => self_.logTransaction(receipt.transactionHash, plant, price, amount, date))
 
-        return Observable.fromPromise(promise)
-            .mergeMap(data => self_.logTransaction(data.toString(), plant, price, amount, date))
-            .catch(error => Observable.throw(error))
+        return Observable.fromPromise(promise).catch(error => Observable.throw(error))
     }
 
-    transfer(to: string, amount: number, date: Date): void {
-        /*this.exchange.transfer.sendTransaction(to, amount, date, {from: this.web3.eth.coinbase})*/
+    transfer(plant: string, to: string, amount: number, date: Date): Observable<any> {
+        const self_ = this
+
+        const promise = new Promise(function (resolve, reject) {
+            self_.contract.transfer.sendTransaction(
+                plant,
+                to,
+                date.getTime() / 1000,
+                amount,
+                function (err, result) {
+                    if (err) {
+                        console.log(err)
+                        reject(err)
+                    }
+                    resolve(result)
+                })
+        }).then(txHash => self_.getTransactionReceiptMined(txHash, 500))
+            .then(receipt => console.log(receipt))
+
+        return Observable.fromPromise(promise).catch(error => Observable.throw(error))
     }
 
     getOwned(wallet: string, date: Date): Observable<number> {
@@ -286,6 +306,32 @@ export class EthereumService {
         const _self = this
         return _self.activeWallet()
             .mergeMap(data => _self.transactionsLog.log(plant, data, transactionId, price, amountKwh, date))
+    }
+
+    private getTransactionReceiptMined(txHash, interval) {
+        const self_ = this;
+        const transactionReceiptAsync = function (resolve, reject) {
+            self_.web3.eth.getTransactionReceipt(txHash, (error, receipt) => {
+                if (error) {
+                    reject(error);
+                } else if (receipt == null || receipt.blockNumber == null || receipt.blockNumber == "") {
+                    setTimeout(
+                        () => transactionReceiptAsync(resolve, reject),
+                        interval ? interval : 500);
+                } else {
+                    resolve(receipt);
+                }
+            });
+        };
+
+        if (Array.isArray(txHash)) {
+            return Promise.all(txHash.map(
+                oneTxHash => self_.getTransactionReceiptMined(oneTxHash, interval)));
+        } else if (typeof txHash === 'string') {
+            return new Promise(transactionReceiptAsync);
+        } else {
+            throw new Error('Invalid Type: ' + txHash);
+        }
     }
 
 }

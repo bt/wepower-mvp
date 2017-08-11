@@ -14,6 +14,7 @@ import {reject} from "q";
 import {PlantType} from "../../registration/plant-form/plant-form";
 import {toPromise} from "rxjs/operator/toPromise";
 import {BuyTokensRow} from "../buy-tokens-row";
+import {TransactionsLogService} from "../../shared/transactions-log-service";
 
 @Component({
   selector: 'app-client-consumption-review',
@@ -25,15 +26,21 @@ export class ClientConsumptionReviewComponent implements OnInit {
   consumptionReview: Array<ConsumptionReviewRow>
   tableReviewPeriod: Period = new Period(new Date(), new Date())
   walletId: string
-
+  buying = false
   availableRange: Period
 
   details: { [key: number]: Array<BuyTokensRow>; } = {};
 
+  tranfferData: {
+      address: string,
+      value: number
+  }
+
   constructor(private ethereum: EthereumService,
               private exchangeMarket: ExchangeRateService,
               private predictionService: ProductionPredictionService,
-              private consumptionReviewService: ConsumptionReviewService) { }
+              private consumptionReviewService: ConsumptionReviewService,
+              private transactionLogs: TransactionsLogService) { }
 
 
   ngOnInit() {
@@ -57,15 +64,23 @@ export class ClientConsumptionReviewComponent implements OnInit {
     this.loadTable(this.tableReviewPeriod);
   }
 
-  sendTokens() {
+  transferTokens() {
+      /*this.transactionLogs.transactionsConsumerPlant(this.walletId, )
+          .mergeMap(data => this.ethereum.transfer(data, this.tranfferData.address))
+          .subscribe(
+              data => null,
+              error => console.log)*/
 
   }
 
   buyTokens(plant: string, amount: number, date: Date, price: number) {
+      this.buying = true
       this.ethereum.buy(plant, amount, date, price).subscribe(
-          data => console.log(data),
-          error => console.error(error)
-      )
+          data => this.buying = false,
+          error => {
+              console.error(error)
+              this.buying = false
+      })
   }
 
   isAfter(date: Date): boolean {
@@ -95,9 +110,7 @@ export class ClientConsumptionReviewComponent implements OnInit {
     ).then(values => {
       let consumptionDetails: Array<ConsumptionDetails> = values[0]
       let exchangeRate = values[1]
-      // Hardcoded
-
-      let price: number = 25
+      let price: number = 0
 
       let consumptionRows = consumptionDetails.map(consumptionForDay => {
           return new ConsumptionReviewRow(
@@ -115,17 +128,23 @@ export class ClientConsumptionReviewComponent implements OnInit {
       let updates: Array<any> = [];
 
       consumptionRows.forEach(consumptionForDay =>
-            updates.push(new Promise((resolve, reject) => {
-                this.ethereum.getOwned(this.walletId, consumptionForDay.date).subscribe(
-                    data => {
-                        consumptionForDay.tokens = data
-                        resolve(true)
-                    },
-                    error => reject
-                )})))
+          updates.push(
+              Promise.all([
+                  this.ethereum.getOwned(this.walletId, consumptionForDay.date).toPromise(),
+                  this.transactionLogs.transactionsConsumer(this.walletId, consumptionForDay.date).toPromise()
+              ]).then(vals => {
+                  consumptionForDay.tokens = vals[0]
+                  if (vals[0] > 0) {
+                      consumptionForDay.priceEth = 0
+                      vals[1].forEach((val) => consumptionForDay.priceEth += Number(val))
+                      consumptionForDay.priceEur = consumptionForDay.priceEth * exchangeRate
+                      consumptionForDay.paidEth = consumptionForDay.tokens * consumptionForDay.paidEth
+                  }
+              })
+          ))
 
         Promise.all(updates)
-            .then(values => { this.consumptionReview = this.fillEmptyForWeek(consumptionRows) })
+            .then(vals => { this.consumptionReview = this.fillEmptyForWeek(consumptionRows) })
     })
   }
 

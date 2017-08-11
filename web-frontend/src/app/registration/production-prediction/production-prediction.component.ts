@@ -21,6 +21,7 @@ export class ProductionPredictionComponent implements OnInit {
   public predictionRange : Period
   public reviewPeriod : Period;
   public walletId : string
+  public loading = false
 
   constructor(private plantService: PlantManagementService,
               private predictionService : ProductionPredictionService,
@@ -66,10 +67,17 @@ export class ProductionPredictionComponent implements OnInit {
   }
 
   activatePlant() {
+    this.loading = true
     this.plantService.activatePlant(this.walletId)
       .subscribe(
-        success => this.router.navigateByUrl('/dashboard/plant'),
-        error => console.error(error)
+        success => {
+            this.loading = false
+            this.router.navigateByUrl('/dashboard/plant')
+        },
+       error => {
+          this.loading = false
+          console.error(error)
+        }
       )
   }
 }

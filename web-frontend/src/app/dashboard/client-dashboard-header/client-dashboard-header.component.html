@@ -24,7 +24,7 @@
         </div>
         <div class="row">
           <div class="col-md header-data-info">
-            150 kWh
+            {{boughtTotal}} kWh
           </div>
         </div>
       </div>
@@ -44,8 +44,7 @@
                   [labels]="lineChartLabels"
                   [colors]="lineChartColors"
                   [options]="lineChartOptions"
-                  chartType="line"
-      ></canvas>
+                  chartType="line"></canvas>
         </div>
     </div>
       <div class="col-md-3">

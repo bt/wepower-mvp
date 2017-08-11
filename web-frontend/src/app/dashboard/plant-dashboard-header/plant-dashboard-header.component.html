@@ -53,7 +53,8 @@
       <div class="col-md-3">
         <div class="input-group set-price">
           <input class="form-control power-input set-price" type="text" (change)="calcPriceInEth()" [value]="price" (input)="price = $event.target.value">
-          <span class="input-group-addon btn btn-primary power-button set-price" id="basic-addon1" (click)="setPrice()">Set price</span>
+          <button [disabled]="loading" class="input-group-addon btn btn-primary power-button set-price" id="basic-addon1" (click)="setPrice()">
+            Set price </button>
         </div>
         <div class="conversion-message">{{price}} EUR = {{priceEth}} ETH</div>
         <div class="chart-legend">

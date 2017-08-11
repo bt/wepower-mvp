@@ -1,23 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import * as moment from 'moment';
-import { Period } from "../../shared/period";
-import { MarketPriceRow } from "../market-price-row";
-import { ConsumptionPredictionService } from "../../registration/prediction/consumption-prediction.service";
-import { EthereumService } from "../../shared/ethereum.service";
-import { ElectricityMarketPriceService } from "../electricity-market-price.service";
+import {Period} from "../../shared/period";
+import {MarketPriceRow} from "../market-price-row";
+import {ConsumptionPredictionService} from "../../registration/prediction/consumption-prediction.service";
+import {EthereumService} from "../../shared/ethereum.service";
+import {ElectricityMarketPriceService} from "../electricity-market-price.service";
 
 @Component({
-  selector: 'app-client-dashboard-header',
-  templateUrl: './client-dashboard-header.component.html',
-  styleUrls: ['./client-dashboard-header.component.scss']
+    selector: 'app-client-dashboard-header',
+    templateUrl: './client-dashboard-header.component.html',
+    styleUrls: ['./client-dashboard-header.component.scss']
 })
 export class ClientDashboardHeaderComponent implements OnInit {
 
-  consumedTotal: number;
-  headerPeriod: Period;
-  marketPricesReview: Array<MarketPriceRow>;
-  walletId: string
+    consumedTotal: number
+    boughtTotal: number
+    headerPeriod: Period
+    marketPricesReview: Array<MarketPriceRow>
+    walletId: string
 
     public lineChartData: Array<any> = [
         {data: [], label: 'Market price'},
@@ -40,7 +41,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
     public lineChartOptions: any = {
         responsive: true,
         maintainAspectRatio: false,
-        legend: { display: false },
+        legend: {display: false},
         tooltips: {
             enabled: false,
             custom: (tooltipModel) => {
@@ -145,7 +146,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
                     var bodyLines = tooltipModel.body.map(item => item.lines);
 
                     let bodyElement = document.createElement('div');
-                    bodyElement.innerText = bodyLines[0] + ' kWh'
+                    bodyElement.innerText = bodyLines[0] + ' EUR'
                     bodyElement.style.display = 'table' // Allows centering horizontaly without known width
                     bodyElement.style.margin = 'auto' // centers horizontaly
                     bodyContainerEl.appendChild(bodyElement);
@@ -212,75 +213,89 @@ export class ClientDashboardHeaderComponent implements OnInit {
                     padding: 10
                 },
                 gridLines: {
-                    display:false
+                    display: false
                 }
             }]
         }
     };
 
-  constructor(private predictionService : ConsumptionPredictionService,
-              private ethereum : EthereumService,
-              private electricityPriceService : ElectricityMarketPriceService) { }
-
-  ngOnInit() {
-
-    this.headerPeriod = new Period(
-      moment().startOf('isoWeek').toDate(),
-      moment().startOf('isoWeek').add(6, 'day').toDate()
-    );
-
-    let dayLabels: Array<string> = []
-
-    let date = this.headerPeriod.from;
-    while (moment(date).isBefore(this.headerPeriod.to)) {
-      dayLabels.push(moment(date).format('MM-DD'))
-      date = moment(date).add(1, 'day').toDate()
+    constructor(private predictionService: ConsumptionPredictionService,
+                private ethereum: EthereumService,
+                private electricityPriceService: ElectricityMarketPriceService) {
     }
-    this.lineChartLabels = dayLabels;
 
-    this.ethereum.activeWallet()
-      .subscribe(
-        wallet => {
-          this.walletId = wallet
-          this.loadTotalPrediction(this.headerPeriod);
-          this.loadMarketData()
-        },
-        error => console.error(error)
-      )
-  }
+    ngOnInit() {
 
-  private loadTotalPrediction(reviewPeriod: Period) {
-    this.predictionService.getPredictionTotal(this.walletId, reviewPeriod)
-      .subscribe(
-        predictions => this.consumedTotal = predictions,
-        error => console.error(error)
-      );
+        this.headerPeriod = new Period(
+            moment().startOf('isoWeek').toDate(),
+            moment().startOf('isoWeek').add(6, 'day').toDate()
+        );
 
-  }
+        let dayLabels: Array<string> = []
 
-  private loadMarketData() {
-    let periodEnd = moment().add(1, 'days')
-    let periodStart = periodEnd.clone().subtract(6, 'day')
+        let date = this.headerPeriod.from;
+        while (moment(date).isBefore(this.headerPeriod.to)) {
+            dayLabels.push(moment(date).format('MM-DD'))
+            date = moment(date).add(1, 'day').toDate()
+        }
+        this.lineChartLabels = dayLabels;
 
-    let marketReviewPeriod = new Period(
-      periodStart.toDate(),
-      periodEnd.toDate()
-    );
+        this.ethereum.activeWallet()
+            .subscribe(
+                wallet => {
+                    this.walletId = wallet
+                    this.loadTotalPrediction(this.headerPeriod);
+                    this.loadTotalBought(this.headerPeriod)
+                    this.loadMarketData()
+                },
+                error => console.error(error)
+            )
+    }
 
-    // Expected to add prices from contracts, which will have to be merged.
-    Promise.all(
-      [
-        this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise()
-      ]
-    ).then(values => {
-      let marketPrices = values[0]
+    private loadTotalPrediction(reviewPeriod: Period) {
+        this.predictionService.getPredictionTotal(this.walletId, reviewPeriod)
+            .subscribe(
+                predictions => this.consumedTotal = predictions,
+                error => console.error(error)
+            );
 
-      this.setChartData(marketPrices)
-      // Prices from contract will have to be added later
-      this.marketPricesReview = marketPrices
-        .map(priceForDay => new MarketPriceRow(priceForDay[0], priceForDay[1], 25))
-    }).catch(error => console.error(error))
-  }
+    }
+
+    private loadTotalBought(reviewPeriod: Period) {
+        this.boughtTotal = 0
+        let currentDate = moment(reviewPeriod.from)
+
+        while (currentDate.isSameOrBefore(moment(reviewPeriod.to))) {
+            this.ethereum.getOwned(this.walletId, currentDate.toDate())
+                .subscribe(data => this.boughtTotal += Number(data),
+                    error => console.log)
+            currentDate = currentDate.add(1, 'day')
+        }
+    }
+
+    private loadMarketData() {
+        let periodEnd = moment().add(1, 'days')
+        let periodStart = periodEnd.clone().subtract(6, 'day')
+
+        let marketReviewPeriod = new Period(
+            periodStart.toDate(),
+            periodEnd.toDate()
+        );
+
+        // Expected to add prices from contracts, which will have to be merged.
+        Promise.all(
+            [
+                this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise()
+            ]
+        ).then(values => {
+            let marketPrices = values[0]
+
+            this.setChartData(marketPrices)
+            // Prices from contract will have to be added later
+            this.marketPricesReview = marketPrices
+                .map(priceForDay => new MarketPriceRow(priceForDay[0], priceForDay[1], 25))
+        }).catch(error => console.error(error))
+    }
 
     public setChartData(marketPrices: Array<[Date, number]>): void {
         let _lineChartData: Array<any> = new Array(this.lineChartData.length);

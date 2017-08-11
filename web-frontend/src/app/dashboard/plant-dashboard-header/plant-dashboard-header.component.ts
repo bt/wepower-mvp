@@ -23,6 +23,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
   walletId: string
   price = 0
   priceEth = 0
+  loading = false
 
   public lineChartData: Array<any> = [
     {data: [], label: 'Market price'},
@@ -243,7 +244,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
   setPrice(): void {
       const self_ = this
-
+      this.loading = true
       this.exchangeRateService.exchangeRate()
           .mergeMap((data) => {
               self_.priceEth = self_.round(self_.price / Number(data), 6)
@@ -251,10 +252,14 @@ export class PlantDashboardHeaderComponent implements OnInit {
           })
           .mergeMap(data => self_.priceLog.log(self_.walletId, self_.price))
           .subscribe(
-          data => self_.loadPrice(),
+          data => {
+              self_.loadPrice()
+              this.loading = false
+          },
           error => {
               console.log(error)
               self_.loadPrice()
+              this.loading = false
           }
       )
   }
