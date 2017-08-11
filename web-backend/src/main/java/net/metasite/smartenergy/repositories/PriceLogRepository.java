@@ -13,5 +13,7 @@ public interface PriceLogRepository extends BaseRepository<PriceLog> {
 
     List<PriceLog> findAllByPlantAndDateIsAfterAndDateIsBeforeOrderByDateDesc(String plant, LocalDate dateFrom, LocalDate dateTo);
 
-    List<PriceLog> findAllByPlantAndDateIs(String plant, LocalDate date);
+    List<PriceLog> findAllByPlantAndDate(String plant, LocalDate date);
+
+    PriceLog findFirstByPlantOrderByDateDesc(String plant);
 }

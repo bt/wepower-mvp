@@ -34,7 +34,7 @@ public class PriceLogController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/dates")
+    @GetMapping("/period")
     public ResponseEntity<List<DatesPricesDTO>> getForDates(
             @RequestParam String plant,
             @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate from,
@@ -48,14 +48,14 @@ public class PriceLogController {
 
     }
 
-    /*@GetMapping("/{plant}/{date}")
+    @GetMapping("/date")
     public ResponseEntity<BigDecimal> getForDates(
-            @PathVariable String plant,
-            @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date) {
+            @RequestParam String plant,
+            @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date) {
 
         final BigDecimal price = priceLogManager.getFor(plant, date);
         return ResponseEntity.ok(price);
-    }*/
+    }
 
 
 }

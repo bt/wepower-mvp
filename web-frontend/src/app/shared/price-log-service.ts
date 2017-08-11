@@ -27,8 +27,15 @@ export class PriceLogService {
 
     getForPeriod(wallet: string, period: Period): Observable<Array<[Date, number]>> {
         const requestOptions = this.buildPeriodFilterParams(wallet, period)
-        return this.http.get(`${environment.dataUrls.prices.dates}`, requestOptions)
+        return this.http.get(`${environment.dataUrls.prices.period}`, requestOptions)
             .map(this.extractData)
+            .catch(error => Observable.throw("Failed to get plant data", error))
+    }
+
+    getFor(wallet: string, date: Date): Observable<number> {
+        const requestOptions = this.buildDateFilterParams(wallet, date)
+        return this.http.get(`${environment.dataUrls.prices.date}`, requestOptions)
+            .map(response => Number(response))
             .catch(error => Observable.throw("Failed to get plant data", error))
     }
 
@@ -40,6 +47,18 @@ export class PriceLogService {
                     priceForDay.price
                 ]
             )
+    }
+
+    private buildDateFilterParams(wallet: string, date: Date) {
+        let params: URLSearchParams = new URLSearchParams()
+
+        params.set('plant', wallet)
+        params.set('date', moment(date).format('YYYY-MM-DD'))
+
+
+        let requestOptions = new RequestOptions()
+        requestOptions.params = params
+        return requestOptions
     }
 
     private buildPeriodFilterParams(wallet: string, period: Period) {

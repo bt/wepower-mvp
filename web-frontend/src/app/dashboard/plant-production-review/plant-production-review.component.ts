@@ -12,6 +12,7 @@ import { ProductionDetails } from "../production-details";
 import {ProductionPredictionService} from "../../registration/prediction/production-prediction.service";
 import {Observable} from "rxjs/Observable";
 import {TransactionsLogService} from "../../shared/transactions-log-service";
+import {PriceLogService} from "../../shared/price-log-service";
 
 @Component({
   selector: 'app-plant-production-review',
@@ -33,7 +34,8 @@ export class PlantProductionReviewComponent implements OnInit {
               private exchangeMarket: ExchangeRateService,
               private predictionService: ProductionPredictionService,
               private productionReviewService: ProductionReviewService,
-              private transactionLog: TransactionsLogService) { }
+              private transactionLog: TransactionsLogService,
+              private priceLog: PriceLogService) { }
 
   ngOnInit() {
     this.ethereum.activeWallet()
@@ -80,20 +82,17 @@ export class PlantProductionReviewComponent implements OnInit {
             )
     }
 
-  totalAmount(date: Date): Observable<number> {
-    return this.ethereum.getTotalAmount(this.walletId, date.getTime())
-  }
-
   private loadTable(period: Period) {
     Promise.all(
       [
         this.productionReviewService.getProductionDetails(this.walletId, period).toPromise(),
-        this.exchangeMarket.exchangeRate().toPromise()
+        this.exchangeMarket.exchangeRate().toPromise(),
+        this.ethereum.getPrice(this.walletId).toPromise()
       ]
     ).then(values => {
       const productionDetails: Array<ProductionDetails> = values[0]
       const exchangeRate = values[1]
-      const price = 0
+      const price = values[2] ? values[2] : 0
 
       const reviewDetails = productionDetails.map(productionForDay => {
           return new ProductionReviewRow(
@@ -102,8 +101,8 @@ export class PlantProductionReviewComponent implements OnInit {
             productionForDay.production,
             0,
             price,
-            price / exchangeRate,
-            price * 0,
+            price * exchangeRate,
+            0,
             0
           )
         }
@@ -114,19 +113,23 @@ export class PlantProductionReviewComponent implements OnInit {
         reviewDetails.forEach(productionForDay =>
             updates.push(
                 Promise.all([
-                    this.totalAmount(productionForDay.date).toPromise(),
+                    this.ethereum.getTotalAmount(this.walletId, productionForDay.date).toPromise(),
                     this.ethereum.getOwned(this.walletId, productionForDay.date).toPromise(),
-                    this.transactionLog.transactionsPlant(this.walletId, productionForDay.date).toPromise()
-                ]).then(values => {
-                    productionForDay.totalTokens = Number(values[0])
-                    productionForDay.sold = Number(values[0]) - Number(values[1])
-                    values[2].forEach((val) => productionForDay.receivedEth += Number(val)  )
-
+                    this.transactionLog.transactionsPlant(this.walletId, productionForDay.date).toPromise(),
+                    this.priceLog.getFor(this.walletId, productionForDay.date).toPromise()
+                ]).then(vals => {
+                    productionForDay.totalTokens = Number(vals[0])
+                    productionForDay.sold = Number(vals[0]) - Number(vals[1])
+                    vals[2].forEach((val) => productionForDay.receivedEth += Number(val))
+                    if (vals[3] && moment(productionForDay.date).isAfter(moment(Date())) && vals[3] !== 0) {
+                        productionForDay.priceEur = vals[3]
+                        productionForDay.priceEth = vals[3] / exchangeRate
+                    }
                 })
             ))
 
         Promise.all(updates)
-            .then(values => { this.productionReview = this.fillForWeek(reviewDetails) })
+            .then(vals => { this.productionReview = this.fillForWeek(reviewDetails) })
 
     })
   }

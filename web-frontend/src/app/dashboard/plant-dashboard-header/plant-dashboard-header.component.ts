@@ -8,6 +8,7 @@ import { EthereumService } from "../../shared/ethereum.service";
 import { ElectricityMarketPriceService } from "../electricity-market-price.service";
 import {BlockchainPlantData} from "../../shared/blockchain-plant";
 import {PriceLogService} from "../../shared/price-log-service";
+import {ExchangeRateService} from "app/dashboard/exchange-rate.service";
 
 @Component({
   selector: 'app-plant-dashboard-header',
@@ -17,9 +18,11 @@ import {PriceLogService} from "../../shared/price-log-service";
 export class PlantDashboardHeaderComponent implements OnInit {
 
   producedTotal: number
+  soldTotal: number
   headerPeriod: Period
   walletId: string
-  price : number = 0
+  price = 0
+  priceEth = 0
 
   public lineChartData: Array<any> = [
     {data: [], label: 'Market price'},
@@ -147,7 +150,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
                     var bodyLines = tooltipModel.body.map(item => item.lines);
 
                     let bodyElement = document.createElement('div');
-                    bodyElement.innerText = bodyLines[0] + ' kWh'
+                    bodyElement.innerText = bodyLines[0] + ' EUR'
                     bodyElement.style.display = 'table' // Allows centering horizontaly without known width
                     bodyElement.style.margin = 'auto' // centers horizontaly
                     bodyContainerEl.appendChild(bodyElement);
@@ -223,7 +226,9 @@ export class PlantDashboardHeaderComponent implements OnInit {
   constructor(private predictionService: ProductionPredictionService,
               private ethereum: EthereumService,
               private electricityPriceService: ElectricityMarketPriceService,
-              private priceLog: PriceLogService) { }
+              private priceLog: PriceLogService,
+              private exchangeRateService: ExchangeRateService,
+              private pricesLog: PriceLogService) { }
 
   ngOnInit() {
     this.ethereum.activeWallet()
@@ -237,15 +242,36 @@ export class PlantDashboardHeaderComponent implements OnInit {
   }
 
   setPrice(): void {
-      const priceInEth = this.ethereum.ethToWei(this.price)
-      this.ethereum.setPrice(this.walletId, priceInEth).subscribe(
-          data => null,
+      const self_ = this
+
+      this.exchangeRateService.exchangeRate()
+          .mergeMap((data) => {
+              self_.priceEth = self_.round(self_.price / Number(data), 6)
+              return self_.ethereum.setPrice(self_.walletId, self_.ethereum.ethToWei(self_.priceEth))
+          })
+          .mergeMap(data => self_.priceLog.log(self_.walletId, self_.price))
+          .subscribe(
+          data => self_.loadPrice(),
           error => {
               console.log(error)
-              this.loadPrice()
+              self_.loadPrice()
           }
       )
   }
+
+    calcPriceInEth(): void {
+        const self_ = this
+
+        this.priceEth = 0
+        this.exchangeRateService.exchangeRate()
+            .subscribe(
+                data => self_.priceEth = self_.round(self_.price / data, 6),
+                error => {
+                    console.log(error)
+                    self_.priceEth = 0
+                }
+            )
+    }
 
   private loadData() {
 
@@ -263,9 +289,10 @@ export class PlantDashboardHeaderComponent implements OnInit {
         dayLabels.push(moment(date).format('MM-DD'))
         date = moment(date).add(1, 'day').toDate()
     }
-    this.lineChartLabels = dayLabels;
+    this.lineChartLabels = dayLabels
 
-    this.loadTotalPrediction(this.headerPeriod);
+    this.loadTotalPrediction(this.headerPeriod)
+    this.loadTotalSold(this.headerPeriod)
     this.loadMarketReview();
   }
 
@@ -295,10 +322,27 @@ export class PlantDashboardHeaderComponent implements OnInit {
       );
   }
 
+  private loadTotalSold(reveiwPeriod: Period) {
+      this.soldTotal = 0
+      let currentDate = moment(reveiwPeriod.from)
+
+      while (currentDate.isSameOrBefore(moment(reveiwPeriod.to))) {
+          Promise.all([
+              this.ethereum.getTotalAmount(this.walletId, currentDate.toDate()).toPromise(),
+              this.ethereum.getOwned(this.walletId, currentDate.toDate()).toPromise()
+          ]).then(values => {
+            this.soldTotal += (Number(values[0]) - Number(values[1]))
+          })
+          currentDate = currentDate.add(1, 'day')
+      }
+  }
+
   private loadPrice() {
       this.ethereum.getPrice(this.walletId).subscribe(
-          data => this.price = this.ethereum.weiToETH(data),
-          error => console.error(error)
+          data => {
+              this.price = this.ethereum.weiToETH(data)
+              this.calcPriceInEth()},
+              error => console.error(error)
       )
   }
 
@@ -320,4 +364,12 @@ export class PlantDashboardHeaderComponent implements OnInit {
       this.lineChartData = _lineChartData;
     }, 50);
   }
+
+
+    private round(number: number, precision: number) {
+        var factor = Math.pow(10, precision);
+        var tempNumber = number * factor;
+        var roundedTempNumber = Math.round(tempNumber);
+        return roundedTempNumber / factor;
+    };
 }

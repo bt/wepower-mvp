@@ -2,7 +2,6 @@ package net.metasite.smartenergy.prices;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import net.metasite.smartenergy.domain.Plant;
 import net.metasite.smartenergy.domain.PriceLog;
 import net.metasite.smartenergy.repositories.PlantRepository;
 import net.metasite.smartenergy.repositories.PriceLogRepository;
@@ -65,13 +63,14 @@ public class PriceLogManager {
     }
 
     public BigDecimal getFor(String plant, LocalDate date) {
-        List<PriceLog> prices = priceLogRepository.findAllByPlantAndDateIs(plant, date);
+        List<PriceLog> prices = priceLogRepository.findAllByPlantAndDate(plant, date);
 
-        if (prices.isEmpty()) {
-            return BigDecimal.ZERO;
+        if (!prices.isEmpty()) {
+            return getAvaragePrice(prices);
         }
 
-        return getAvaragePrice(prices);
+        PriceLog priceLog = priceLogRepository.findFirstByPlantOrderByDateDesc(plant);
+        return priceLog == null ? BigDecimal.ZERO : priceLog.getPrice();
     }
 
     private BigDecimal getAvaragePrice(List<PriceLog> priceLogs) {

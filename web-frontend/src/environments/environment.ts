@@ -39,7 +39,8 @@ export const environment = {
     },
     prices: {
       root: '/api/v1/price/log',
-      dates: '/api/v1/price/log/dates'
+      period: '/api/v1/price/log/period',
+      date: '/api/v1/price/log/date'
     }
   }
 };

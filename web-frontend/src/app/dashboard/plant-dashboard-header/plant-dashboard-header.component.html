@@ -25,7 +25,7 @@
           </div>
           <div class="row">
             <div class="col header-data-info">
-              485 kWh
+              {{soldTotal}} kWh
             </div>
           </div>
         </div>
@@ -52,9 +52,10 @@
       </div>
       <div class="col-md-3">
         <div class="input-group set-price">
-          <input class="form-control power-input set-price" type="text" [value]="price" (input)="price = $event.target.value">
+          <input class="form-control power-input set-price" type="text" (change)="calcPriceInEth()" [value]="price" (input)="price = $event.target.value">
           <span class="input-group-addon btn btn-primary power-button set-price" id="basic-addon1" (click)="setPrice()">Set price</span>
         </div>
+        <div class="conversion-message">{{price}} EUR = {{priceEth}} ETH</div>
         <div class="chart-legend">
           <ng-container *ngFor="let data of lineChartData; let i = index">
             <span class="item" *ngIf="data.data.length > 0">

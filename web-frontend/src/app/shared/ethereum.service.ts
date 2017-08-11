@@ -28,8 +28,7 @@ export class EthereumService {
 
     private contract: any
 
-    constructor(private transactionsLog: TransactionsLogService,
-                private pricesLog: PriceLogService) {
+    constructor(private transactionsLog: TransactionsLogService) {
     }
 
     loadConnection(): Promise<any> {
@@ -135,14 +134,7 @@ export class EthereumService {
                     console.log(err)
                     reject(err)
                 }
-                self_.pricesLog.log(wallet, self_.weiToETH(price))
-                    .subscribe(
-                        data => resolve(result),
-                        error => {
-                            console.log(error)
-                            resolve(result)
-                        }
-                    )
+                resolve(result)
             })
         })
         return Observable.fromPromise(promise).catch(error => Observable.throw(error))
@@ -166,8 +158,8 @@ export class EthereumService {
         return Observable.fromPromise(promise).catch(error => Observable.throw(error))
     }
 
-    getTotalAmount(wallet: string, date: number): Observable<number> {
-        const dateInSeconds: number = date / 1000
+    getTotalAmount(wallet: string, date: Date): Observable<number> {
+        const dateInSeconds: number = date.getTime() / 1000
         const self_ = this
 
         const promise = new Promise(function (resolve, reject) {
