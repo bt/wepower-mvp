@@ -48,10 +48,6 @@ contract PlantSmartContract {
   }
 
   function balanceOf(address _address, uint _date) returns(uint256) {
-    if (_date < now) {
-      return 0;
-    }
-
     Wepwr token = tokens[_address][_date];
     return token.amount;
   }

@@ -34,10 +34,19 @@
         <tr>
           <td class="text-right">{{row.date | date: 'MM-dd'}}</td>
           <td class="text-right">
-            <span *ngIf="row.tokens > 0">{{row.consumption}}/{{row.prediction}}</span>
+            <div class="progressBarContainer" *ngIf="row.tokens > 0">
+              <div class="progressbar">
+                <div [ngStyle]="{width: (row.tokens > 0 ? (0/row.tokens)*100 : 0) + '%'}"></div>
+              </div>
+              <span> 0/{{row.tokens}} kWh</span>
+            </div>
             <span *ngIf="row.tokens <= 0">{{row.prediction}} kWh predicted</span>
           </td>
-          <td class="text-right"><span *ngIf="row.tokens > 0">{{row.prediction}}</span></td>
+          <td class="text-right"><div *ngIf="row.tokens > 0">
+              <img *ngIf="row.type == 0" class="img-fluid circle" src="/assets/images/icon-sun.svg">
+              <img *ngIf="row.type == 2" class="img-fluid circle" src="/assets/images/icon-hydro.svg">
+              <img *ngIf="row.type == 1" class="img-fluid circle" src="/assets/images/icon-wind.svg">
+            <span>{{row.prediction}}</span></div></td>
           <td class="text-right"><span *ngIf="row.tokens > 0">{{row.priceEth}}</span></td>
           <td class="text-right"><span *ngIf="row.tokens > 0">{{row.priceEur}}</span></td>
           <td class="text-right">

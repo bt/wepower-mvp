@@ -39,7 +39,7 @@ export class RegistrationStateService {
   private extractType(response : Response) : WalletDetails {
     let body = response.json()
 
-    if (!body.active) {
+    if (!body.active && body.type !== 'PLANT') {
       return null
     }
 

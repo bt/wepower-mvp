@@ -263,6 +263,19 @@ export class PlantDashboardHeaderComponent implements OnInit {
           }
       )
   }
+    calcPriceInEur(): void {
+        const self_ = this
+
+        this.price = 0
+        this.exchangeRateService.exchangeRate()
+            .subscribe(
+                data => self_.price = self_.round(self_.priceEth * data, 6),
+                error => {
+                    console.log(error)
+                    self_.price = 0
+                }
+            )
+    }
 
     calcPriceInEth(): void {
         const self_ = this
@@ -332,9 +345,10 @@ export class PlantDashboardHeaderComponent implements OnInit {
       let currentDate = moment(reveiwPeriod.from)
 
       while (currentDate.isSameOrBefore(moment(reveiwPeriod.to))) {
+          const date = new Date(currentDate.format('YYYY-MM-DD'))
           Promise.all([
-              this.ethereum.getTotalAmount(this.walletId, currentDate.toDate()).toPromise(),
-              this.ethereum.getOwned(this.walletId, currentDate.toDate()).toPromise()
+              this.ethereum.getTotalAmount(this.walletId, date).toPromise(),
+              this.ethereum.getOwned(this.walletId, date).toPromise()
           ]).then(values => {
             this.soldTotal += (Number(values[0]) - Number(values[1]))
           })
@@ -345,10 +359,11 @@ export class PlantDashboardHeaderComponent implements OnInit {
   private loadPrice() {
       this.ethereum.getPrice(this.walletId).subscribe(
           data => {
-              this.price = this.ethereum.weiToETH(data)
-              this.calcPriceInEth()},
+              this.priceEth = this.ethereum.weiToETH(data)
+              this.calcPriceInEur()},
               error => console.error(error)
       )
+
   }
 
   public setChartData(marketPrices: Array<[Date, number]>, yourPrices: Array<[Date, number]>): void {

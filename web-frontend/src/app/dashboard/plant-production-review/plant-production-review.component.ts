@@ -92,7 +92,7 @@ export class PlantProductionReviewComponent implements OnInit {
     ).then(values => {
       const productionDetails: Array<ProductionDetails> = values[0]
       const exchangeRate = values[1]
-      const price = values[2] ? values[2] : 0
+      const price = values[2] ? this.ethereum.weiToETH(values[2]) : 0
 
       const reviewDetails = productionDetails.map(productionForDay => {
           return new ProductionReviewRow(
@@ -100,8 +100,8 @@ export class PlantProductionReviewComponent implements OnInit {
             productionForDay.prediction,
             productionForDay.production,
             0,
-            price,
-            price * exchangeRate,
+            this.round(price, 6),
+            this.round(price * exchangeRate, 6),
             0,
             0
           )
@@ -122,8 +122,8 @@ export class PlantProductionReviewComponent implements OnInit {
                     productionForDay.sold = Number(vals[0]) - Number(vals[1])
                     vals[2].forEach((val) => productionForDay.receivedEth += Number(val))
                     if (vals[3] && moment(productionForDay.date).isAfter(moment(Date())) && vals[3] !== 0) {
-                        productionForDay.priceEur = vals[3]
-                        productionForDay.priceEth = vals[3] / exchangeRate
+                        productionForDay.priceEur = this.round(vals[3], 6)
+                        productionForDay.priceEth = this.round(vals[3] / exchangeRate, 6)
                     }
                 })
             ))
@@ -154,4 +154,11 @@ export class PlantProductionReviewComponent implements OnInit {
             this.frontDisabled = true
         }
     }
+
+    private round(number: number, precision: number) {
+        var factor = Math.pow(10, precision);
+        var tempNumber = number * factor;
+        var roundedTempNumber = Math.round(tempNumber);
+        return roundedTempNumber / factor;
+    };
 }

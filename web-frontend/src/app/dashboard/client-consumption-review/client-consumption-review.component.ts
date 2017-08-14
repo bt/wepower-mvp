@@ -15,6 +15,7 @@ import {PlantType} from "../../registration/plant-form/plant-form";
 import {toPromise} from "rxjs/operator/toPromise";
 import {BuyTokensRow} from "../buy-tokens-row";
 import {TransactionsLogService} from "../../shared/transactions-log-service";
+import {RegistrationStateService} from "app/shared/registration-state.service";
 
 @Component({
   selector: 'app-client-consumption-review',
@@ -118,9 +119,10 @@ export class ClientConsumptionReviewComponent implements OnInit {
             consumptionForDay.prediction,
             0,
             consumptionForDay.consumption,
-            price,
-            price / exchangeRate,
-            price * consumptionForDay.prediction
+            this.round(price, 6),
+            this.round(price / exchangeRate, 6),
+            this.round(price * consumptionForDay.prediction, 6),
+            null
           )
         }
       )
@@ -131,14 +133,16 @@ export class ClientConsumptionReviewComponent implements OnInit {
           updates.push(
               Promise.all([
                   this.ethereum.getOwned(this.walletId, consumptionForDay.date).toPromise(),
-                  this.transactionLogs.transactionsConsumer(this.walletId, consumptionForDay.date).toPromise()
+                  this.transactionLogs.transactionsConsumer(this.walletId, consumptionForDay.date).toPromise(),
+                  this.transactionLogs.transactionsConsumerPlant(this.walletId, consumptionForDay.date).toPromise()
               ]).then(vals => {
                   consumptionForDay.tokens = vals[0]
+                  consumptionForDay.type = vals[2]
                   if (vals[0] > 0) {
                       consumptionForDay.priceEth = 0
                       vals[1].forEach((val) => consumptionForDay.priceEth += Number(val))
-                      consumptionForDay.priceEur = consumptionForDay.priceEth * exchangeRate
-                      consumptionForDay.paidEth = consumptionForDay.tokens * consumptionForDay.paidEth
+                      consumptionForDay.priceEur = this.round(consumptionForDay.priceEth * exchangeRate, 6)
+                      consumptionForDay.paidEth = this.round(consumptionForDay.tokens * consumptionForDay.paidEth, 6)
                   }
               })
           ))

@@ -7,7 +7,8 @@ export class ConsumptionReviewRow implements DayDataRow {
               public consumed: number,
               public priceEth: number,
               public priceEur: number,
-              public paidEth: number) {
+              public paidEth: number,
+              public type: number) {
 
   }
 
@@ -17,6 +18,7 @@ export class ConsumptionReviewRow implements DayDataRow {
       0,
       0,
       0,
+      null,
       null,
       null,
       null

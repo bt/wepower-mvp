@@ -195,9 +195,10 @@ export class EthereumService {
                     resolve(result)
             })
         }).then(txHash => self_.getTransactionReceiptMined(txHash, 500))
-          .then(receipt => self_.logTransaction(receipt.transactionHash, plant, price, amount, date))
 
-        return Observable.fromPromise(promise).catch(error => Observable.throw(error))
+        return Observable.fromPromise(promise)
+            .mergeMap(receipt => self_.logTransaction(receipt.transactionHash, plant, price, amount, date))
+            .catch(error => Observable.throw(error))
     }
 
     transfer(plant: string, to: string, amount: number, date: Date): Observable<any> {
@@ -314,7 +315,7 @@ export class EthereumService {
             self_.web3.eth.getTransactionReceipt(txHash, (error, receipt) => {
                 if (error) {
                     reject(error);
-                } else if (receipt == null || receipt.blockNumber == null || receipt.blockNumber == "") {
+                } else if (receipt == null || receipt.blockNumber == null || receipt.blockNumber === '') {
                     setTimeout(
                         () => transactionReceiptAsync(resolve, reject),
                         interval ? interval : 500);

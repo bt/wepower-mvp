@@ -263,10 +263,10 @@ export class ClientDashboardHeaderComponent implements OnInit {
 
     private loadTotalBought(reviewPeriod: Period) {
         this.boughtTotal = 0
-        let currentDate = moment(reviewPeriod.from)
+        let currentDate = moment(reviewPeriod.from).hours(0)
 
         while (currentDate.isSameOrBefore(moment(reviewPeriod.to))) {
-            this.ethereum.getOwned(this.walletId, currentDate.toDate())
+            this.ethereum.getOwned(this.walletId, new Date(currentDate.format('YYYY-MM-DD')))
                 .subscribe(data => this.boughtTotal += Number(data),
                     error => console.log)
             currentDate = currentDate.add(1, 'day')

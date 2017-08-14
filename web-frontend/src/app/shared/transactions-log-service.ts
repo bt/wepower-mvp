@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import {Http, Response} from '@angular/http';
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs/Observable";
+import {RegistrationStateService} from "app/shared/registration-state.service";
 
 
 @Injectable()
 export class TransactionsLogService {
 
-    constructor(private http: Http) { }
+    constructor(private http: Http,
+                private registrationStateService: RegistrationStateService) { }
 
     log(plant: string, consumer: string, transaction: string, amountEth: number, amountKwh: number, date: Date): Observable<any> {
 
@@ -30,6 +32,8 @@ export class TransactionsLogService {
                 ${environment.dataUrls.transactions.consumer}?consumer=${from}&date=${date.toISOString().split('T')[0]}`)
             .map(response => response.json()
                 .map(transaction => transaction.plant))
+            .mergeMap(plant => this.registrationStateService.getActiveWalletDetails(plant))
+            .map(data => data.plantType.toString())
             .catch(this.handleError)
     }
 
