@@ -71,9 +71,6 @@ public class TransactionLogController {
     }
 
     private TransactionLogDTO convert(TransactionLog log) {
-        if (!log.getAmountEth().equals(BigDecimal.ZERO)) {
-            System.out.println("!");
-        }
         return new TransactionLogDTO(
                 log.getPlant(),
                 log.getConsumer(),

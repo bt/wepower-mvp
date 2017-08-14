@@ -18,7 +18,7 @@ import { PlantType } from "../registration/plant-form/plant-form";
 export class RegistrationStateService {
   constructor(private http: Http) { }
 
-  isActive(wallet : string, type : string) : Observable<boolean> {
+  isActive(wallet: string, type: string): Observable<boolean> {
     return this.http.get(`${environment.dataUrls.wallet.root}/${wallet}`)
       .map(details => this.extractActive(details, type))
       .catch(response => {
@@ -26,17 +26,20 @@ export class RegistrationStateService {
       })
   }
 
-  getActiveWalletDetails(wallet : string) : Observable<WalletDetails> {
+  getActiveWalletDetails(wallet: string): Observable<WalletDetails> {
     return this.http.get(`${environment.dataUrls.wallet.root}/${wallet}`)
-      .map(this.extractType)
-      .catch(response => Observable.of(null))
+      .map(response => this.extractType(response, wallet))
+      .catch(response => {
+        console.error(response)
+        return Observable.of(null)
+      })
   }
 
-  private extractActive(response : Response, requiredType : String) : boolean {
+  private extractActive(response: Response, requiredType: String): boolean {
     return response.json().type == requiredType && response.json().active == true
   }
 
-  private extractType(response : Response) : WalletDetails {
+  private extractType(response: Response, walletId: string): WalletDetails {
     let body = response.json()
 
     if (!body.active && body.type !== 'PLANT') {
@@ -46,6 +49,6 @@ export class RegistrationStateService {
     let plantType = PlantType[<string> response.json().productionType]
     let responseWalletType = <string> response.json().type
 
-    return new WalletDetails(response.json().walletId, WalletType[responseWalletType], plantType)
+    return new WalletDetails(walletId, WalletType[responseWalletType], plantType)
   }
 }

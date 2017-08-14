@@ -205,7 +205,7 @@ export class EthereumService {
         const self_ = this
 
         const promise = new Promise(function (resolve, reject) {
-            self_.contract.transfer.sendTransaction(
+            self_.contract.send.sendTransaction(
                 plant,
                 to,
                 date.getTime() / 1000,
@@ -219,6 +219,25 @@ export class EthereumService {
                 })
         }).then(txHash => self_.getTransactionReceiptMined(txHash, 500))
             .then(receipt => console.log(receipt))
+
+        return Observable.fromPromise(promise).catch(error => Observable.throw(error))
+    }
+
+    getSourceOf(wallet: string, date: Date): Observable<number> {
+        const self_ = this
+
+        const promise = new Promise(function (resolve, reject) {
+            self_.contract.getSourceOf.call(
+                wallet,
+                date.getTime() / 1000,
+                function (err, result) {
+                    if (err) {
+                        console.log(err)
+                        reject(err)
+                    }
+                    resolve(result)
+                })
+        })
 
         return Observable.fromPromise(promise).catch(error => Observable.throw(error))
     }

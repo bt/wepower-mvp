@@ -3,6 +3,7 @@ import {Http, Response} from '@angular/http';
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs/Observable";
 import {RegistrationStateService} from "app/shared/registration-state.service";
+import {WalletDetails} from "app/dashboard/wallet-details";
 
 
 @Injectable()
@@ -27,14 +28,17 @@ export class TransactionsLogService {
             .catch(this.handleError);
     }
 
-    transactionsConsumerPlant(from: string, date: Date): Observable<Array<number>> {
+    transactionsConsumerPlantDetails(from: string, date: Date): Observable<WalletDetails> {
         return this.http.get(`
                 ${environment.dataUrls.transactions.consumer}?consumer=${from}&date=${date.toISOString().split('T')[0]}`)
-            .map(response => response.json()
-                .map(transaction => transaction.plant))
-            .mergeMap(plant => this.registrationStateService.getActiveWalletDetails(plant))
-            .map(data => data.plantType.toString())
-            .catch(this.handleError)
+            .mergeMap(response => {
+                const plant = response.json().map(transaction => transaction.plant)
+                return this.registrationStateService.getActiveWalletDetails(plant)
+            })
+            .catch(error => {
+                console.error('Error while extracting wallet details: ', error)
+                return Observable.of(null)
+            })
     }
 
     transactionsConsumer(from: string, date: Date): Observable<Array<number>> {
@@ -58,7 +62,7 @@ export class TransactionsLogService {
     }
 
     private handleError(error: Response): Observable<Array<number>> {
-        console.error("Error while interacting with transactions log", error)
+        console.error('Error while interacting with transactions log', error)
         return Observable.of([0])
     }
 

@@ -55,8 +55,10 @@
           <td class="text-right">
             <div *ngIf="isAfter(row.date)">
               <div *ngIf="row.tokens > 0; else detailsButton">
-                <button type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" data-target="#tokensTransaction">
-                <i class="fa fa-exchange"></i> Transfer</button>
+                <button [disabled]="transferring" type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" (click)="prepareTransferData(row.date, row.tokens)" data-target="#tokensTransaction">
+                  <i *ngIf="!transferring" class="fa fa-exchange"></i>
+                  <i *ngIf="transferring" class="fa fa-circle-o-notch fa-spin"></i>
+                  Transfer</button>
               </div>
               <ng-template #detailsButton>
                 <a [hidden]="row.expanded" class="row-action" (click)="loadDetails(row.date, row.prediction); row.expanded = true;">
@@ -117,7 +119,7 @@
               </div>
               <div class="row">
                 <div class="col-md">
-                  <input name="walletId" class="form-control" (ngModel)="tranfferData.address">
+                  <input name="walletId" class="form-control" [value]="transferAddress" (input)="transferAddress = $event.target.value">
                 </div>
               </div>
             </div>
@@ -129,7 +131,7 @@
               </div>
               <div class="row">
                 <div class="col-md">
-                  <input name="amountOfTokens" class="form-control" (ngModel)="tranfferData.value">
+                  <input disabled="true" name="amountOfTokens" class="form-control" [value]="transferValue" (input)="transferValue = $event.target.value">
                 </div>
               </div>
             </div>

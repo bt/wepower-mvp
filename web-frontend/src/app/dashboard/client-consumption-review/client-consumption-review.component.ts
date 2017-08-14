@@ -28,14 +28,14 @@ export class ClientConsumptionReviewComponent implements OnInit {
   tableReviewPeriod: Period = new Period(new Date(), new Date())
   walletId: string
   buying = false
+  transferring = false
   availableRange: Period
 
   details: { [key: number]: Array<BuyTokensRow>; } = {};
 
-  tranfferData: {
-      address: string,
-      value: number
-  }
+  transferAddress = ''
+  transferValue = 0
+  transferDate: Date
 
   constructor(private ethereum: EthereumService,
               private exchangeMarket: ExchangeRateService,
@@ -65,12 +65,24 @@ export class ClientConsumptionReviewComponent implements OnInit {
     this.loadTable(this.tableReviewPeriod);
   }
 
+  prepareTransferData(transferDate: Date, value: number) {
+      this.transferAddress = ''
+      this.transferValue = value
+      this.transferDate = transferDate
+  }
+
   transferTokens() {
-      /*this.transactionLogs.transactionsConsumerPlant(this.walletId, )
-          .mergeMap(data => this.ethereum.transfer(data, this.tranfferData.address))
+      this.transferring = true
+
+      this.transactionLogs.transactionsConsumerPlantDetails(this.walletId, this.transferDate)
+          .mergeMap(data =>
+                this.ethereum.transfer(data.walletAddress, this.transferAddress, this.transferValue, this.transferDate))
           .subscribe(
-              data => null,
-              error => console.log)*/
+              data => this.transferring = false,
+              error => {
+                  console.log(error),
+                  this.transferring = false
+              })
 
   }
 
@@ -134,10 +146,10 @@ export class ClientConsumptionReviewComponent implements OnInit {
               Promise.all([
                   this.ethereum.getOwned(this.walletId, consumptionForDay.date).toPromise(),
                   this.transactionLogs.transactionsConsumer(this.walletId, consumptionForDay.date).toPromise(),
-                  this.transactionLogs.transactionsConsumerPlant(this.walletId, consumptionForDay.date).toPromise()
+                  this.ethereum.getSourceOf(this.walletId, consumptionForDay.date).toPromise()
               ]).then(vals => {
                   consumptionForDay.tokens = vals[0]
-                  consumptionForDay.type = vals[2]
+                  consumptionForDay.type = vals[2] != null ? Number(vals[2]) : null
                   if (vals[0] > 0) {
                       consumptionForDay.priceEth = 0
                       vals[1].forEach((val) => consumptionForDay.priceEth += Number(val))
