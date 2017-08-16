@@ -78,7 +78,10 @@ export class ClientConsumptionReviewComponent implements OnInit {
           .mergeMap(data =>
                 this.ethereum.transfer(data.walletAddress, this.transferAddress, this.transferValue, this.transferDate))
           .subscribe(
-              data => this.transferring = false,
+              data => {
+                  this.loadTable(this.tableReviewPeriod)
+                  this.transferring = false
+              },
               error => {
                   console.log(error),
                   this.transferring = false
@@ -89,11 +92,14 @@ export class ClientConsumptionReviewComponent implements OnInit {
   buyTokens(plant: string, amount: number, date: Date, price: number) {
       this.buying = true
       this.ethereum.buy(plant, amount, date, price).subscribe(
-          data => this.buying = false,
-          error => {
-              console.error(error)
+          data => {
+              this.loadTable(this.tableReviewPeriod)
               this.buying = false
-      })
+                },
+              error => {
+                  console.error(error)
+                  this.buying = false
+              })
   }
 
   isAfter(date: Date): boolean {
@@ -102,6 +108,13 @@ export class ClientConsumptionReviewComponent implements OnInit {
 
     return dateToCompare.isAfter(currentDate)
   }
+
+    isBefore(date: Date): boolean {
+        let currentDate = moment()
+        let dateToCompare = moment(date)
+
+        return dateToCompare.isBefore(currentDate)
+    }
 
   private initializeTable() {
     let periodStart = moment().startOf('week').add(1, 'days')

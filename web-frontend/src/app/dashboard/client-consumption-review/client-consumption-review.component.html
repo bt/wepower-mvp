@@ -53,9 +53,9 @@
             <div *ngIf="row.tokens > 0 && row.paidEth">{{row.paidEth}}</div>
           </td>
           <td class="text-right">
-            <div *ngIf="isAfter(row.date) && row.priceEth > 0">
+            <div *ngIf="isAfter(row.date)">
               <div *ngIf="row.tokens > 0; else detailsButton">
-                <button [disabled]="transferring" type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" (click)="prepareTransferData(row.date, row.tokens)" data-target="#tokensTransaction">
+                <button *ngIf="row.priceEth > 0" [disabled]="transferring" type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" (click)="prepareTransferData(row.date, row.tokens)" data-target="#tokensTransaction">
                   <i *ngIf="!transferring" class="fa fa-exchange"></i>
                   <i *ngIf="transferring" class="fa fa-circle-o-notch fa-spin"></i>
                   Transfer</button>

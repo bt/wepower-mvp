@@ -310,15 +310,16 @@ export class EthereumService {
     }
 
     private parseAddress(): string {
-        let address = ''
-        const diff = 0
+        //TEST NET ADDRESS HARDCODED FOR A WHILE
+        let address = '0x5c761efa88b482ee6955c41248a9cb1a38794521'
+        /*const diff = 0
         const currentTime: number = new Date().getTime()
         Object.keys(exchange_artifact.networks).forEach(function (key) {
             if (diff === 0 || (currentTime - Number(key)) < diff) {
                 const network = exchange_artifact.networks[key]
                 address = network.address
             }
-        });
+        });*/
         return address
     }
 

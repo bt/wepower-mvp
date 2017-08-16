@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build_contracts_dev": "cd ../smart-contracts && truffle compile --network development",
-    "build_contracts_prod": "cd ../smart-contracts && truffle compile --network development",
+    "build_contracts_prod": "cd ../smart-contracts && truffle compile --network demo",
     "clean_contracts": "rm -rf compiled_contracts/* ",
     "fetch_contracts": "mkdir -p compiled_contracts && cp -r ../smart-contracts/build/contracts/* compiled_contracts/",
     "deploy_contracts_dev": "cd ../smart-contracts && truffle migrate --reset --network development",
@@ -14,7 +14,8 @@
     "deploy-app-prod": "scp -r dist/* root@192.168.50.157:/home/metasite/wepower/web-app/.",
     "start": "ng serve --proxy-config proxy.conf.json",
     "clean_start": "npm run build_contracts_dev && npm run deploy_contracts_dev && npm run clean_contracts && npm run fetch_contracts && npm run start",
-    "build_prod": "npm run build_contracts_prod && npm run deploy_contracts_prod && npm run clean_contracts && npm run fetch_contracts && npm run build-app-prod && npm run deploy-app-prod"
+    "build_prod": "npm run build_contracts_prod && npm run deploy_contracts_prod && npm run clean_contracts && npm run fetch_contracts && npm run build-app-prod && npm run deploy-app-prod",
+    "deploy-prod-without-deploying-smart-contracts": "cd ../smart-contracts && truffle compile --network ropsten"
   },
   "private": true,
   "dependencies": {
@@ -30,14 +31,18 @@
     "@angular/platform-browser-dynamic": "^4.2.5",
     "@angular/router": "^4.2.5",
     "angular-font-awesome": "^2.0.2",
+    "bip39": "^2.3.1",
     "chart.js": "^2.6.0",
     "core-js": "^2.4.1",
+    "ethereumjs-wallet": "^0.6.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
     "moment": "^2.18.1",
     "ng2-charts": "^1.6.0",
     "rxjs": "^5.1.0",
     "tether": "^1.4.0",
+    "web3": "^0.18.4",
+    "web3-provider-engine": "^13.2.9",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
@@ -46,6 +51,9 @@
     "@angular/language-service": "^4.2.5",
     "@types/jasmine": "2.5.45",
     "@types/node": "^6.0.79",
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.24.1",
     "bootstrap": "^4.0.0-alpha.6",
     "codelyzer": "~3.0.1",
     "jasmine-core": "~2.6.2",

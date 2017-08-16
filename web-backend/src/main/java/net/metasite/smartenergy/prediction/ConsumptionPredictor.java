@@ -45,20 +45,20 @@ public class ConsumptionPredictor implements Predictor {
             int randomDeviation = ThreadLocalRandom.current().nextInt(absoluteVariation * 2 + 1) - absoluteVariation;
             int baseSizePrediction = BASE_CONSUMPTION_FOR_DAY + randomDeviation;
 
-            predictions.put(predictionDay, adjustPredictionToSize(new BigDecimal(baseSizePrediction), size));
+            predictions.put(predictionDay, adjustPredictionToSize(baseSizePrediction, size));
         }
 
         return predictions;
     }
 
 
-    private BigDecimal adjustPredictionToSize(BigDecimal prediction, SupportedHouseSize size) {
+    private BigDecimal adjustPredictionToSize(int prediction, SupportedHouseSize size) {
         if (size.getCode().equals("S")) {
-            return prediction.divide(new BigDecimal(4));
+            return BigDecimal.valueOf(Math.round(prediction / 4));
         } else if (size.getCode().equals("M")) {
-            return prediction.divide(new BigDecimal(2));
+            return BigDecimal.valueOf(Math.round(prediction / 2));
         } else {
-            return prediction;
+            return BigDecimal.valueOf(prediction);
         }
     }
 }
