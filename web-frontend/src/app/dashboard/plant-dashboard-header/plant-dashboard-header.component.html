@@ -59,10 +59,10 @@
         <div class="conversion-message">{{price}} EUR = {{priceEth}} ETH</div>
         <div class="chart-legend">
           <ng-container *ngFor="let data of lineChartData; let i = index">
-            <span class="item" *ngIf="data.data.length > 0">
+            <div class="item" *ngIf="data.data.length > 0">
               <i [ngStyle]="{color: lineChartColors[i].borderColor}" class="fa fa-circle" aria-hidden="true"></i>
               <span class="label">{{data.label}}</span>
-            </span>
+            </div>
           </ng-container>
         </div>
       </div>

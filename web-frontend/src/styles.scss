@@ -12,6 +12,10 @@
   font-stretch: normal;
 }
 
+html {
+  background-color: $power-background-grey;
+}
+
 .btn-primary.power-button {
   background-color : $power-blue;
   font-family: 'Roboto', Sans-serif;

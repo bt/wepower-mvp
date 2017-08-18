@@ -3,15 +3,21 @@
 .pagination {
   padding: 1.5em 0;
 
-  .review-period {
-    font-size: 34px;
+  .review-period-container {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 1.5em;
+
+    .review-period {
+      font-size: 34px;
+    }
   }
 
   .selector {
-    display: flex;
+    display: inline-block;
+    vertical-align: middle;
     justify-content: flex-end;
     align-items: center;
-    margin-left: 20px;
   }
 }
 
@@ -29,8 +35,6 @@
 }
 
 .button-back {
-  margin-right: 0.5em;
-
   background-image: url('/assets/images/pagination_back.png');
 }
 .button-back:disabled {
@@ -51,6 +55,7 @@
 .button-forward:disabled:hover {
   cursor: default;
 }
+
 .dashboard-container {
   .dashboard-table {
 

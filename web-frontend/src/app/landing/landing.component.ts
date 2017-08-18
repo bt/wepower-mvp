@@ -12,7 +12,7 @@ export class LandingComponent implements OnInit {
 
   connectedToWallet = false;
 
-  constructor(etherium : EthereumService) {
+  constructor(etherium: EthereumService) {
     this.etherium = etherium;
   }
 

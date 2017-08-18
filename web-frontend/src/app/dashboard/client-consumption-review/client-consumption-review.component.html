@@ -1,18 +1,20 @@
 <div class="row pagination">
-  <div class="col-md-1 selector">
-    <button type="button"
-            class="pagination-button button-back"
-            (click)="previousPeriod()"
-            [disabled]="backDisabled"
-    ></button>
-    <button type="button"
-            class="pagination-button button-forward"
-            (click)="nextPeriod()"
-            [disabled]="frontDisabled"
-    ></button>
-  </div>
-  <div class="col-md ">
-    <span class="review-period">{{tableReviewPeriod.from | date:'MMM dd' }} – {{tableReviewPeriod.to | date:'MMM dd'}}, {{tableReviewPeriod.to | date:'y'}}</span>
+  <div class="col-md-12">
+    <div class="selector">
+      <button type="button"
+              class="pagination-button button-back"
+              (click)="previousPeriod()"
+              [disabled]="backDisabled"
+      ></button>
+      <button type="button"
+              class="pagination-button button-forward"
+              (click)="nextPeriod()"
+              [disabled]="frontDisabled"
+      ></button>
+    </div>
+    <div class="review-period-container">
+      <span class="review-period">{{tableReviewPeriod.from | date:'MMM dd' }} – {{tableReviewPeriod.to | date:'MMM dd'}}, {{tableReviewPeriod.to | date:'y'}}</span>
+    </div>
   </div>
 </div>
 <div class="row dashboard-container">
@@ -20,9 +22,9 @@
     <table class="table dashboard-table">
       <thead>
       <tr>
-        <th class="text-right" style="width: 70px">Date</th>
-        <th class="text-right">Usage</th>
-        <th class="text-right">Tokens</th>
+        <th class="text-left" style="width: 100px">Date</th>
+        <th class="text-left">Usage</th>
+        <th class="text-left">Tokens</th>
         <th class="text-right">Price, ETH/kWh</th>
         <th class="text-right">Price, EUR/kWh</th>
         <th class="text-right">Sum</th>
@@ -32,27 +34,31 @@
       <tbody>
       <ng-container *ngFor="let row of consumptionReview">
         <tr>
-          <td class="text-right">{{row.date | date: 'MM-dd'}}</td>
-          <td class="text-right">
-            <div class="progressBarContainer" *ngIf="row.tokens > 0">
-              <div class="progressbar">
-                <div [ngStyle]="{width: (row.tokens > 0 ? (0/row.tokens)*100 : 0) + '%'}"></div>
+          <td class="text-left align-middle">{{row.date | date: 'MM-dd'}}</td>
+          <td class="text-left align-middle">
+            <div class="row progressBarContainer" *ngIf="row.tokens > 0">
+              <div class="col-md-3" style="min-width: 120px;">
+                <div class="progressbar">
+                  <div [ngStyle]="{width: (row.tokens > 0 ? (0/row.tokens)*100 : 0) + '%'}"></div>
+                </div>
               </div>
-              <span> 0/{{row.tokens}} kWh</span>
+              <div class="col-md">
+                <span> 0/{{row.tokens}} kWh</span>
+              </div>
             </div>
             <span *ngIf="row.tokens <= 0">{{row.prediction}} kWh predicted</span>
           </td>
-          <td class="text-right"><div *ngIf="row.tokens > 0">
+          <td class="text-left align-middle"><div *ngIf="row.tokens > 0">
               <img *ngIf="row.type == 0" class="img-fluid circle" src="/assets/images/icon-sun.svg">
               <img *ngIf="row.type == 2" class="img-fluid circle" src="/assets/images/icon-hydro.svg">
               <img *ngIf="row.type == 1" class="img-fluid circle" src="/assets/images/icon-wind.svg">
             <span>{{row.prediction}}</span></div></td>
-          <td class="text-right"><span *ngIf="row.tokens > 0 && row.priceEth > 0">{{row.priceEth}}</span></td>
-          <td class="text-right"><span *ngIf="row.tokens > 0 && row.priceEur > 0">{{row.priceEur}}</span></td>
-          <td class="text-right">
-            <div *ngIf="row.tokens > 0 && row.paidEth">{{row.paidEth}}</div>
+          <td class="text-right align-middle"><span *ngIf="row.tokens > 0 && row.priceEth > 0">{{row.priceEth}} ETH</span></td>
+          <td class="text-right align-middle"><span *ngIf="row.tokens > 0 && row.priceEur > 0">{{row.priceEur}} EUR</span></td>
+          <td class="text-right align-middle">
+            <div *ngIf="row.tokens > 0 && row.paidEth">{{row.paidEth}} ETH</div>
           </td>
-          <td class="text-right">
+          <td class="text-right align-middle">
             <div *ngIf="isAfter(row.date)">
               <div *ngIf="row.tokens > 0; else detailsButton">
                 <button *ngIf="row.priceEth > 0" [disabled]="transferring" type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" (click)="prepareTransferData(row.date, row.tokens)" data-target="#tokensTransaction">
@@ -73,19 +79,19 @@
         </tr>
         <ng-container *ngFor="let detail of details[row.date.getTime()]">
           <tr [hidden]="!row.expanded" class="expanded-row">
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right">
+            <td class="text-left align-middle"></td>
+            <td class="text-left align-middle"></td>
+            <td class="text-left align-middle">
               <span>
                 <img *ngIf="detail.source == 0" class="img-fluid circle" src="/assets/images/icon-sun.svg">
                 <img *ngIf="detail.source == 2" class="img-fluid circle" src="/assets/images/icon-hydro.svg">
                 <img *ngIf="detail.source == 1" class="img-fluid circle" src="/assets/images/icon-wind.svg">
               </span>
               {{detail.tokens}} kWh</td>
-            <td class="text-right"><span *ngIf="detail.priceEth != 0">{{detail.priceEth}} ETH</span></td>
-            <td class="text-right"><span *ngIf="detail.priceEth != 0">{{detail.priceEur}} EUR</span></td>
-            <td class="text-right"><span *ngIf="detail.priceEth != 0">{{detail.sum}} ETH</span></td>
-            <td class="text-right">
+            <td class="text-right align-middle"><span *ngIf="detail.priceEth != 0">{{detail.priceEth}} ETH</span></td>
+            <td class="text-right align-middle"><span *ngIf="detail.priceEth != 0">{{detail.priceEur}} EUR</span></td>
+            <td class="text-right align-middle"><span *ngIf="detail.priceEth != 0">{{detail.sum}} ETH</span></td>
+            <td class="text-right align-middle">
               <button (click)="buyTokens(detail.address, detail.tokens, detail.date, detail.sum)"
                       [disabled]="detail.priceEth == 0 || buying"
                       type="button" class="btn btn-primary power-button" id="send-button">

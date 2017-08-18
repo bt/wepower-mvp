@@ -32,6 +32,7 @@
 }
 
 .power-input.set-price {
+  border-right: 0px;
   border-color: $power-grey;
   border-width: 2px;
   border-radius: 0;
@@ -43,12 +44,13 @@
 }
 
 .power-button.set-price {
+  border-left: 1px solid;
   font-size: 14px;
   color: $power-white;
   font-weight: 500;
 }
 
-.power-button.set-price:hover {
+.power-button.set-price:hover:enabled {
   cursor: pointer;
 
   background-color: $power-white;
@@ -63,6 +65,10 @@
 
   .item {
     padding: 5px;
+    display: inline-block;
+    .label {
+      vertical-align: text-top;
+    }
   }
 
 }

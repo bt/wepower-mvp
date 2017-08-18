@@ -165,9 +165,10 @@ export class ClientConsumptionReviewComponent implements OnInit {
                   consumptionForDay.type = vals[2] != null ? Number(vals[2]) : null
                   if (vals[0] > 0) {
                       consumptionForDay.priceEth = 0
-                      vals[1].forEach((val) => consumptionForDay.priceEth += Number(val))
+                      vals[1].forEach((val) => consumptionForDay.paidEth += Number(val))
+                      consumptionForDay.paidEth = this.round(consumptionForDay.paidEth, 6)
+                      consumptionForDay.priceEth = this.round(consumptionForDay.paidEth / consumptionForDay.tokens, 6)
                       consumptionForDay.priceEur = this.round(consumptionForDay.priceEth * exchangeRate, 6)
-                      consumptionForDay.paidEth = this.round(consumptionForDay.tokens * consumptionForDay.paidEth, 6)
                   }
               })
           ))

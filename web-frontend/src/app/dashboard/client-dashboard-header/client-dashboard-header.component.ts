@@ -227,9 +227,8 @@ export class ClientDashboardHeaderComponent implements OnInit {
     ngOnInit() {
 
         this.headerPeriod = new Period(
-            moment().startOf('isoWeek').toDate(),
-            moment().startOf('isoWeek').add(6, 'day').toDate()
-        );
+            moment().subtract(5, 'day').toDate(),
+            moment().add(1, 'day').toDate());
 
         let dayLabels: Array<string> = []
 

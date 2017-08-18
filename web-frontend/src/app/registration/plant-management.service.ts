@@ -32,8 +32,8 @@ export class PlantManagementService {
       'areaCode' : plantData.areaCode,
       'type' : PlantType[plantData.type],
       'capacity' : plantData.capacity,
-      'produceFrom' : moment().toDate(),
-      'produceTo' : moment().add(1, 'month').toDate()
+      'produceFrom' : moment().add(1, 'day').toDate(),
+      'produceTo' : moment().add(1, 'month').add(1, 'day').toDate()
     }
 
     return this.http.post(`${environment.dataUrls.plant.root}`, body)

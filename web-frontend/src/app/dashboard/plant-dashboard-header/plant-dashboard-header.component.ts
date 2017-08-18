@@ -187,6 +187,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
                 tooltipEl.style.position = 'absolute';
                 tooltipEl.style.left = (position.left + tooltipModel.caretX - 82) + 'px';
                 tooltipEl.style.top = position.top + top + 'px';
+                tooltipEl.style.zIndex = '6';
             }
         },
         scales: {
@@ -296,9 +297,8 @@ export class PlantDashboardHeaderComponent implements OnInit {
     this.loadPrice()
 
     this.headerPeriod = new Period(
-      moment().startOf('isoWeek').toDate(),
-      moment().startOf('isoWeek').add(6, 'day').toDate()
-    );
+        moment().subtract(5, 'day').toDate(),
+        moment().add(1, 'day').toDate());
 
     let dayLabels: Array<string> = []
 

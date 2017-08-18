@@ -1,18 +1,20 @@
 <div class="row pagination">
-  <div class="col-md-1 selector">
-    <button type="button"
-            class="pagination-button button-back"
-            (click)="previousPeriod()"
-            [disabled]="backDisabled"
-    ></button>
-    <button type="button"
-            class="pagination-button button-forward"
-            (click)="nextPeriod()"
-            [disabled]="frontDisabled"
-    ></button>
-  </div>
-  <div class="col-md ">
-    <span class="review-period">{{tableReviewPeriod.from | date:'MMM dd' }} – {{tableReviewPeriod.to | date:'MMM dd'}}, {{tableReviewPeriod.to | date:'y'}}</span>
+  <div class="col-md-12">
+    <div class="selector">
+      <button type="button"
+              class="pagination-button button-back"
+              (click)="previousPeriod()"
+              [disabled]="backDisabled"
+      ></button>
+      <button type="button"
+              class="pagination-button button-forward"
+              (click)="nextPeriod()"
+              [disabled]="frontDisabled"
+      ></button>
+    </div>
+    <div class="review-period-container">
+      <span class="review-period">{{tableReviewPeriod.from | date:'MMM dd' }} – {{tableReviewPeriod.to | date:'MMM dd'}}, {{tableReviewPeriod.to | date:'y'}}</span>
+    </div>
   </div>
 </div>
 <div class="row dashboard-container">
@@ -20,7 +22,7 @@
     <table class="table dashboard-table">
       <thead>
       <tr>
-        <th class="text-right">Date</th>
+        <th class="text-left">Date</th>
         <th class="text-right">Predicted, kWh</th>
         <th class="text-right">Produced, kWh</th>
         <th class="text-right">Price, ETH/kWh</th>
@@ -31,18 +33,22 @@
       </thead>
       <tbody>
       <tr *ngFor="let row of productionReview">
-        <td class="text-right">{{row.date | date: 'MM-dd'}}</td>
+        <td class="text-left">{{row.date | date: 'MM-dd'}}</td>
         <td class="text-right"><span *ngIf="(row.production) || row.prediction">{{row.prediction}}</span></td>
         <td class="text-right"><span *ngIf="(row.production) || row.prediction">{{row.production}}</span></td>
         <td class="text-right"><span *ngIf="(row.production) || row.prediction">{{row.priceEth}} ETH</span></td>
         <td class="text-right"><span *ngIf="(row.production) || row.prediction">{{row.priceEur}} Eur</span></td>
         <td class="text-right">
-          <div class="progressBarContainer" *ngIf="(row.production) || row.prediction">
-            <div class="progressbar">
-              <div [ngStyle]="{width: (row.totalTokens ? (row.sold/row.totalTokens)*100 : 0) + '%'}"></div>
+          <div class="row progressBarContainer" *ngIf="(row.production) || row.prediction">
+            <div class="col-md-9">
+                <div class="progressbar">
+                  <div [ngStyle]="{width: (row.totalTokens ? (row.sold/row.totalTokens)*100 : 0) + '%'}"></div>
+                </div>
             </div>
-            <span *ngIf="row.totalTokens">{{row.sold}}/{{row.totalTokens}}</span>
-            <!--<span *ngIf="!(row.totalTokens) && row.prediction">{{row.sold}}/{{row.prediction}}</span>-->
+            <div class="col-md-3">
+              <span *ngIf="row.totalTokens">{{row.sold}}/{{row.totalTokens}}</span>
+              <!--<span *ngIf="!(row.totalTokens) && row.prediction">{{row.sold}}/{{row.prediction}}</span>-->
+            </div>
           </div>
         </td>
         <td class="text-right">
