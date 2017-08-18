@@ -12,9 +12,6 @@ import "rxjs/add/operator/filter";
 import {BlockchainPlantData} from "./blockchain-plant";
 import {PlantType} from "../registration/plant-form/plant-form";
 import {TransactionsLogService} from "./transactions-log-service";
-import {error} from "util";
-import {PriceLogService} from "./price-log-service";
-
 
 var Web3 = require('web3');
 
@@ -28,8 +25,7 @@ export class EthereumService {
 
     private contract: any
 
-    constructor(private transactionsLog: TransactionsLogService) {
-    }
+    constructor(private transactionsLog: TransactionsLogService) {}
 
     loadConnection(): Promise<any> {
         console.log("Load web3 connection")
