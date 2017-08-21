@@ -53,7 +53,7 @@ public class PriceLogManager {
             lastPrice = price;
         }
 
-        while (currentDate.isBefore(to)) {
+        while (currentDate.isBefore(to) || currentDate.isEqual(to)) {
             prices.put(currentDate, lastPrice);
             currentDate = currentDate.plusDays(1);
         }

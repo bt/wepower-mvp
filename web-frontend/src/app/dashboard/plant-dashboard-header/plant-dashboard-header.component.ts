@@ -25,6 +25,9 @@ export class PlantDashboardHeaderComponent implements OnInit {
   priceEth = 0
   loading = false
 
+  // Charts stuff, should be refactored into separate component
+  labelValuesMap = {}
+
   public lineChartData: Array<any> = [
     {data: [], label: 'Market price'},
     {data: [], label: 'Your price'}
@@ -166,7 +169,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
                     let titleLines = tooltipModel.title;
 
                     let titleElement = document.createElement('div');
-                    titleElement.innerText = moment(this.lineChartLabels[titleLines[0]]).format('YYYY-MM-DD')
+                    titleElement.innerText = moment(this.labelValuesMap[titleLines[0]]).format('YYYY-MM-DD')
                     titleElement.style.display = 'table' // Allows centering horizontaly without known width
                     titleElement.style.margin = 'auto' // centers horizontaly
 
@@ -329,6 +332,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
     let date = this.headerPeriod.from;
     while (moment(date).isBefore(this.headerPeriod.to)) {
         dayLabels.push(moment(date).format('MM-DD'))
+        this.labelValuesMap[moment(date).format('MM-DD')] = date
         date = moment(date).add(1, 'day').toDate()
     }
     this.lineChartLabels = dayLabels
