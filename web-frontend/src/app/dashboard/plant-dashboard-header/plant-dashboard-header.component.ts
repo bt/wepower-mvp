@@ -342,22 +342,14 @@ export class PlantDashboardHeaderComponent implements OnInit {
     }
 
   private loadData() {
-
     this.loadPrice()
 
     this.headerPeriod = new Period(
-        moment().subtract(5, 'day').toDate(),
-        moment().add(1, 'day').toDate());
+      moment().startOf('isoWeek').toDate(),
+      moment().startOf('isoWeek').add(6, 'day').toDate()
+    );
 
     let dayLabels: Array<string> = []
-
-    let date = this.headerPeriod.from;
-    while (moment(date).isBefore(this.headerPeriod.to)) {
-        dayLabels.push(moment(date).format('MM-DD'))
-        this.labelValuesMap[moment(date).format('MM-DD')] = date
-        date = moment(date).add(1, 'day').toDate()
-    }
-    this.lineChartLabels = dayLabels
 
     this.loadTotalPrediction(this.headerPeriod)
     this.loadTotalSold(this.headerPeriod)
@@ -372,6 +364,8 @@ export class PlantDashboardHeaderComponent implements OnInit {
       marketReviewStart.toDate(),
       marketReviewEnd.toDate()
     );
+
+    this.initChartLabels(marketReviewPeriod)
 
     // Expected to add prices from contracts, which will have to be merged.
     Promise.all([
@@ -414,6 +408,19 @@ export class PlantDashboardHeaderComponent implements OnInit {
               error => console.error(error)
       )
 
+  }
+
+  private initChartLabels(chartPeriod : Period) {
+    let dayLabels: Array<string> = []
+
+    let fromDate = chartPeriod.from;
+
+    while (moment(fromDate).isBefore(chartPeriod.to)) {
+      dayLabels.push(moment(fromDate).format('MM-DD'))
+      this.labelValuesMap[moment(fromDate).format('MM-DD')] = fromDate
+      fromDate = moment(fromDate).add(1, 'day').toDate()
+    }
+    this.lineChartLabels = dayLabels;
   }
 
   public setChartData(marketPrices: Array<[Date, number]>, yourPrices: Array<[Date, number]>): void {

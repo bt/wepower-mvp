@@ -20,6 +20,9 @@ export class ClientDashboardHeaderComponent implements OnInit {
     marketPricesReview: Array<MarketPriceRow>
     walletId: string
 
+    // Charts stuff, should be refactored into separate component
+    labelValuesMap = {}
+
     public lineChartData: Array<any> = [
         {data: [], label: 'Market price'},
         {data: [], label: 'Your price'}
@@ -63,6 +66,14 @@ export class ClientDashboardHeaderComponent implements OnInit {
     ];
 
     public lineChartOptions: any = {
+        layout: {
+          padding: {
+            left: 15,
+            right: 0,
+            top: 0,
+            bottom: 0
+          }
+        },
         responsive: true,
         maintainAspectRatio: false,
         legend: {display: false},
@@ -161,7 +172,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
                     let titleLines = tooltipModel.title;
 
                     let titleElement = document.createElement('div');
-                    titleElement.innerText = moment(this.lineChartLabels[titleLines[0]]).format('YYYY-MM-DD')
+                    titleElement.innerText = moment(this.labelValuesMap[titleLines[0]]).format('YYYY-MM-DD')
                     titleElement.style.display = 'table' // Allows centering horizontaly without known width
                     titleElement.style.margin = 'auto' // centers horizontaly
 
@@ -251,17 +262,9 @@ export class ClientDashboardHeaderComponent implements OnInit {
     ngOnInit() {
 
         this.headerPeriod = new Period(
-            moment().subtract(5, 'day').toDate(),
-            moment().add(1, 'day').toDate());
-
-        let dayLabels: Array<string> = []
-
-        let date = this.headerPeriod.from;
-        while (moment(date).isBefore(this.headerPeriod.to)) {
-            dayLabels.push(moment(date).format('MM-DD'))
-            date = moment(date).add(1, 'day').toDate()
-        }
-        this.lineChartLabels = dayLabels;
+            moment().startOf('isoWeek').toDate(),
+            moment().startOf('isoWeek').add(6, 'day').toDate()
+        );
 
         this.ethereum.activeWallet()
             .subscribe(
@@ -275,7 +278,8 @@ export class ClientDashboardHeaderComponent implements OnInit {
             )
     }
 
-    private loadTotalPrediction(reviewPeriod: Period) {
+
+  private loadTotalPrediction(reviewPeriod: Period) {
         this.predictionService.getPredictionTotal(this.walletId, reviewPeriod)
             .subscribe(
                 predictions => this.consumedTotal = predictions,
@@ -305,6 +309,8 @@ export class ClientDashboardHeaderComponent implements OnInit {
             periodEnd.toDate()
         );
 
+        this.initChartLabels(marketReviewPeriod)
+
         // Expected to add prices from contracts, which will have to be merged.
         Promise.all(
             [
@@ -318,6 +324,21 @@ export class ClientDashboardHeaderComponent implements OnInit {
             this.marketPricesReview = marketPrices
                 .map(priceForDay => new MarketPriceRow(priceForDay[0], priceForDay[1], 25))
         }).catch(error => console.error(error))
+    }
+
+    private initChartLabels(chartPeriod : Period) {
+        let dayLabels: Array<string> = []
+
+        let fromDate = chartPeriod.from;
+
+        while (moment(fromDate).isBefore(chartPeriod.to)) {
+            dayLabels.push(moment(fromDate).format('MM-DD'))
+            this.labelValuesMap[moment(fromDate).format('MM-DD')] = fromDate
+
+            fromDate = moment(fromDate).add(1, 'day').toDate()
+        }
+
+        this.lineChartLabels = dayLabels;
     }
 
     public setChartData(marketPrices: Array<[Date, number]>): void {
