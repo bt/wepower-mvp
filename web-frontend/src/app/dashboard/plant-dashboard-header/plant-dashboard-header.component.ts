@@ -71,6 +71,14 @@ export class PlantDashboardHeaderComponent implements OnInit {
   ];
 
     public lineChartOptions: any = {
+        layout: {
+          padding: {
+            left: 15,
+            right: 0,
+            top: 0,
+            bottom: 0
+          }
+        },
         responsive: true,
         maintainAspectRatio: false,
         legend: { display: false },
@@ -226,7 +234,13 @@ export class PlantDashboardHeaderComponent implements OnInit {
                     fontSize: 16,
                     fontColor: '#000',
 
-                    padding: 30
+                    padding: 30,
+
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                      return Math.round(value * 100) / 100;
+                    }
+
                 },
                 gridLines: {
                     color: '#e0e0e0',
