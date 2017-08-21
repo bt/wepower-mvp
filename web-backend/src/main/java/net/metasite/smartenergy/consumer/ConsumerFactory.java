@@ -49,15 +49,16 @@ public class ConsumerFactory {
             String areaCode,
             String meterId,
             BigDecimal consumption,
-            String houseSizeCode) {
+            String houseSizeCode,
+            LocalDate consumeFrom,
+            LocalDate consumeTo) {
 
         SupportedLocationArea locationArea = supportedLocationArea.findByCode(areaCode);
         SupportedHouseSize houseSize = supportedHouseSizeRepository.findByCode(houseSizeCode);
 
         Predictor predictor = new ConsumptionPredictor(houseSize);
-        Map<LocalDate, BigDecimal> predictedUsage = predictor.predict(
-                closed(now(), now().plusMonths(1))
-        );
+        Map<LocalDate, BigDecimal> predictedUsage =
+                predictor.predict(closed(consumeFrom, consumeTo));
 
         List<ConsumptionLog> usageLogs = predictedUsage.entrySet().stream()
                 .map(predictionEntry -> buildPrediction(predictionEntry.getKey(), predictionEntry.getValue()))

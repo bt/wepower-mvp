@@ -24,6 +24,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
   price = 0
   priceEth = 0
   loading = false
+  invalidPrice = false
 
   // Charts stuff, should be refactored into separate component
   labelValuesMap = {}
@@ -287,6 +288,13 @@ export class PlantDashboardHeaderComponent implements OnInit {
   setPrice(): void {
       const self_ = this
       this.loading = true
+
+      if (Number.isNaN(Number.parseFloat(this.price.toString())) || this.price < 0) {
+          self_.loadPrice()
+          this.loading = false
+          return
+      }
+
       this.exchangeRateService.exchangeRate()
           .mergeMap((data) => {
               self_.priceEth = self_.round(self_.price / Number(data), 6)
@@ -319,10 +327,10 @@ export class PlantDashboardHeaderComponent implements OnInit {
             )
     }
 
-    calcPriceInEth(): void {
+    handlePrice(event: any): void {
         const self_ = this
-
         this.priceEth = 0
+
         this.exchangeRateService.exchangeRate()
             .subscribe(
                 data => self_.priceEth = self_.round(self_.price / data, 6),

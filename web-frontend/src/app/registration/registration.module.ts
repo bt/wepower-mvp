@@ -23,8 +23,6 @@ import { ChartsModule } from "ng2-charts";
 import { MdAutocompleteModule, MdInputModule } from '@angular/material';
 import {FormsModule } from '@angular/forms';
 
-
-
 @NgModule({
   imports: [
     CommonModule,

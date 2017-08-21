@@ -75,7 +75,9 @@ public class ConsumerController {
                 request.getAreaCode(),
                 request.getMeterId(),
                 request.getConsumption(),
-                request.getHouseSizeCode()
+                request.getHouseSizeCode(),
+                request.getConsumeFrom(),
+                request.getConsumeTo()
         );
 
         return ResponseEntity.ok(new CreatedConsumerDTO(consumerId));

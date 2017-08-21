@@ -16,6 +16,7 @@ import {toPromise} from "rxjs/operator/toPromise";
 import {BuyTokensRow} from "../buy-tokens-row";
 import {TransactionsLogService} from "../../shared/transactions-log-service";
 import {RegistrationStateService} from "app/shared/registration-state.service";
+import {ConsumptionPredictionService} from "app/registration/prediction/consumption-prediction.service";
 
 @Component({
   selector: 'app-client-consumption-review',
@@ -23,6 +24,9 @@ import {RegistrationStateService} from "app/shared/registration-state.service";
   styleUrls: ['./client-consumption-review.component.scss']
 })
 export class ClientConsumptionReviewComponent implements OnInit {
+
+  backDisabled: boolean
+  frontDisabled: boolean
 
   consumptionReview: Array<ConsumptionReviewRow>
   tableReviewPeriod: Period = new Period(new Date(), new Date())
@@ -39,7 +43,7 @@ export class ClientConsumptionReviewComponent implements OnInit {
 
   constructor(private ethereum: EthereumService,
               private exchangeMarket: ExchangeRateService,
-              private predictionService: ProductionPredictionService,
+              private predictionService: ConsumptionPredictionService,
               private consumptionReviewService: ConsumptionReviewService,
               private transactionLogs: TransactionsLogService) { }
 
@@ -58,11 +62,13 @@ export class ClientConsumptionReviewComponent implements OnInit {
   previousPeriod() {
     this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(-1)
     this.loadTable(this.tableReviewPeriod);
+    this.adjustButtonActivity()
   }
 
   nextPeriod() {
     this.tableReviewPeriod = this.tableReviewPeriod.plusWeeks(1)
     this.loadTable(this.tableReviewPeriod);
+    this.adjustButtonActivity()
   }
 
   prepareTransferData(transferDate: Date, value: number) {
@@ -125,6 +131,7 @@ export class ClientConsumptionReviewComponent implements OnInit {
     );
 
     this.loadTable(this.tableReviewPeriod)
+    this.loadAvailablePeriod()
   }
 
   private loadTable(period: Period) {
@@ -194,6 +201,17 @@ export class ClientConsumptionReviewComponent implements OnInit {
         })
   }
 
+    private loadAvailablePeriod() {
+        this.predictionService.getPredictedPeriod(this.walletId)
+            .subscribe(
+                period => {
+                    this.availableRange = period
+                    this.adjustButtonActivity()
+                },
+                error => console.error(error)
+            );
+    }
+
   bestPrice(amount: number, date: Date, type: PlantType, exchangeRate: number): Promise<BuyTokensRow> {
     let bestPriceAddr: string
     return this.ethereum.getBestPrice(amount, date, type)
@@ -216,6 +234,23 @@ export class ClientConsumptionReviewComponent implements OnInit {
         var tempNumber = number * factor;
         var roundedTempNumber = Math.round(tempNumber);
         return roundedTempNumber / factor;
-    };
+    }
+
+    private adjustButtonActivity() {
+        if (this.tableReviewPeriod == null || this.availableRange) {
+            this.backDisabled = true
+            this.frontDisabled = true
+        }
+
+        this.backDisabled = false
+        if (this.tableReviewPeriod.from <= this.availableRange.from) {
+            this.backDisabled = true
+        }
+
+        this.frontDisabled = false
+        if (this.tableReviewPeriod.to >= this.availableRange.to) {
+            this.frontDisabled = true
+        }
+    }
 
 }

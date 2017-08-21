@@ -1,6 +1,7 @@
 package net.metasite.smartenergy.api.consumer.request;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class ConsumerDetailsDTO {
     private String walletId;
@@ -8,6 +9,8 @@ public class ConsumerDetailsDTO {
     private String meterId;
     private BigDecimal consumption;
     private String houseSizeCode;
+    private LocalDate consumeFrom;
+    private LocalDate consumeTo;
 
     public ConsumerDetailsDTO() {
     }
@@ -50,5 +53,21 @@ public class ConsumerDetailsDTO {
 
     public String getHouseSizeCode() {
         return houseSizeCode;
+    }
+
+    public LocalDate getConsumeFrom() {
+        return consumeFrom;
+    }
+
+    public void setConsumeFrom(LocalDate consumeFrom) {
+        this.consumeFrom = consumeFrom;
+    }
+
+    public LocalDate getConsumeTo() {
+        return consumeTo;
+    }
+
+    public void setConsumeTo(LocalDate consumeTo) {
+        this.consumeTo = consumeTo;
     }
 }

@@ -20,6 +20,7 @@ import { PlantProductionReviewComponent } from './plant-production-review/plant-
 import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
 import { PlantDashboardGuardService } from "./router-guards/plant-dashboard-guard.service";
 import { ConsumerDashboardGuardService } from "./router-guards/consumer-dashboard-guard.service";
+import {NumberOnlyDirective} from "../shared/numbers-only-directive";
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { ConsumerDashboardGuardService } from "./router-guards/consumer-dashboar
     ClientDashboardHeaderComponent,
     ClientConsumptionReviewComponent,
     PlantProductionReviewComponent,
-    DashboardLayoutComponent
+    DashboardLayoutComponent,
+    NumberOnlyDirective
   ],
   providers: [
     ExchangeRateService,

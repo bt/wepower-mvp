@@ -1,6 +1,7 @@
 package net.metasite.smartenergy.consumer;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import net.metasite.smartenergy.domain.Consumer;
 import net.metasite.smartenergy.repositories.ConsumerRepository;
@@ -33,7 +34,9 @@ public class ConsumerManager {
             String areaCode,
             String meterId,
             BigDecimal consumption,
-            String houseSizeCode) {
+            String houseSizeCode,
+            LocalDate consumeFrom,
+            LocalDate consumeTo) {
 
         Consumer temporaryConsumer = consumerRepository.findByWalletIdIgnoreCase(walletId);
 
@@ -47,7 +50,9 @@ public class ConsumerManager {
                 areaCode,
                 meterId,
                 consumption,
-                houseSizeCode
+                houseSizeCode,
+                consumeFrom,
+                consumeTo
         );
 
         return createdId;

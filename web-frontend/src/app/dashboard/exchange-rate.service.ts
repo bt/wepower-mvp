@@ -10,9 +10,9 @@ import {environment} from "../../environments/environment";
 @Injectable()
 export class ExchangeRateService {
 
-  constructor(private http : Http) { }
+  constructor(private http: Http) { }
 
-  exchangeRate() : Observable<number> {
+  exchangeRate(): Observable<number> {
     return this.http.get(`${environment.dataUrls.market.ethereumPrice}`)
       .map(this.extractData)
       .catch(this.handleError)

@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
+import * as moment from 'moment'
+
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/startWith';
@@ -96,6 +98,8 @@ export class ConsumerFormComponent implements OnInit {
       .find(area => area.name == this.formData.areaName)
     this.formData.areaCode = selectedArea.code
     this.formData.meterId = this.formData.walletId
+    this.formData.consumeFrom = moment().add(1, 'day').toDate()
+    this.formData.consumeTo = moment().add(1, 'month').add(1, 'day').toDate()
 
     return this.formData
   }
