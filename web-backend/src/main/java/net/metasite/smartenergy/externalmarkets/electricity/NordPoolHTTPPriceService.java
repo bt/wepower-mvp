@@ -23,7 +23,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class NordPoolHTTPPriceService {
+public class NordPoolHTTPPriceService implements ElectricityPriceLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(NordPoolHTTPPriceService.class);
 
@@ -69,23 +69,5 @@ public class NordPoolHTTPPriceService {
                 .getAsDouble();
 
         return CompletableFuture.completedFuture(new PriceForDay(date, new BigDecimal(priceForDay)));
-    }
-
-    public static class PriceForDay {
-        private LocalDate day;
-        private BigDecimal price;
-
-        public PriceForDay(LocalDate day, BigDecimal price) {
-            this.day = day;
-            this.price = price;
-        }
-
-        public LocalDate getDay() {
-            return day;
-        }
-
-        public BigDecimal getPrice() {
-            return price;
-        }
     }
 }

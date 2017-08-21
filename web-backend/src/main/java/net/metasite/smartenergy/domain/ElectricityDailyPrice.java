@@ -53,7 +53,11 @@ public class ElectricityDailyPrice {
         return date;
     }
 
-    public BigDecimal getUnitPrice() {
+    public BigDecimal getMWhPrice() {
         return unitPrice;
+    }
+
+    public BigDecimal getkWhPrice() {
+        return unitPrice.divide(new BigDecimal(1000));
     }
 }

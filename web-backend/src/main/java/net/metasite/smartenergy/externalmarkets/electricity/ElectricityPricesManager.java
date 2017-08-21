@@ -9,10 +9,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import net.metasite.smartenergy.domain.ElectricityDailyPrice;
-import net.metasite.smartenergy.externalmarkets.electricity.NordPoolHTTPPriceService.PriceForDay;
 import net.metasite.smartenergy.repositories.ElectricityDailyPriceRepository;
 
 import org.slf4j.Logger;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 
 @Service
@@ -33,27 +30,27 @@ public class ElectricityPricesManager {
 
     private ElectricityDailyPriceRepository electricityDailyPriceRepository;
 
-    private NordPoolHTTPPriceService nordPoolHTTPPriceService;
+    private ElectricityPriceLoader electricityPriceLoader;
 
     @Autowired
     public ElectricityPricesManager(
             ElectricityDailyPriceRepository electricityDailyPriceRepository,
-            NordPoolHTTPPriceService nordPoolHTTPPriceService) {
+            ElectricityPriceLoader mockNordPoolPriceService) {
         this.electricityDailyPriceRepository = electricityDailyPriceRepository;
-        this.nordPoolHTTPPriceService = nordPoolHTTPPriceService;
+        this.electricityPriceLoader = mockNordPoolPriceService;
     }
 
     public BigDecimal getPriceForDate(LocalDate date) {
         ElectricityDailyPrice dailyPrice = electricityDailyPriceRepository.findDistinctFirstByDate(date);
 
         if (dailyPrice != null) {
-            return dailyPrice.getUnitPrice();
+            return dailyPrice.getMWhPrice();
         }
 
-        List<PriceForDay> receivedPrices = fetchRemainingFromNordPool(ImmutableList.of(date));
+        List<PriceForDay> receivedPrices = loadNotCachedFromNordpool(ImmutableList.of(date));
         cacheMissingPrices(receivedPrices);
         if (receivedPrices.size() > 0) {
-            return receivedPrices.get(0).getPrice();
+            return receivedPrices.get(0).getkWhPrice();
         }
 
         return BigDecimal.ZERO;
@@ -77,31 +74,31 @@ public class ElectricityPricesManager {
             missingDates.add(date);
         }
 
-        List<PriceForDay> receivedPrices = fetchRemainingFromNordPool(missingDates);
+        List<PriceForDay> receivedPrices = loadNotCachedFromNordpool(missingDates);
 
         cacheMissingPrices(receivedPrices);
 
         Builder resultBuilder = ImmutableMap.builder();
 
-        alreadyChachedDailyPrices.forEach(dailyPrice -> resultBuilder.put(dailyPrice.getDate(), dailyPrice.getUnitPrice()));
-        receivedPrices.forEach(priceForDay -> resultBuilder.put(priceForDay.getDay(), priceForDay.getPrice()));
+        alreadyChachedDailyPrices.forEach(dailyPrice -> resultBuilder.put(dailyPrice.getDate(), dailyPrice.getMWhPrice()));
+        receivedPrices.forEach(priceForDay -> resultBuilder.put(priceForDay.getDay(), priceForDay.getkWhPrice()));
 
         return resultBuilder.build();
     }
 
     private void cacheMissingPrices(List<PriceForDay> receivedPrices) {
         List<ElectricityDailyPrice> validPricesReceived = receivedPrices.stream()
-                .filter(price -> !price.getPrice().equals(BigDecimal.ZERO))
-                .map(priceForDay -> new ElectricityDailyPrice(priceForDay.getDay(), priceForDay.getPrice()))
+                .filter(price -> !price.getkWhPrice().equals(BigDecimal.ZERO))
+                .map(priceForDay -> new ElectricityDailyPrice(priceForDay.getDay(), priceForDay.getkWhPrice()))
                 .collect(Collectors.toList());
 
         electricityDailyPriceRepository.save(validPricesReceived);
     }
 
-    private List<PriceForDay> fetchRemainingFromNordPool(List<LocalDate> requiredDates) {
+    private List<PriceForDay> loadNotCachedFromNordpool(List<LocalDate> requiredDates) {
         Map<LocalDate, CompletableFuture<PriceForDay>> promises = new HashMap<>();
 
-        requiredDates.forEach(date -> promises.put(date, nordPoolHTTPPriceService.getPriceForDate(date)));
+        requiredDates.forEach(date -> promises.put(date, electricityPriceLoader.getPriceForDate(date)));
 
 
         return promises.entrySet()

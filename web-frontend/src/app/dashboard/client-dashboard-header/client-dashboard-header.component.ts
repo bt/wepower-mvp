@@ -28,14 +28,38 @@ export class ClientDashboardHeaderComponent implements OnInit {
     public lineChartLabels: Array<any>;
 
     public lineChartColors: Array<any> = [
-        {
-            borderColor: '#001cff',
-            backgroundColor: 'rgba(0,0,0,0)'
-        },
-        {
-            borderColor: '#00a700',
-            backgroundColor: 'rgba(0,0,0,0)'
-        }
+      {
+        borderWidth: 4,
+        backgroundColor: 'rgba(0,0,0,0)',
+        borderColor: '#001cff',
+
+        pointBackgroundColor: '#001cff',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointLabelFontSize: 10,
+
+        pointRadius: 6,
+        pointHoverRadius: 6,
+
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#001cff',
+      },
+      {
+        borderWidth: 4,
+        backgroundColor: 'rgba(0,0,0,0)',
+        borderColor: '#00a700',
+
+        pointBackgroundColor: '#00a700',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointLabelFontSize: 10,
+
+        pointRadius: 6,
+        pointHoverRadius: 6,
+
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#00a700'
+      }
     ];
 
     public lineChartOptions: any = {

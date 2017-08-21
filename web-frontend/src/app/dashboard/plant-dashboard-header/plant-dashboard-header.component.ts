@@ -34,12 +34,36 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
   public lineChartColors: Array<any> = [
     {
+      borderWidth: 4,
+      backgroundColor: 'rgba(0,0,0,0)',
       borderColor: '#001cff',
-      backgroundColor: 'rgba(0,0,0,0)'
+
+      pointBackgroundColor: '#001cff',
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      pointLabelFontSize: 10,
+
+      pointRadius: 6,
+      pointHoverRadius: 6,
+
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: '#001cff',
     },
     {
+      borderWidth: 4,
+      backgroundColor: 'rgba(0,0,0,0)',
       borderColor: '#00a700',
-      backgroundColor: 'rgba(0,0,0,0)'
+
+      pointBackgroundColor: '#00a700',
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      pointLabelFontSize: 10,
+
+      pointRadius: 6,
+      pointHoverRadius: 6,
+
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: '#00a700'
     }
   ];
 
