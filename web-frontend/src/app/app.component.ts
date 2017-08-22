@@ -1,8 +1,5 @@
-import {Component} from '@angular/core';
-import {Router} from "@angular/router";
-
+import {Component, NgZone} from '@angular/core';
 import {EthereumService} from "./shared/ethereum.service";
-import {ExistingUserGuardService} from "./landing/router-guards/existing-user-guard.service";
 
 
 const contract = require('truffle-contract');
@@ -13,19 +10,9 @@ const contract = require('truffle-contract');
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    balance: number;
-    etherium: EthereumService
-    existingUserGuard: ExistingUserGuardService
-    router: Router
-
     private monitoringAccount = false
 
-    constructor(etherium: EthereumService,
-                existingUserGuard: ExistingUserGuardService,
-                router: Router) {
-        this.etherium = etherium
-        this.existingUserGuard = existingUserGuard
-        this.router = router
+    constructor(private etherium: EthereumService, private _ngZone: NgZone) {
     }
 
     ngOnInit() {
@@ -41,16 +28,11 @@ export class AppComponent {
         setInterval(() => {
             this.etherium.activeWallet().subscribe(
                 data => {
-                    if (data !== currentAccount) {
+                    if (currentAccount == null) {
                         currentAccount = data
-                        // existingUserGuard handles existing plants/consumers navigation to dashboard
-                        // if their data don't exist navigate to root.
-                        // This is needed because if always navigate to '/' it won't get refreshed
-                        // after user changes and existingUserGuard won't fire
-                        this.existingUserGuard.canActivate(null, null).subscribe(
-                            response => response ? this.router.navigateByUrl('/') : null,
-                            error => console.error
-                        )
+                    } else if (data !== currentAccount) {
+                        // hard reload if user changed - guards should handle navigation
+                        this._ngZone.runOutsideAngular(() => location.reload())
                     }
                 },
                 console.error
