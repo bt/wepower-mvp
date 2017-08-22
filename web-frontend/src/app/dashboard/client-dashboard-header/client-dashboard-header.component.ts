@@ -66,6 +66,9 @@ export class ClientDashboardHeaderComponent implements OnInit {
     ];
 
     public lineChartOptions: any = {
+        hover: {
+          mode: 'point'
+        },
         layout: {
           padding: {
             left: 15,

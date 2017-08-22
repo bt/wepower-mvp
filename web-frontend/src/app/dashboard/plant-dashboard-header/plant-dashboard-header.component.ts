@@ -30,8 +30,8 @@ export class PlantDashboardHeaderComponent implements OnInit {
   labelValuesMap = {}
 
   public lineChartData: Array<any> = [
-    {data: [], label: 'Market price'},
-    {data: [], label: 'Your price'}
+    {data: [], label: 'Market price', pointHitRadius: 1},
+    {data: [], label: 'Your price', pointHitRadius: 1}
   ];
 
   public lineChartLabels: Array<any>;
@@ -49,6 +49,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
       pointRadius: 6,
       pointHoverRadius: 6,
+      pointHitRadius: 1,
 
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: '#001cff',
@@ -72,6 +73,9 @@ export class PlantDashboardHeaderComponent implements OnInit {
   ];
 
     public lineChartOptions: any = {
+        hover: {
+          mode: 'point'
+        },
         layout: {
           padding: {
             left: 15,
@@ -84,7 +88,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
         maintainAspectRatio: false,
         legend: { display: false },
         tooltips: {
-            enabled: false,
+          enabled: false,
             custom: (tooltipModel) => {
                 // Tooltip Element
                 var tooltipEl = document.getElementById('chart-tooltip');
