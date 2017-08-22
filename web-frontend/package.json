@@ -10,7 +10,7 @@
     "deploy_contracts_dev": "cd ../smart-contracts && truffle migrate --reset --network development",
     "deploy_contracts_prod": "cd ../smart-contracts && truffle migrate --reset --network demo",
     "compile": "npm run build_contracts && ng build",
-    "build-app-prod": "ng build --environment=dev",
+    "build-app-prod": "ng build --prod --env=prod",
     "deploy-app-demo": "scp -r dist/* root@192.168.50.157:/home/metasite/wepower/web-app/.",
     "deploy-app-prod": "scp -r dist/* dev@192.168.80.139:/home/dev/wepower/web-app/.",
     "start": "ng serve --proxy-config proxy.conf.json",
