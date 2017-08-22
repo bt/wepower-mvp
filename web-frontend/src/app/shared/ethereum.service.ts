@@ -291,7 +291,7 @@ export class EthereumService {
     }
 
     private parseAddress(): string {
-        let address = ''
+        let address = environment.exchangeAddress
         if (address !== '') {
             return address
         }
