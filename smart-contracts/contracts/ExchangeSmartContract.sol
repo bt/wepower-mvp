@@ -29,13 +29,14 @@ contract ExchangeSmartContract  {
     uint256 bestPrice = 0;
 
     for (uint i = 0; i < plants.length; i++) {
-      PlantSmartContract plantContract = PlantSmartContract(plantContracts[plants[i]]);
+      address plant = plants[i];
+      PlantSmartContract plantContract = PlantSmartContract(plantContracts[plant]);
 
-      if (/*plantContract.balanceOf(plants[i], _date) >= _amount &&*/
+      if (plantContract.balanceOf(plant, _date) >= _amount &&
       plantContract.source() == source &&
       (plantContract.price() < bestPrice || bestPrice == 0)) {
 
-        bestAddress = plants[i];
+        bestAddress = plant;
         bestPrice = plantContract.price();
       }
     }
