@@ -10,13 +10,17 @@ export class LandingComponent implements OnInit {
 
   private etherium: EthereumService;
 
-  connectedToWallet = false;
+  connectedToWallet = false
+  usingChrome = false
 
   constructor(etherium: EthereumService) {
     this.etherium = etherium;
   }
 
   ngOnInit() {
+    this.usingChrome = window.navigator.userAgent.toLowerCase().includes("chrome")
+    console.log("Im using chrome" + this.usingChrome)
+
     this.etherium.activeWallet()
       .toPromise()
       .then(wallet => {

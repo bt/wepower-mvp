@@ -106,7 +106,7 @@ export class EthereumService {
 
         const self_ = this;
 
-        
+
 
         const promise = new Promise(function (resolve, reject) {
             self_.contract.createPlantContract.sendTransaction(wallet,
@@ -293,7 +293,7 @@ export class EthereumService {
     }
 
     private parseAddress(): string {
-        let address = environment.exchangeAddress
+        let address = ''
         if (address !== '') {
             return address
         }

@@ -20,6 +20,13 @@ export class ExistingUserGuardService implements CanActivate {
               private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    let usingChrome = window.navigator.userAgent.toLowerCase().includes("chrome")
+
+    // If user is not using chrome, we redirect to landing page without even checking if he is valid user
+    if (!usingChrome) {
+      return Observable.of(true)
+    }
+
     return this.ethereumService.activeWallet()
       .mergeMap(wallet => {
         if (!wallet) {
