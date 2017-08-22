@@ -9,6 +9,7 @@ import 'rxjs/add/operator/timeoutWith';
 import 'rxjs/add/operator/toPromise';
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/filter";
+import { environment } from "../../environments/environment";
 import {BlockchainPlantData} from "./blockchain-plant";
 import {PlantType} from "../registration/plant-form/plant-form";
 import {TransactionsLogService} from "./transactions-log-service";
@@ -104,6 +105,8 @@ export class EthereumService {
         ) : []
 
         const self_ = this;
+
+        
 
         const promise = new Promise(function (resolve, reject) {
             self_.contract.createPlantContract.sendTransaction(wallet,
@@ -289,26 +292,12 @@ export class EthereumService {
         return this.web3.toWei(ethAmount)
     }
 
-    private waitForMine(): void {
-        this.web3.eth.filter('latest', function (error, result) {
-            if (!error) {
-                console.log("MINED")
-                this.web3.eth.getBlock(result, true, function (error, result) {
-                    console.log("BLOCK");
-                    console.log(result);
-                });
-            } else {
-                console.log("MINED WITH ERROR")
-                console.error(error)
-            }
-            this.web3.eth.filter.stopWatch();
-        });
-    }
-
     private parseAddress(): string {
-        //TEST NET ADDRESS HARDCODED FOR A WHILE
-        let address = '0x5c761efa88b482ee6955c41248a9cb1a38794521'
-/*        let address: string
+        let address = environment.exchangeAddress
+        if (address !== '') {
+            return address
+        }
+
         const diff = 0
         const currentTime: number = new Date().getTime()
         Object.keys(exchange_artifact.networks).forEach(function (key) {
@@ -316,7 +305,7 @@ export class EthereumService {
                 const network = exchange_artifact.networks[key]
                 address = network.address
             }
-        });*/
+        });
         return address
     }
 

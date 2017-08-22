@@ -14,6 +14,8 @@ import {ProductionPredictionService} from "./prediction/production-prediction.se
 import { EthereumService } from "../shared/ethereum.service";
 import { BlockchainPlantData } from "../shared/blockchain-plant"
 import {PredictionData} from "./prediction/prediction-data";
+import {PriceLogService} from "../shared/price-log-service";
+import {ExchangeRateService} from "../dashboard/exchange-rate.service";
 
 @Injectable()
 export class PlantManagementService {
@@ -21,6 +23,8 @@ export class PlantManagementService {
   constructor(
       private http: Http,
       private ethereumService: EthereumService,
+      private priceLog: PriceLogService,
+      private exchangeRateService: ExchangeRateService,
       private predictionService: ProductionPredictionService) {
   }
 
@@ -52,7 +56,19 @@ export class PlantManagementService {
     return this.getBlockchainData(wallet)
         .mergeMap(data => this.ethereumService.registerPlant(wallet, data))
         .mergeMap(data => this.http.post(`${plantUrl.root}/${wallet}/${plantUrl.activate}`, null))
+        .mergeMap(data => this.ethereumService.getPrice(wallet))
+        .mergeMap(data => this.logPrice(wallet, data))
         .catch(error => Observable.throw(error))
+  }
+
+  private logPrice(wallet: string, price: number): Observable<any> {
+      const priceETH = this.ethereumService.weiToETH(price);
+      return this.exchangeRateService.exchangeRate()
+          .mergeMap(data => {
+            const price = data * priceETH
+            return Observable.of(price)
+          })
+          .mergeMap(data => this.priceLog.log(wallet, data))
   }
 
   private getBlockchainData(wallet: string): Observable<BlockchainPlantData> {

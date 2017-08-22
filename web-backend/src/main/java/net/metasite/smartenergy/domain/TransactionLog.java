@@ -30,10 +30,10 @@ public class TransactionLog {
     @Column
     private String transaction;
 
-    @Column
+    @Column(precision = 19, scale = 6)
     private BigDecimal amountEth;
 
-    @Column
+    @Column(precision = 19, scale = 6)
     private BigDecimal amountKwh;
 
     public TransactionLog() {

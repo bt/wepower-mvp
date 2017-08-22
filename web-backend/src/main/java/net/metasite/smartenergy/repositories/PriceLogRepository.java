@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PriceLogRepository extends BaseRepository<PriceLog> {
 
-    List<PriceLog> findAllByPlantAndDateIsAfterAndDateIsBeforeOrderByDateDesc(String plant, LocalDate dateFrom, LocalDate dateTo);
+    List<PriceLog> findAllByPlantAndDateIsBetweenOrderByDateDesc(String plant, LocalDate dateFrom, LocalDate dateTo);
 
-    List<PriceLog> findAllByPlantAndDate(String plant, LocalDate date);
+    PriceLog findFirstByPlantAndDate(String plant, LocalDate date);
 
     PriceLog findFirstByPlantOrderByDateDesc(String plant);
 }

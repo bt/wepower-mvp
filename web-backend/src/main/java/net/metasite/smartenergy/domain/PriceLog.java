@@ -24,7 +24,7 @@ public class PriceLog {
     @Column
     private LocalDate date;
 
-    @Column
+    @Column(precision = 19, scale = 6)
     private BigDecimal price;
 
     public PriceLog() {

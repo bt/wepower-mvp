@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -15,69 +16,77 @@ import net.metasite.smartenergy.repositories.PriceLogRepository;
 
 import org.springframework.stereotype.Service;
 
+import static java.util.stream.Collectors.toMap;
+
 @Service
 public class PriceLogManager {
 
     @Resource
     private PriceLogRepository priceLogRepository;
 
-    @Resource
-    private PlantRepository plantRepository;
-
     public void log(String plant, BigDecimal price, LocalDate date) {
-        PriceLog log = new PriceLog(plant, date, price);
-        priceLogRepository.save(log);
+
+        PriceLog priceLog = priceLogRepository.findFirstByPlantAndDate(plant, date);
+        if (priceLog == null) {
+            priceLogRepository.save(new PriceLog(plant, date, price));
+            return;
+        }
+
+        priceLog.setPrice(price);
+        priceLogRepository.save(priceLog);
     }
 
     public Map<LocalDate, BigDecimal> getFromTo(String plant, LocalDate from, LocalDate to) {
+        List<PriceLog> priceLogs = priceLogRepository.findAllByPlantAndDateIsBetweenOrderByDateDesc(plant, from, to);
 
-        List<PriceLog> priceLogs =
-                priceLogRepository.findAllByPlantAndDateIsAfterAndDateIsBeforeOrderByDateDesc(plant, from, to);
+        Map<LocalDate, BigDecimal> prices = priceLogs
+                .stream()
+                .collect(toMap(PriceLog::getDate, PriceLog::getPrice));
 
-        Map<LocalDate, List<PriceLog>> logs = priceLogs.stream()
-                .collect(Collectors.groupingBy(PriceLog::getDate));
-
-        Map<LocalDate, BigDecimal> prices = new HashMap<>();
-        LocalDate currentDate = from;
-        BigDecimal lastPrice = BigDecimal.ZERO;
-
-        for (Map.Entry<LocalDate, List<PriceLog>> log: logs.entrySet()) {
-            final BigDecimal price = getAvaragePrice(log.getValue());
-            final LocalDate date = log.getKey();
-
-            while (currentDate.isBefore(date) || currentDate.isEqual(date)) {
-                prices.put(currentDate, price);
-                currentDate = currentDate.plusDays(1);
-            }
-            currentDate = date.plusDays(1);
-            lastPrice = price;
-        }
-
-        while (currentDate.isBefore(to) || currentDate.isEqual(to)) {
-            prices.put(currentDate, lastPrice);
-            currentDate = currentDate.plusDays(1);
-        }
+        prependToDate(from, priceLogs.stream().findFirst(), prices);
+        appendToDate(to, priceLogs.stream().reduce((a, b) -> b), prices);
 
         return prices;
+    }
 
+    public void prependToDate(LocalDate from, Optional<PriceLog> priceLog, Map<LocalDate, BigDecimal> prices) {
+        if (!priceLog.isPresent()) {
+            return;
+        }
+
+        final LocalDate toDate = priceLog.get().getDate();
+        final BigDecimal price = priceLog.get().getPrice();
+
+        LocalDate currentDate = from;
+        while (currentDate.isBefore(toDate) || currentDate.isEqual(toDate)) {
+            prices.put(currentDate, price);
+            currentDate = currentDate.plusDays(1);
+        }
+    }
+
+    public void appendToDate(LocalDate to, Optional<PriceLog> priceLog, Map<LocalDate, BigDecimal> prices) {
+        if (!priceLog.isPresent()) {
+            return;
+        }
+
+        LocalDate currentDate = priceLog.get().getDate();
+        final BigDecimal price = priceLog.get().getPrice();
+
+        while (currentDate.isBefore(to) || currentDate.isEqual(to)) {
+            prices.put(currentDate, price);
+            currentDate = currentDate.plusDays(1);
+        }
     }
 
     public BigDecimal getFor(String plant, LocalDate date) {
-        List<PriceLog> prices = priceLogRepository.findAllByPlantAndDate(plant, date);
+        PriceLog priceLog = priceLogRepository.findFirstByPlantAndDate(plant, date);
 
-        if (!prices.isEmpty()) {
-            return getAvaragePrice(prices);
+        if (priceLog != null) {
+            return priceLog.getPrice();
         }
 
-        PriceLog priceLog = priceLogRepository.findFirstByPlantOrderByDateDesc(plant);
+        priceLog = priceLogRepository.findFirstByPlantOrderByDateDesc(plant);
         return priceLog == null ? BigDecimal.ZERO : priceLog.getPrice();
     }
-
-    private BigDecimal getAvaragePrice(List<PriceLog> priceLogs) {
-        return BigDecimal.valueOf(priceLogs.stream()
-                .map(PriceLog::getPrice)
-                .collect(Collectors.averagingDouble(BigDecimal::doubleValue)));
-    }
-
 
 }

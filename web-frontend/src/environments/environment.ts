@@ -5,7 +5,8 @@
 
 export const environment = {
   production: false,
-  dataUrls: {
+    exchangeAddress: '',
+    dataUrls: {
     locationArea: '/api/v1/location-area',
     houseSize: '/api/v1/house-size',
     plant: {
