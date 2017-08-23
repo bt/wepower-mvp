@@ -56,6 +56,15 @@
   cursor: default;
 }
 
+
+.review-row {
+  height: 4.5em;
+
+  .review-cell {
+      vertical-align: middle;
+  }
+}
+
 .dashboard-container {
   .dashboard-table {
 

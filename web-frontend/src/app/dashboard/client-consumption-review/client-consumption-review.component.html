@@ -33,9 +33,9 @@
       </thead>
       <tbody>
       <ng-container *ngFor="let row of consumptionReview">
-        <tr>
-          <td class="text-left align-middle">{{row.date | date: 'MM-dd'}}</td>
-          <td class="text-left align-middle">
+        <tr class="review-row">
+          <td class="text-left review-cell">{{row.date | date: 'MM-dd'}}</td>
+          <td class="text-left review-cell">
             <div class="row progressBarContainer" *ngIf="row.tokens > 0">
               <div class="col-md-3" style="min-width: 120px;">
                 <div class="progressbar">
@@ -48,17 +48,17 @@
             </div>
             <span *ngIf="row.tokens <= 0">{{row.prediction}} kWh predicted</span>
           </td>
-          <td class="text-left align-middle"><div *ngIf="row.tokens > 0">
+          <td class="text-left review-cell"><div *ngIf="row.tokens > 0">
               <img *ngIf="row.type == 0" class="img-fluid circle" src="/assets/images/icon-sun.svg">
               <img *ngIf="row.type == 2" class="img-fluid circle" src="/assets/images/icon-hydro.svg">
               <img *ngIf="row.type == 1" class="img-fluid circle" src="/assets/images/icon-wind.svg">
             <span>{{row.prediction}}</span></div></td>
-          <td class="text-right align-middle"><span *ngIf="row.tokens > 0 && row.priceEth > 0">{{row.priceEth}} ETH</span></td>
-          <td class="text-right align-middle"><span *ngIf="row.tokens > 0 && row.priceEur > 0">{{row.priceEur}} EUR</span></td>
-          <td class="text-right align-middle">
+          <td class="text-right review-cell"><span *ngIf="row.tokens > 0 && row.priceEth > 0">{{row.priceEth}} ETH</span></td>
+          <td class="text-right review-cell"><span *ngIf="row.tokens > 0 && row.priceEur > 0">{{row.priceEur}} EUR</span></td>
+          <td class="text-right review-cell">
             <div *ngIf="row.tokens > 0 && row.paidEth">{{row.paidEth}} ETH</div>
           </td>
-          <td class="text-right align-middle">
+          <td class="text-right review-cell">
             <div *ngIf="isAfter(row.date)">
               <div *ngIf="row.tokens > 0; else detailsButton">
                 <button *ngIf="row.priceEth > 0" [disabled]="transferring" type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" (click)="prepareTransferData(row.date, row.tokens)" data-target="#tokensTransaction">

@@ -117,6 +117,15 @@
   }
 }
 
+
+.review-row {
+  height: 4.5em;
+
+  .review-cell {
+    vertical-align: middle;
+  }
+}
+
 #tokensTransaction {
 
   .modal-content {
@@ -124,7 +133,7 @@
     -moz-border-radius: 1px;
     border-radius: 1px;
   }
-  
+
   .modal-header {
     border-bottom: 0px;
   }
