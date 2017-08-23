@@ -123,17 +123,20 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
                 if (tooltipModel.yAlign) {
                     if (tooltipModel.yAlign == 'top') {
-                        // If div is aligned at top - we add some pixels, to push it down to back to canvas
-                        top = tooltipModel.y + 5
-                        pointDown = false
-                    } else {
-                        // Position over value
-                        top = tooltipModel.y - 75
-                        pointDown = true
+                      // If div is aligned at top - we add some pixels, to push it down to back to canvas
+                      top = tooltipModel.y + 5
+                      pointDown = false
+                    } else if (tooltipModel.yAlign == 'center') {
+                      // Position over value
+                      top = tooltipModel.y - 80
+                      pointDown = true
+                    } else if (tooltipModel.yAlign == 'bottom') {
+                      // Position over value
+                      top = tooltipModel.y - 52
+                      pointDown = true
                     }
                 }
-
-                // Set Text
+              // Set Text
                 if (tooltipModel.body) {
                     // Clears tooltip
                     while (tooltipEl.firstChild) {
@@ -175,7 +178,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
                     bodyContainerEl.style.borderColor = '#e0e0e0'
                     bodyContainerEl.style.borderStyle = 'solid'
                     bodyContainerEl.style.borderWidth = '3px'
-                    bodyContainerEl.style.minWidth = '120px'
+                    bodyContainerEl.style.minWidth = '220px'
 
                     tooltipEl.appendChild(bodyContainerEl)
 
@@ -225,7 +228,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
                 tooltipEl.style.display = 'inline';
                 tooltipEl.style.position = 'absolute';
-                tooltipEl.style.left = (position.left + tooltipModel.caretX - 82) + 'px';
+                tooltipEl.style.left = (position.left + tooltipModel.caretX - 110) + 'px';
                 tooltipEl.style.top = position.top + top + 'px';
                 tooltipEl.style.zIndex = '6';
             }
@@ -234,7 +237,6 @@ export class PlantDashboardHeaderComponent implements OnInit {
             yAxes: [{
                 display: true,
                 ticks: {
-                    suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
                     fontFamily: "'Roboto', 'Sans-serif'",
                     fontSize: 16,
                     fontColor: '#000',
@@ -353,8 +355,6 @@ export class PlantDashboardHeaderComponent implements OnInit {
       moment().startOf('isoWeek').add(6, 'day').toDate()
     );
 
-    let dayLabels: Array<string> = []
-
     this.loadTotalPrediction(this.headerPeriod)
     this.loadTotalSold(this.headerPeriod)
     this.loadMarketReview();
@@ -440,9 +440,26 @@ export class PlantDashboardHeaderComponent implements OnInit {
           _lineChartData[1].data[j] = yourPrices[j][1];
       }
 
+    let allPlotedPrices = _lineChartData[0].data.concat(_lineChartData[1].data)
+
+    let max = allPlotedPrices.reduce((max, n) => n > max ? n : max)
+    let min = allPlotedPrices.reduce((min, n) => n < min ? n : min)
+
+    let amplitude = max - min
+    let lowestPoint = Math.max((min - amplitude), 0)
+    let highestPoint = Math.max((max + amplitude/10), 0)
+
+    this.lineChartOptions.scales.yAxes[0].ticks.suggestedMin = lowestPoint
+    this.lineChartOptions.scales.yAxes[0].ticks.suggestedMax = highestPoint
+
+    // Reseting labels is required in order to reset scales, as this resets min/max values
+    this.lineChartLabels = Object.keys(this.labelValuesMap)
+
     setTimeout(() => {
       // Timeout required because of angular and chart js integration bug.
-      this.lineChartData = _lineChartData;
+      console.log("ALREADY")
+      this.lineChartData = _lineChartData
+
     }, 50);
   }
 

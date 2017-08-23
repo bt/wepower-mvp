@@ -119,9 +119,13 @@ export class ClientDashboardHeaderComponent implements OnInit {
                         // If div is aligned at top - we add some pixels, to push it down to back to canvas
                         top = tooltipModel.y + 5
                         pointDown = false
-                    } else {
+                    } else if (tooltipModel.yAlign == 'center') {
                         // Position over value
-                        top = tooltipModel.y - 75
+                        top = tooltipModel.y - 80
+                        pointDown = true
+                    } else if (tooltipModel.yAlign == 'bottom') {
+                        // Position over value
+                        top = tooltipModel.y - 52
                         pointDown = true
                     }
                 }
@@ -168,7 +172,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
                     bodyContainerEl.style.borderColor = '#e0e0e0'
                     bodyContainerEl.style.borderStyle = 'solid'
                     bodyContainerEl.style.borderWidth = '3px'
-                    bodyContainerEl.style.minWidth = '120px'
+                    bodyContainerEl.style.minWidth = '220px'
 
                     tooltipEl.appendChild(bodyContainerEl)
 
@@ -218,7 +222,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
 
                 tooltipEl.style.display = 'inline';
                 tooltipEl.style.position = 'absolute';
-                tooltipEl.style.left = (position.left + tooltipModel.caretX - 82) + 'px';
+                tooltipEl.style.left = (position.left + tooltipModel.caretX - 110) + 'px';
                 tooltipEl.style.top = position.top + top + 'px';
             }
         },
@@ -282,7 +286,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
     }
 
 
-  private loadTotalPrediction(reviewPeriod: Period) {
+    private loadTotalPrediction(reviewPeriod: Period) {
         this.predictionService.getPredictionTotal(this.walletId, reviewPeriod)
             .subscribe(
                 predictions => this.consumedTotal = predictions,
