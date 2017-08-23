@@ -28,23 +28,24 @@ export class EthereumService {
 
     constructor(private transactionsLog: TransactionsLogService) {}
 
-    loadConnection(): Promise<any> {
+    loadConnection(): Promise<boolean> {
         console.log("Load web3 connection")
         // Checking if Web3 has been injected by the browser (Mist/MetaMask)
         if (typeof window['web3'] === 'undefined') {
             console.error("No web3 detected! Is MetaMask on?");
-            return Promise.reject("No web3 detected! Is MetaMask on?");
+            return new Promise((resolve, reject) => resolve(false))
         }
         // Use Mist/MetaMask's provider
         this.web3 = new Web3(window['web3'].currentProvider);
         this.contract = this.web3.eth.contract(exchange_artifact.abi).at(this.parseAddress());
 
-        return new Promise((resolve, reject) => resolve())
+        return new Promise((resolve, reject) => resolve(true))
     }
 
     activeWallet(): Observable<string> {
         if (!this.isActiveConnection()) {
-            this.loadConnection()
+            console.error("No web3 detected! Is MetaMask on?");
+            return Observable.of(null)
         }
 
         let promise = new Promise((resolve, reject) => {
