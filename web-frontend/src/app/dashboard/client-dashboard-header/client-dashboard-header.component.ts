@@ -14,7 +14,7 @@ import {ElectricityMarketPriceService} from "../electricity-market-price.service
 })
 export class ClientDashboardHeaderComponent implements OnInit {
 
-    consumedTotal: number
+    needToBuy: number
     boughtTotal: number
     headerPeriod: Period
     marketPricesReview: Array<MarketPriceRow>
@@ -24,8 +24,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
     labelValuesMap = {}
 
     public lineChartData: Array<any> = [
-        {data: [], label: 'Market price'},
-        {data: [], label: 'Your price'}
+        {data: [], label: 'Market price'}
     ];
 
     public lineChartLabels: Array<any>;
@@ -277,7 +276,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
             .subscribe(
                 wallet => {
                     this.walletId = wallet
-                    this.loadTotalPrediction(this.headerPeriod);
+                    this.loadRequirmentsForWeek(this.headerPeriod);
                     this.loadTotalBought(this.headerPeriod)
                     this.loadMarketData()
                 },
@@ -286,10 +285,10 @@ export class ClientDashboardHeaderComponent implements OnInit {
     }
 
 
-    private loadTotalPrediction(reviewPeriod: Period) {
+    private loadRequirmentsForWeek(reviewPeriod: Period) {
         this.predictionService.getPredictionTotal(this.walletId, reviewPeriod)
             .subscribe(
-                predictions => this.consumedTotal = predictions,
+                predictions => this.needToBuy = predictions,
                 error => console.error(error)
             );
 
@@ -355,8 +354,6 @@ export class ClientDashboardHeaderComponent implements OnInit {
         for (let j = 0; j < marketPrices.length; j++) {
             _lineChartData[0].data[j] = marketPrices[j][1];
         }
-
-        _lineChartData[1] = {data: new Array(7), label: 'Your price'};
 
         setTimeout(() => {
             // Timeout required because of angular and chart js integration bug.

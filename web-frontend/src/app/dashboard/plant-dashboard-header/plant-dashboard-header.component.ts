@@ -457,12 +457,10 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
     setTimeout(() => {
       // Timeout required because of angular and chart js integration bug.
-      console.log("ALREADY")
       this.lineChartData = _lineChartData
 
     }, 50);
   }
-
 
     private round(number: number, precision: number) {
         var factor = Math.pow(10, precision);

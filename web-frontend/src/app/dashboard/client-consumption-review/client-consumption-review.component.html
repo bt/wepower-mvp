@@ -52,7 +52,7 @@
               <img *ngIf="row.type == 0" class="img-fluid circle" src="/assets/images/icon-sun.svg">
               <img *ngIf="row.type == 2" class="img-fluid circle" src="/assets/images/icon-hydro.svg">
               <img *ngIf="row.type == 1" class="img-fluid circle" src="/assets/images/icon-wind.svg">
-            <span>{{row.prediction}}</span></div></td>
+            <span>{{row.tokens}}</span></div></td>
           <td class="text-right review-cell"><span *ngIf="row.tokens > 0 && row.priceEth > 0">{{row.priceEth}} ETH</span></td>
           <td class="text-right review-cell"><span *ngIf="row.tokens > 0 && row.priceEur > 0">{{row.priceEur}} EUR</span></td>
           <td class="text-right review-cell">
@@ -61,7 +61,7 @@
           <td class="text-right review-cell">
             <div *ngIf="isAfter(row.date)">
               <div *ngIf="row.tokens > 0; else detailsButton">
-                <button *ngIf="row.priceEth > 0" [disabled]="transferring" type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" (click)="prepareTransferData(row.date, row.tokens)" data-target="#tokensTransaction">
+                <button [disabled]="transferring" type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" (click)="prepareTransferData(row.date, row.tokens)" data-target="#tokensTransaction">
                   <i *ngIf="!transferring" class="fa fa-exchange"></i>
                   <i *ngIf="transferring" class="fa fa-circle-o-notch fa-spin"></i>
                   Transfer</button>
@@ -145,7 +145,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" (click)="transferTokens()" class="btn btn-primary power-button mr-auto" data-dismiss="modal">
+        <button type="button" [disabled]="!validateTransferAddress()" (click)="transferTokens()" class="btn btn-primary power-button mr-auto" data-dismiss="modal">
         <i class="fa fa-exchange"></i> Transfer</button>
       </div>
     </div>

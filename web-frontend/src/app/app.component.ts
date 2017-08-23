@@ -16,23 +16,25 @@ export class AppComponent {
     }
 
     ngOnInit() {
-        this.monitorAccountChange(null)
+        this.etherium.activeWallet().subscribe(
+            account => this.monitorAccountChange(this, account))
     }
 
-    private monitorAccountChange(currentAccount: string): void {
-        if (this.monitoringAccount) {
+    private monitorAccountChange(self_: AppComponent, currentAccount: string): void {
+        if (self_.monitoringAccount) {
             return
         }
-        this.monitoringAccount = true
+        self_.monitoringAccount = true
+
         // HACK https://github.com/MetaMask/faq/issues/52
         setInterval(() => {
-            this.etherium.activeWallet().subscribe(
-                data => {
-                    if (currentAccount == null) {
-                        currentAccount = data
-                    } else if (data !== currentAccount) {
+            self_.etherium.activeWallet().subscribe(
+                account => {
+                    if ((currentAccount == null && account != null) || account !== currentAccount) {
+                        currentAccount = account
+
                         // hard reload if user changed - guards should handle navigation
-                        this._ngZone.runOutsideAngular(() => location.reload())
+                        self_._ngZone.runOutsideAngular(() => location.reload())
                     }
                 },
                 console.error

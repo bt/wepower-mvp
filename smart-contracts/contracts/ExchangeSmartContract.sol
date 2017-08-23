@@ -68,6 +68,19 @@ contract ExchangeSmartContract  {
     return source;
   }
 
+  function getProducerOf(address _consumer, uint _date) constant returns(address) {
+    address producer;
+    for (uint i = 0; i < plants.length; i++) {
+      address plant = plants[i];
+      address contractAddress = plantContracts[plant];
+      PlantSmartContract plantContract = PlantSmartContract(contractAddress);
+      if (plantContract.balanceOf(_consumer, _date) > 0) {
+        producer = plant;
+      }
+    }
+    return producer;
+  }
+
   function getAvailableAmount(address _plant, uint _date) returns (uint256) {
     PlantSmartContract plantContract = PlantSmartContract(plantContracts[_plant]);
     return plantContract.balanceOf(_plant, _date);

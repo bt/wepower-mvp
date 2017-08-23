@@ -80,9 +80,9 @@ export class ClientConsumptionReviewComponent implements OnInit {
   transferTokens() {
       this.transferring = true
 
-      this.transactionLogs.transactionsConsumerPlantDetails(this.walletId, this.transferDate)
-          .mergeMap(data =>
-                this.ethereum.transfer(data.walletAddress, this.transferAddress, this.transferValue, this.transferDate))
+      this.ethereum.getProducerOf(this.walletId, this.transferDate)
+          .mergeMap(plantAddress =>
+                this.ethereum.transfer(plantAddress, this.transferAddress, this.transferValue, this.transferDate))
           .subscribe(
               data => {
                   this.loadTable(this.tableReviewPeriod)
@@ -120,6 +120,10 @@ export class ClientConsumptionReviewComponent implements OnInit {
         let dateToCompare = moment(date)
 
         return dateToCompare.isBefore(currentDate)
+    }
+
+    validateTransferAddress(): boolean {
+      return this.ethereum.isAddress(this.transferAddress)
     }
 
   private initializeTable() {

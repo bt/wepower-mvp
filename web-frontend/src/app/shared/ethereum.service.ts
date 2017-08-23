@@ -9,48 +9,48 @@ import 'rxjs/add/operator/timeoutWith';
 import 'rxjs/add/operator/toPromise';
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/filter";
-import { environment } from "../../environments/environment";
+import {environment} from "../../environments/environment";
 import {BlockchainPlantData} from "./blockchain-plant";
 import {PlantType} from "../registration/plant-form/plant-form";
 import {TransactionsLogService} from "./transactions-log-service";
 
-var Web3 = require('web3');
-
-var exchange_artifact = require('../../../compiled_contracts/ExchangeSmartContract.json');
+const Web3 = require('web3');
+const ethereum_address = require('ethereum-address');
+const exchange_artifact = require('../../../compiled_contracts/ExchangeSmartContract.json');
 
 @Injectable()
 export class EthereumService {
 
-    private walletLoading: Observable<string>
-    private web3: any
+    private web3: any;
+    private contract: any;
 
-    private contract: any
-
-    constructor(private transactionsLog: TransactionsLogService) {}
+    constructor(private transactionsLog: TransactionsLogService) {
+    }
 
     loadConnection(): Promise<boolean> {
-        console.log("Load web3 connection")
-        // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-        if (typeof window['web3'] === 'undefined') {
-            console.error("No web3 detected! Is MetaMask on?");
-            return new Promise((resolve, reject) => resolve(false))
-        }
-        // Use Mist/MetaMask's provider
-        this.web3 = new Web3(window['web3'].currentProvider);
-        this.contract = this.web3.eth.contract(exchange_artifact.abi).at(this.parseAddress());
-
-        return new Promise((resolve, reject) => resolve(true))
+        return new Promise((resolve, reject) => {
+            window.addEventListener('load', () => {
+                console.log('Loading web3')
+                if (typeof window['web3'] === 'undefined') {
+                    console.error('No web3 detected! Is MetaMask on?');
+                    return resolve(false)
+                }
+                this.web3 = new Web3(window['web3'].currentProvider);
+                this.contract = this.web3.eth.contract(exchange_artifact.abi).at(this.parseAddress());
+                resolve(true)
+            })
+        });
     }
 
     activeWallet(): Observable<string> {
         if (!this.isActiveConnection()) {
-            console.error("No web3 detected! Is MetaMask on?");
+            console.log('No active connection')
             return Observable.of(null)
         }
 
-        let promise = new Promise((resolve, reject) => {
+        const promise = new Promise((resolve, reject) => {
             this.web3.eth.getAccounts((error, result) => {
-                if (!result) {
+                if (!result || result.length === 0) {
                     resolve(null)
                 } else {
                     this.web3.eth.defaultAccount = result[0];
@@ -60,7 +60,6 @@ export class EthereumService {
         });
 
         return Observable.fromPromise(promise)
-            .timeout(1000)
             .catch((error) => {
                 console.log(error)
                 return Observable.of(null)
@@ -72,7 +71,7 @@ export class EthereumService {
         return this.activeWallet()
             .mergeMap(wallet => {
                 if (!wallet) {
-                    return Observable.throw("Wallet is not present")
+                    return Observable.throw('Wallet is not present')
                 }
                 return this.observeBalance(wallet);
             })
@@ -193,7 +192,7 @@ export class EthereumService {
                         reject(err)
                     }
                     resolve(result)
-            })
+                })
         })
 
         return Observable.fromPromise(promise)
@@ -244,6 +243,25 @@ export class EthereumService {
         return Observable.fromPromise(promise).catch(error => Observable.throw(error))
     }
 
+    getProducerOf(wallet: string, date: Date): Observable<string> {
+        const self_ = this
+
+        const promise = new Promise(function (resolve, reject) {
+            self_.contract.getProducerOf.call(
+                wallet,
+                date.getTime() / 1000,
+                function (err, result) {
+                    if (err) {
+                        console.log(err)
+                        reject(err)
+                    }
+                    resolve(result)
+                })
+        })
+
+        return Observable.fromPromise(promise).catch(error => Observable.throw(error))
+    }
+
     getOwned(wallet: string, date: Date): Observable<number> {
         const self_ = this
 
@@ -258,7 +276,7 @@ export class EthereumService {
                     }
                     resolve(result)
                 })
-        })
+        });
 
         return Observable.fromPromise(promise).catch(error => Observable.throw(error))
     }
@@ -293,6 +311,10 @@ export class EthereumService {
 
     ethToWei(ethAmount: number): number {
         return this.web3.toWei(ethAmount)
+    }
+
+    isAddress(address: string): boolean {
+        return ethereum_address.isAddress(address)
     }
 
     private parseAddress(): string {
@@ -331,9 +353,14 @@ export class EthereumService {
                         () => transactionReceiptAsync(resolve, reject),
                         interval ? interval : 500)
                 } else {
+                    // in testrpc we don't need to wait for several block to be mined
+                    if (!environment.production) {
+                        resolve(receipt)
+                    }
+
                     // wait for one more block to be mined
                     filter.watch(function (err, blochHash) {
-                        self_.web3.eth.getBlock(blochHash, function(e, block) {
+                        self_.web3.eth.getBlock(blochHash, function (e, block) {
                             if (receipt.blockNumber < block.number) {
                                 resolve(receipt)
                                 filter.stopWatching()
