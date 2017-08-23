@@ -320,6 +320,8 @@ export class EthereumService {
 
     private getTransactionReceiptMined(txHash, interval): Promise<any> {
         const self_ = this
+
+        const filter = this.web3.eth.filter('latest')
         const transactionReceiptAsync = function (resolve, reject) {
             self_.web3.eth.getTransactionReceipt(txHash, (error, receipt) => {
                 if (error) {
@@ -329,7 +331,15 @@ export class EthereumService {
                         () => transactionReceiptAsync(resolve, reject),
                         interval ? interval : 500)
                 } else {
-                    resolve(receipt)
+                    // wait for one more block to be mined
+                    filter.watch(function (err, blochHash) {
+                        self_.web3.eth.getBlock(blochHash, function(e, block) {
+                            if (receipt.blockNumber < block.number) {
+                                resolve(receipt)
+                                filter.stopWatching()
+                            }
+                        })
+                    })
                 }
             })
         }
