@@ -307,7 +307,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
     }
 
     private loadMarketData() {
-        let periodEnd = moment().add(1, 'days')
+        let periodEnd = moment().add(1, 'day')
         let periodStart = periodEnd.clone().subtract(6, 'day')
 
         let marketReviewPeriod = new Period(
@@ -337,7 +337,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
 
         let fromDate = chartPeriod.from;
 
-        while (moment(fromDate).isBefore(chartPeriod.to)) {
+        while (moment(fromDate).isSameOrBefore(chartPeriod.to)) {
             dayLabels.push(moment(fromDate).format('MM-DD'))
             this.labelValuesMap[moment(fromDate).format('MM-DD')] = fromDate
 

@@ -361,7 +361,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
   }
 
   private loadMarketReview() {
-    let marketReviewEnd = moment().add(1, 'days')
+    let marketReviewEnd = moment().add(1, 'day')
     let marketReviewStart = marketReviewEnd.clone().subtract(6, 'day')
 
     let marketReviewPeriod = new Period(
@@ -419,7 +419,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
     let fromDate = chartPeriod.from;
 
-    while (moment(fromDate).isBefore(chartPeriod.to)) {
+    while (moment(fromDate).isSameOrBefore(chartPeriod.to)) {
       dayLabels.push(moment(fromDate).format('MM-DD'))
       this.labelValuesMap[moment(fromDate).format('MM-DD')] = fromDate
       fromDate = moment(fromDate).add(1, 'day').toDate()
