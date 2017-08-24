@@ -13,6 +13,7 @@ import {ProductionPredictionService} from "../../registration/prediction/product
 import {Observable} from "rxjs/Observable";
 import {TransactionsLogService} from "../../shared/transactions-log-service";
 import {PriceLogService} from "../../shared/price-log-service";
+import {PriceService} from "../price.service";
 
 @Component({
     selector: 'app-plant-production-review',
@@ -35,10 +36,14 @@ export class PlantProductionReviewComponent implements OnInit {
                 private predictionService: ProductionPredictionService,
                 private productionReviewService: ProductionReviewService,
                 private transactionLog: TransactionsLogService,
+                private priceService: PriceService,
                 private priceLog: PriceLogService) {
     }
 
     ngOnInit() {
+        this.priceService.priceChange.subscribe(
+            price => this.loadTable(this.tableReviewPeriod)
+        )
         this.ethereum.activeWallet()
             .subscribe(
                 wallet => {

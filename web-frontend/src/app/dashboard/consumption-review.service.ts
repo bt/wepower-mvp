@@ -19,6 +19,8 @@ export class ConsumptionReviewService {
   constructor(private http : Http,
               private datePipe : DatePipe) { }
 
+
+
   getConsumptionDetails(wallet : string, period : Period) : Observable<Array<ConsumptionDetails>> {
     let plantUrl = environment.dataUrls.consumer
     let requestOptions = this.buildPredictionFilterParams(period)

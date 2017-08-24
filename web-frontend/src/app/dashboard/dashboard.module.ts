@@ -21,6 +21,7 @@ import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.co
 import { PlantDashboardGuardService } from "./router-guards/plant-dashboard-guard.service";
 import { ConsumerDashboardGuardService } from "./router-guards/consumer-dashboard-guard.service";
 import {NumberOnlyDirective} from "../shared/numbers-only-directive";
+import {PriceService} from "./price.service";
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import {NumberOnlyDirective} from "../shared/numbers-only-directive";
     ConsumptionReviewService,
     ElectricityMarketPriceService,
     PlantDashboardGuardService,
-    ConsumerDashboardGuardService
+    ConsumerDashboardGuardService,
+    PriceService
   ]
 })
 export class DashboardModule { }

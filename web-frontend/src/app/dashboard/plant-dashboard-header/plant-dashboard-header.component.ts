@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 
 import * as moment from 'moment';
 import { Period } from "../../shared/period";
-import { MarketPriceRow } from "../market-price-row";
 import { ProductionPredictionService } from "../../registration/prediction/production-prediction.service";
 import { EthereumService } from "../../shared/ethereum.service";
 import { ElectricityMarketPriceService } from "../electricity-market-price.service";
-import {BlockchainPlantData} from "../../shared/blockchain-plant";
 import {PriceLogService} from "../../shared/price-log-service";
 import {ExchangeRateService} from "app/dashboard/exchange-rate.service";
+import {PriceService} from "../price.service";
 
 @Component({
   selector: 'app-plant-dashboard-header',
@@ -25,6 +24,8 @@ export class PlantDashboardHeaderComponent implements OnInit {
   priceEth = 0
   loading = false
   invalidPrice = false
+
+  priceChange: any
 
   // Charts stuff, should be refactored into separate component
   labelValuesMap = {}
@@ -278,60 +279,49 @@ export class PlantDashboardHeaderComponent implements OnInit {
               private electricityPriceService: ElectricityMarketPriceService,
               private priceLog: PriceLogService,
               private exchangeRateService: ExchangeRateService,
-              private pricesLog: PriceLogService) { }
+              private priceService: PriceService) {
+
+  }
 
   ngOnInit() {
+  this.priceChange = this.priceService.priceChange.subscribe((price) => {
+      this.price = price
+      this.handlePrice(null)
+      this.loadData()
+  });
     this.ethereum.activeWallet()
       .subscribe(
         wallet => {
           this.walletId = wallet
-          this.loadData()
+          this.priceService.loadPrice(this.walletId).subscribe(
+              data => {},
+              error => console.error(error)
+          )
         },
         error => console.error(error)
       )
   }
+
+    ngOnDestroy() {
+        this.priceChange.unsubscribe();
+    }
 
   setPrice(): void {
       const self_ = this
       this.loading = true
 
       if (Number.isNaN(Number.parseFloat(this.price.toString())) || this.price < 0) {
-          self_.loadPrice()
+          this.priceService.loadPrice(this.walletId)
           this.loading = false
           return
       }
 
-      this.exchangeRateService.exchangeRate()
-          .mergeMap((data) => {
-              self_.priceEth = self_.round(self_.price / Number(data), 6)
-              return self_.ethereum.setPrice(self_.walletId, self_.ethereum.ethToWei(self_.priceEth))
-          })
-          .mergeMap(data => self_.priceLog.log(self_.walletId, self_.price))
+      this.priceService.changePrice(this.walletId, this.price)
           .subscribe(
-          data => {
-              self_.loadPrice()
-              this.loading = false
-          },
-          error => {
-              console.log(error)
-              self_.loadPrice()
-              this.loading = false
-          }
-      )
+              result => self_.loading = false,
+              error => self_.loading = false)
+      /*self_.priceEth = self_.round(self_.price / Number(data), 6)*/
   }
-    calcPriceInEur(): void {
-        const self_ = this
-
-        this.price = 0
-        this.exchangeRateService.exchangeRate()
-            .subscribe(
-                data => self_.price = self_.round(self_.priceEth * data, 6),
-                error => {
-                    console.log(error)
-                    self_.price = 0
-                }
-            )
-    }
 
     handlePrice(event: any): void {
         const self_ = this
@@ -339,7 +329,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
         this.exchangeRateService.exchangeRate()
             .subscribe(
-                data => self_.priceEth = self_.round(self_.price / data, 6),
+                rate => self_.priceEth = self_.priceService.round(self_.price / rate, 6),
                 error => {
                     console.log(error)
                     self_.priceEth = 0
@@ -348,8 +338,6 @@ export class PlantDashboardHeaderComponent implements OnInit {
     }
 
   private loadData() {
-    this.loadPrice()
-
     this.headerPeriod = new Period(
       moment().startOf('isoWeek').toDate(),
       moment().startOf('isoWeek').add(6, 'day').toDate()
@@ -404,16 +392,6 @@ export class PlantDashboardHeaderComponent implements OnInit {
       }
   }
 
-  private loadPrice() {
-      this.ethereum.getPrice(this.walletId).subscribe(
-          data => {
-              this.priceEth = this.ethereum.weiToETH(data)
-              this.calcPriceInEur()},
-              error => console.error(error)
-      )
-
-  }
-
   private initChartLabels(chartPeriod : Period) {
     let dayLabels: Array<string> = []
 
@@ -461,11 +439,4 @@ export class PlantDashboardHeaderComponent implements OnInit {
 
     }, 50);
   }
-
-    private round(number: number, precision: number) {
-        var factor = Math.pow(10, precision);
-        var tempNumber = number * factor;
-        var roundedTempNumber = Math.round(tempNumber);
-        return roundedTempNumber / factor;
-    };
 }
