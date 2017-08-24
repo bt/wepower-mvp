@@ -15,7 +15,6 @@ import {PlantType} from "../registration/plant-form/plant-form";
 import {TransactionsLogService} from "./transactions-log-service";
 
 const Web3 = require('web3');
-const ethereum_address = require('ethereum-address');
 const exchange_artifact = require('../../../compiled_contracts/ExchangeSmartContract.json');
 
 @Injectable()
@@ -314,7 +313,7 @@ export class EthereumService {
     }
 
     isAddress(address: string): boolean {
-        return ethereum_address.isAddress(address)
+        return this.web3.isAddress(address)
     }
 
     private parseAddress(): string {

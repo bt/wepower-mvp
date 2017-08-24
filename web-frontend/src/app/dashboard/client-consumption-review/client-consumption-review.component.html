@@ -39,11 +39,11 @@
             <div class="row progressBarContainer" *ngIf="row.tokens > 0">
               <div class="col-md-3" style="min-width: 120px;">
                 <div class="progressbar">
-                  <div [ngStyle]="{width: (row.tokens > 0 ? (0/row.tokens)*100 : 0) + '%'}"></div>
+                  <div [ngStyle]="{width: (row.tokens > 0 && row.consumed > 0 ? (row.consumed/row.tokens)*100 : 0) + '%'}"></div>
                 </div>
               </div>
               <div class="col-md">
-                <span> 0/{{row.tokens}} kWh</span>
+                <span> {{row.consumed > 0 ? row.consumed : 0}}/{{row.tokens}} kWh</span>
               </div>
             </div>
             <span *ngIf="row.tokens <= 0">{{row.prediction}} kWh predicted</span>

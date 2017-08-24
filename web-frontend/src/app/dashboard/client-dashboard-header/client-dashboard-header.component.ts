@@ -291,7 +291,6 @@ export class ClientDashboardHeaderComponent implements OnInit {
                 predictions => this.needToBuy = predictions,
                 error => console.error(error)
             );
-
     }
 
     private loadTotalBought(reviewPeriod: Period) {
@@ -300,7 +299,10 @@ export class ClientDashboardHeaderComponent implements OnInit {
 
         while (currentDate.isSameOrBefore(moment(reviewPeriod.to))) {
             this.ethereum.getOwned(this.walletId, new Date(currentDate.format('YYYY-MM-DD')))
-                .subscribe(data => this.boughtTotal += Number(data),
+                .subscribe(bought => {
+                        this.boughtTotal += Number(bought)
+                        this.needToBuy -= Number(bought)
+                    },
                     error => console.log)
             currentDate = currentDate.add(1, 'day')
         }
