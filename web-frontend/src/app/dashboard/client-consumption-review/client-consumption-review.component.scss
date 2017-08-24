@@ -81,8 +81,13 @@
         box-shadow: none;
       }
 
-      .expanded-row td {
-        border-top: 1px solid $power-background-grey;
+      .expanded-row {
+
+        height: 4.5em;
+
+        td {
+          border-top: 1px solid $power-background-grey;
+        }
       }
 
       tr {
