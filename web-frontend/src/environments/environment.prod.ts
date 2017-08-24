@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    exchangeAddress: '0x5c761efa88b482ee6955c41248a9cb1a38794521',
+    exchangeAddress: '0x58f60234540cdc29e961474533a469f4975af1c6',
     dataUrls: {
         locationArea: '/api/v1/location-area',
         houseSize: '/api/v1/house-size',
