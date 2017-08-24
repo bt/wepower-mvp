@@ -6,6 +6,7 @@ import {MarketPriceRow} from "../market-price-row";
 import {ConsumptionPredictionService} from "../../registration/prediction/consumption-prediction.service";
 import {EthereumService} from "../../shared/ethereum.service";
 import {ElectricityMarketPriceService} from "../electricity-market-price.service";
+import {TokensHandlerService} from "../tokens-handler.service";
 
 @Component({
     selector: 'app-client-dashboard-header',
@@ -14,7 +15,7 @@ import {ElectricityMarketPriceService} from "../electricity-market-price.service
 })
 export class ClientDashboardHeaderComponent implements OnInit {
 
-    needToBuy: number
+    needToBuy = 0
     boughtTotal: number
     headerPeriod: Period
     marketPricesReview: Array<MarketPriceRow>
@@ -262,10 +263,20 @@ export class ClientDashboardHeaderComponent implements OnInit {
 
     constructor(private predictionService: ConsumptionPredictionService,
                 private ethereum: EthereumService,
-                private electricityPriceService: ElectricityMarketPriceService) {
+                private electricityPriceService: ElectricityMarketPriceService,
+                private tokensHandlerService: TokensHandlerService
+    ) {
     }
 
     ngOnInit() {
+        this.tokensHandlerService.tokensChange.subscribe(
+            tokens => {
+                this.needToBuy = 0
+                this.boughtTotal = 0
+                this.loadRequirmentsForWeek(this.headerPeriod);
+                this.loadTotalBought(this.headerPeriod)
+            }
+        );
 
         this.headerPeriod = new Period(
             moment().startOf('isoWeek').toDate(),
@@ -288,7 +299,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
     private loadRequirmentsForWeek(reviewPeriod: Period) {
         this.predictionService.getPredictionTotal(this.walletId, reviewPeriod)
             .subscribe(
-                predictions => this.needToBuy = predictions,
+                predictions => this.needToBuy += predictions,
                 error => console.error(error)
             );
     }

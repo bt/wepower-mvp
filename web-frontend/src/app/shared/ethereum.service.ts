@@ -352,9 +352,9 @@ export class EthereumService {
                         () => transactionReceiptAsync(resolve, reject),
                         interval ? interval : 500)
                 } else {
-                    // in testrpc we don't need to wait for several block to be mined
+                    // in testrpc we don't need to wait for several block to be mined - simulate wait  time
                     if (!environment.production) {
-                        resolve(receipt)
+                        setTimeout(resolve(receipt), 2000)
                     }
 
                     // wait for one more block to be mined

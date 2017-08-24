@@ -17,6 +17,7 @@ import {BuyTokensRow} from "../buy-tokens-row";
 import {TransactionsLogService} from "../../shared/transactions-log-service";
 import {RegistrationStateService} from "app/shared/registration-state.service";
 import {ConsumptionPredictionService} from "app/registration/prediction/consumption-prediction.service";
+import {TokensHandlerService} from "app/dashboard/tokens-handler.service";
 
 @Component({
   selector: 'app-client-consumption-review',
@@ -45,6 +46,7 @@ export class ClientConsumptionReviewComponent implements OnInit {
               private exchangeMarket: ExchangeRateService,
               private predictionService: ConsumptionPredictionService,
               private consumptionReviewService: ConsumptionReviewService,
+              private tokensHandlerService: TokensHandlerService,
               private transactionLogs: TransactionsLogService) { }
 
 
@@ -80,9 +82,8 @@ export class ClientConsumptionReviewComponent implements OnInit {
   transferTokens() {
       this.transferring = true
 
-      this.ethereum.getProducerOf(this.walletId, this.transferDate)
-          .mergeMap(plantAddress =>
-                this.ethereum.transfer(plantAddress, this.transferAddress, this.transferValue, this.transferDate))
+      this.tokensHandlerService
+          .transferTokens(this.walletId, this.transferAddress, this.transferValue, this.transferDate)
           .subscribe(
               data => {
                   this.loadTable(this.tableReviewPeriod)
@@ -97,7 +98,7 @@ export class ClientConsumptionReviewComponent implements OnInit {
 
   buyTokens(plant: string, amount: number, date: Date, price: number) {
       this.buying = true
-      this.ethereum.buy(plant, amount, date, price).subscribe(
+      this.tokensHandlerService.buyTokens(plant, amount, date, price).subscribe(
           data => {
               this.loadTable(this.tableReviewPeriod)
               this.buying = false

@@ -22,6 +22,7 @@ import { PlantDashboardGuardService } from "./router-guards/plant-dashboard-guar
 import { ConsumerDashboardGuardService } from "./router-guards/consumer-dashboard-guard.service";
 import {NumberOnlyDirective} from "../shared/numbers-only-directive";
 import {PriceService} from "./price.service";
+import {TokensHandlerService} from "./tokens-handler.service";
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import {PriceService} from "./price.service";
     ElectricityMarketPriceService,
     PlantDashboardGuardService,
     ConsumerDashboardGuardService,
-    PriceService
+    PriceService,
+    TokensHandlerService
   ]
 })
 export class DashboardModule { }
