@@ -357,10 +357,24 @@ export class ClientDashboardHeaderComponent implements OnInit {
             _lineChartData[0].data[j] = marketPrices[j][1];
         }
 
+        let allPlotedPrices = _lineChartData[0].data
+
+        let max = allPlotedPrices.reduce((max, n) => n > max ? n : max)
+        let min = allPlotedPrices.reduce((min, n) => n < min ? n : min)
+
+        let amplitude = max - min
+        let lowestPoint = Math.max((min - amplitude), 0)
+        let highestPoint = Math.max((max + amplitude/10), 0)
+
+        this.lineChartOptions.scales.yAxes[0].ticks.suggestedMin = lowestPoint
+        this.lineChartOptions.scales.yAxes[0].ticks.suggestedMax = highestPoint
+
+        // Reseting labels is required in order to reset scales, as this resets min/max values
+        this.lineChartLabels = Object.keys(this.labelValuesMap)
+
         setTimeout(() => {
             // Timeout required because of angular and chart js integration bug.
             this.lineChartData = _lineChartData;
         }, 50);
     }
-
 }
