@@ -3,6 +3,7 @@ package net.metasite.smartenergy.prices;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class PriceLogManager {
     }
 
     public Map<LocalDate, BigDecimal> getFromTo(String plant, LocalDate from, LocalDate to) {
-        List<PriceLog> priceLogs = priceLogRepository.findAllByPlantAndDateIsBetweenOrderByDateDesc(plant, from, to);
+        List<PriceLog> priceLogs = priceLogRepository.findAllByPlantAndDateIsBetweenOrderByDateAsc(plant, from, to);
 
         Map<LocalDate, BigDecimal> prices = priceLogs
                 .stream()
@@ -46,7 +47,10 @@ public class PriceLogManager {
         prependToDate(from, priceLogs.stream().findFirst(), prices);
         appendToDate(to, priceLogs.stream().reduce((a, b) -> b), prices);
 
-        return prices;
+        return prices.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
     public void prependToDate(LocalDate from, Optional<PriceLog> priceLog, Map<LocalDate, BigDecimal> prices) {
