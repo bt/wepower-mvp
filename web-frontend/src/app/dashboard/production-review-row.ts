@@ -12,7 +12,7 @@ export class ProductionReviewRow implements DayDataRow {
 
   }
 
-  public static emptyForDay(date : Date) {
+  public static emptyForDay(date: Date) {
     return new ProductionReviewRow(
       date,
       0,

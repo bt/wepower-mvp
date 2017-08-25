@@ -90,6 +90,9 @@ export class PlantProductionReviewComponent implements OnInit {
     }
 
     private loadTable(period: Period) {
+
+        const self_ = this
+
         Promise.all(
             [
                 this.productionReviewService.getProductionDetails(this.walletId, period).toPromise(),
@@ -128,6 +131,8 @@ export class PlantProductionReviewComponent implements OnInit {
                         productionForDay.totalTokens = Number(vals[0])
                         productionForDay.sold = Number(vals[0]) - Number(vals[1])
                         vals[2].forEach((val) => productionForDay.receivedEth += Number(val))
+                        productionForDay.receivedEth = self_.round(productionForDay.receivedEth, 6)
+
                         if (vals[3] && moment(productionForDay.date).isAfter(moment(Date())) && vals[3] !== 0) {
                             productionForDay.priceEur = this.round(vals[3], 6)
                             productionForDay.priceEth = this.round(vals[3] / exchangeRate, 6)
@@ -165,9 +170,8 @@ export class PlantProductionReviewComponent implements OnInit {
     }
 
     private round(number: number, precision: number) {
-        var factor = Math.pow(10, precision);
-        var tempNumber = number * factor;
-        var roundedTempNumber = Math.round(tempNumber);
-        return roundedTempNumber / factor;
+        const factor = Math.pow(10, precision)
+        const roundedTempNumber = Math.round(number * factor)
+        return roundedTempNumber / factor
     };
 }
