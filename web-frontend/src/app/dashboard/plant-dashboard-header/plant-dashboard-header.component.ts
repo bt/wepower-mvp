@@ -91,7 +91,8 @@ export class PlantDashboardHeaderComponent implements OnInit {
         maintainAspectRatio: false,
         legend: { display: false },
         tooltips: {
-          enabled: false,
+            enabled: false,
+            yAlign: 'bottom',
             custom: (tooltipModel) => {
                 // Tooltip Element
                 var tooltipEl = document.getElementById('chart-tooltip');
@@ -117,59 +118,21 @@ export class PlantDashboardHeaderComponent implements OnInit {
                     tooltipEl.classList.add('no-transform');
                 }
 
-                const position = document.getElementById("plant-dashboard-chart").getBoundingClientRect();
+                const bodyRect = document.body.getBoundingClientRect()
+                const elemRect = document.getElementById("plant-dashboard-chart").getBoundingClientRect()
+                const offset   = elemRect.top - bodyRect.top;
+
+                const position = {top: offset, left: elemRect.left}
 
                 // Find Y Location on page
 
-                let pointDown = true
-                let top = 0
+                let top = tooltipModel.y - 40
 
-                if (tooltipModel.yAlign) {
-                    if (tooltipModel.yAlign == 'top') {
-                      // If div is aligned at top - we add some pixels, to push it down to back to canvas
-                      top = tooltipModel.y + 5
-                      pointDown = false
-                    } else if (tooltipModel.yAlign == 'center') {
-                      // Position over value
-                      top = tooltipModel.y - 80
-                      pointDown = true
-                    } else if (tooltipModel.yAlign == 'bottom') {
-                      // Position over value
-                      top = tooltipModel.y - 52
-                      pointDown = true
-                    }
-                }
-              // Set Text
+                // Set Text
                 if (tooltipModel.body) {
                     // Clears tooltip
                     while (tooltipEl.firstChild) {
                         tooltipEl.removeChild(tooltipEl.firstChild);
-                    }
-
-                    if (!pointDown) {
-                        let innerPointerElement = document.createElement('div');
-                        innerPointerElement.style.width = '0'
-                        innerPointerElement.style.height = '0'
-                        innerPointerElement.style.margin = 'auto'
-                        innerPointerElement.style.position = 'relative'
-                        innerPointerElement.style.bottom = '-13px'
-
-                        innerPointerElement.style.borderLeft = '9px solid transparent'
-                        innerPointerElement.style.borderRight = '9px solid transparent'
-                        innerPointerElement.style.borderBottom = '9px solid #fff'
-
-                        tooltipEl.appendChild(innerPointerElement);
-
-                        let pointerElement = document.createElement('div');
-                        pointerElement.style.width = '0'
-                        pointerElement.style.height = '0'
-                        pointerElement.style.margin = 'auto'
-
-                        pointerElement.style.borderLeft = '10px solid transparent'
-                        pointerElement.style.borderRight = '10px solid transparent'
-                        pointerElement.style.borderBottom = '10px solid #e0e0e0'
-
-                        tooltipEl.appendChild(pointerElement);
                     }
 
                     let bodyContainerEl = document.createElement('div');
@@ -202,38 +165,35 @@ export class PlantDashboardHeaderComponent implements OnInit {
                     bodyElement.style.margin = 'auto' // centers horizontaly
                     bodyContainerEl.appendChild(bodyElement);
 
-                    if (pointDown) {
-                        let pointerElement = document.createElement('div');
-                        pointerElement.style.width = '0'
-                        pointerElement.style.height = '0'
-                        pointerElement.style.margin = 'auto'
+                    let pointerElement = document.createElement('div');
+                    pointerElement.style.width = '0'
+                    pointerElement.style.height = '0'
+                    pointerElement.style.margin = 'auto'
 
-                        pointerElement.style.borderLeft = '10px solid transparent'
-                        pointerElement.style.borderRight = '10px solid transparent'
-                        pointerElement.style.borderTop = '10px solid #e0e0e0'
+                    pointerElement.style.borderLeft = '10px solid transparent'
+                    pointerElement.style.borderRight = '10px solid transparent'
+                    pointerElement.style.borderTop = '10px solid #e0e0e0'
 
-                        tooltipEl.appendChild(pointerElement);
+                    tooltipEl.appendChild(pointerElement);
 
-                        let innerPointerElement = document.createElement('div');
-                        innerPointerElement.style.width = '0'
-                        innerPointerElement.style.height = '0'
-                        innerPointerElement.style.margin = 'auto'
-                        innerPointerElement.style.position = 'relative'
-                        innerPointerElement.style.top = '-13px'
+                    let innerPointerElement = document.createElement('div');
+                    innerPointerElement.style.width = '0'
+                    innerPointerElement.style.height = '0'
+                    innerPointerElement.style.margin = 'auto'
+                    innerPointerElement.style.position = 'relative'
+                    innerPointerElement.style.top = '-13px'
 
-                        innerPointerElement.style.borderLeft = '9px solid transparent'
-                        innerPointerElement.style.borderRight = '9px solid transparent'
-                        innerPointerElement.style.borderTop = '9px solid #fff'
+                    innerPointerElement.style.borderLeft = '9px solid transparent'
+                    innerPointerElement.style.borderRight = '9px solid transparent'
+                    innerPointerElement.style.borderTop = '9px solid #fff'
 
-                        tooltipEl.appendChild(innerPointerElement);
-                    }
+                    tooltipEl.appendChild(innerPointerElement);
                 }
 
                 tooltipEl.style.display = 'inline';
                 tooltipEl.style.position = 'absolute';
                 tooltipEl.style.left = (position.left + tooltipModel.caretX - 110) + 'px';
                 tooltipEl.style.top = position.top + top + 'px';
-                tooltipEl.style.zIndex = '6';
             }
         },
         scales: {
