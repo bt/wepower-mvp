@@ -45,6 +45,11 @@ public class PriceLogManager {
                 .collect(toMap(PriceLog::getDate, PriceLog::getPrice));
 
         prependToDate(from, priceLogs.stream().findFirst(), prices);
+        for (int i = 0; i < priceLogs.size() - 1; i++) {
+            PriceLog logFrom = priceLogs.get(i);
+            PriceLog logTo = priceLogs.get(i + 1);
+            appendToDate(logTo.getDate(), Optional.of(logFrom), prices);
+        }
         appendToDate(to, priceLogs.stream().reduce((a, b) -> b), prices);
 
         return prices.entrySet().stream()
