@@ -4,6 +4,7 @@ import {environment} from "../../environments/environment";
 import {Observable} from "rxjs/Observable";
 import {RegistrationStateService} from "app/shared/registration-state.service";
 import {WalletDetails} from "app/dashboard/wallet-details";
+import {TransactionData} from "./transaction-data";
 
 
 @Injectable()
@@ -28,27 +29,14 @@ export class TransactionsLogService {
             .catch(this.handleError);
     }
 
-    transactionsConsumerPlantDetails(from: string, date: Date): Observable<WalletDetails> {
-        return this.http.get(`
-                ${environment.dataUrls.transactions.consumer}?consumer=${from}&date=${date.toISOString().split('T')[0]}`)
-            .mergeMap(response => {
-                const plant = response.json().map(transaction => transaction.plant)
-                return this.registrationStateService.getActiveWalletDetails(plant)
-            })
-            .catch(error => {
-                console.error('Error while extracting wallet details: ', error)
-                return Observable.of(null)
-            })
-    }
-
-    transactionsConsumer(from: string, date: Date): Observable<Array<number>> {
+    transactionsConsumer(from: string, date: Date): Observable<Array<TransactionData>> {
         return this.http.get(`
                 ${environment.dataUrls.transactions.consumer}?consumer=${from}&date=${date.toISOString().split('T')[0]}`)
             .map(this.extractData)
             .catch(this.handleError)
     }
 
-    transactionsPlant(to: string, date: Date): Observable<Array<number>> {
+    transactionsPlant(to: string, date: Date): Observable<Array<TransactionData>> {
         return this.http.get(`
                 ${environment.dataUrls.transactions.plant}?plant=${to}&date=${date.toISOString().split('T')[0]}`)
             .map(this.extractData)
@@ -56,14 +44,22 @@ export class TransactionsLogService {
     }
 
 
-    private extractData(response: Response): Observable<Array<number>> {
+    private extractData(response: Response): Observable<Array<TransactionData>> {
         return response.json()
-            .map(transaction => transaction.amountEth)
+            .map(transaction =>
+                new TransactionData(
+                    transaction.plant,
+                    transaction.consumer,
+                    new Date(transaction.date),
+                    transaction.transactionId,
+                    transaction.amountEth,
+                    transaction.amountKwh
+                ))
     }
 
-    private handleError(error: Response): Observable<Array<number>> {
+    private handleError(error: Response): Observable<Array<TransactionData>> {
         console.error('Error while interacting with transactions log', error)
-        return Observable.of([0])
+        return Observable.of([null])
     }
 
 }

@@ -33,7 +33,7 @@
       </thead>
       <tbody>
       <ng-container *ngFor="let row of consumptionReview">
-        <tr class="review-row">
+        <tr class="review-row" *ngIf="row.tokens > 0 || row.prediction > 0">
           <td class="text-left review-cell">{{row.date | date: 'MM-dd'}}</td>
           <td class="text-left review-cell">
             <div class="row progressBarContainer" *ngIf="row.tokens > 0 && row.prediction > 0">

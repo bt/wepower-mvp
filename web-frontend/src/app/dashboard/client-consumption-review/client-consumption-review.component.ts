@@ -18,6 +18,7 @@ import {TransactionsLogService} from "../../shared/transactions-log-service";
 import {RegistrationStateService} from "app/shared/registration-state.service";
 import {ConsumptionPredictionService} from "app/registration/prediction/consumption-prediction.service";
 import {TokensHandlerService} from "app/dashboard/tokens-handler.service";
+import {TransactionData} from "../../shared/transaction-data";
 
 @Component({
   selector: 'app-client-consumption-review',
@@ -177,7 +178,7 @@ export class ClientConsumptionReviewComponent implements OnInit {
                   consumptionForDay.type = vals[2] != null ? Number(vals[2]) : null
                   if (vals[0] > 0) {
                       consumptionForDay.priceEth = 0
-                      vals[1].forEach((val) => consumptionForDay.paidEth += Number(val))
+                      vals[1].forEach((val: TransactionData) => consumptionForDay.paidEth += Number(val.amountEth))
                       consumptionForDay.paidEth = this.round(consumptionForDay.paidEth, 6)
                       consumptionForDay.priceEth = this.round(consumptionForDay.paidEth / consumptionForDay.tokens, 6)
                       consumptionForDay.priceEur = this.round(consumptionForDay.priceEth * exchangeRate, 6)

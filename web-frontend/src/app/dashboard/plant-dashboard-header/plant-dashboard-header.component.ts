@@ -40,7 +40,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
   public lineChartColors: Array<any> = [
     {
       borderWidth: 4,
-      backgroundColor: 'rgba(0,0,0,0)',
+      backgroundColor: '#001cff',
       borderColor: '#001cff',
 
       pointBackgroundColor: '#001cff',
@@ -57,7 +57,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
     },
     {
       borderWidth: 4,
-      backgroundColor: 'rgba(0,0,0,0)',
+      backgroundColor: '#00a700',
       borderColor: '#00a700',
 
       pointBackgroundColor: '#00a700',
@@ -77,6 +77,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
         hover: {
           mode: 'point'
         },
+
         layout: {
           padding: {
             left: 15,
@@ -85,6 +86,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
             bottom: 0
           }
         },
+
         responsive: true,
         maintainAspectRatio: false,
         legend: { display: false },
@@ -267,6 +269,8 @@ export class PlantDashboardHeaderComponent implements OnInit {
                     fontColor: '#000',
                     padding: 10
                 },
+                categoryPercentage: 0.5,
+                barPercentage: 0.6,
                 gridLines: {
                     display:false
                 }

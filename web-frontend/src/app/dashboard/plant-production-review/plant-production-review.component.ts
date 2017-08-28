@@ -14,6 +14,7 @@ import {Observable} from "rxjs/Observable";
 import {TransactionsLogService} from "../../shared/transactions-log-service";
 import {PriceLogService} from "../../shared/price-log-service";
 import {PriceService} from "../price.service";
+import {TransactionData} from "../../shared/transaction-data";
 
 @Component({
     selector: 'app-plant-production-review',
@@ -130,7 +131,8 @@ export class PlantProductionReviewComponent implements OnInit {
                     ]).then(vals => {
                         productionForDay.totalTokens = Number(vals[0])
                         productionForDay.sold = Number(vals[0]) - Number(vals[1])
-                        vals[2].forEach((val) => productionForDay.receivedEth += Number(val))
+
+                        vals[2].forEach((val: TransactionData) => productionForDay.receivedEth += val.amountEth)
                         productionForDay.receivedEth = self_.round(productionForDay.receivedEth, 6)
 
                         if (vals[3] && moment(productionForDay.date).isAfter(moment(Date())) && vals[3] !== 0) {

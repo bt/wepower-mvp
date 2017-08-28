@@ -32,29 +32,31 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let row of productionReview" class="review-row">
-        <td class="text-left review-cell">{{row.date | date: 'MM-dd'}}</td>
-        <td class="text-right review-cell"><span *ngIf="(row.production) || row.prediction">{{row.prediction}}</span></td>
-        <td class="text-right review-cell"><span *ngIf="(row.production) || row.prediction">{{row.production}}</span></td>
-        <td class="text-right review-cell"><span *ngIf="(row.production) || row.prediction">{{row.priceEth}} ETH</span></td>
-        <td class="text-right review-cell"><span *ngIf="(row.production) || row.prediction">{{row.priceEur}} Eur</span></td>
-        <td class="text-right review-cell">
-          <div class="row progressBarContainer" *ngIf="(row.production) || row.prediction">
-            <div class="col-md-9">
-                <div class="progressbar">
-                  <div [ngStyle]="{width: (row.totalTokens ? (row.sold/row.totalTokens)*100 : 0) + '%'}"></div>
-                </div>
+      <ng-container *ngFor="let row of productionReview">
+        <tr *ngIf="(row.production) || row.prediction" class="review-row">
+          <td class="text-left review-cell">{{row.date | date: 'MM-dd'}}</td>
+          <td class="text-right review-cell">{{row.prediction}}</td>
+          <td class="text-right review-cell">{{row.production}}</td>
+          <td class="text-right review-cell">{{row.priceEth}} ETH</td>
+          <td class="text-right review-cell">{{row.priceEur}} Eur</td>
+          <td class="text-right review-cell">
+            <div class="row progressBarContainer">
+              <div class="col-md-9">
+                  <div class="progressbar">
+                    <div [ngStyle]="{width: (row.totalTokens ? (row.sold/row.totalTokens)*100 : 0) + '%'}"></div>
+                  </div>
+              </div>
+              <div class="col-md-3">
+                <span *ngIf="row.totalTokens">{{row.sold}}/{{row.totalTokens}}</span>
+                <!--<span *ngIf="!(row.totalTokens) && row.prediction">{{row.sold}}/{{row.prediction}}</span>-->
+              </div>
             </div>
-            <div class="col-md-3">
-              <span *ngIf="row.totalTokens">{{row.sold}}/{{row.totalTokens}}</span>
-              <!--<span *ngIf="!(row.totalTokens) && row.prediction">{{row.sold}}/{{row.prediction}}</span>-->
-            </div>
-          </div>
-        </td>
-        <td class="text-right review-cell">
-          <div *ngIf="row.receivedEth || row.receivedEth === 0">{{row.receivedEth}} ETH</div>
-        </td>
-      </tr>
+          </td>
+          <td class="text-right review-cell">
+            <div *ngIf="row.receivedEth || row.receivedEth === 0">{{row.receivedEth}} ETH</div>
+          </td>
+        </tr>
+      </ng-container>
       </tbody>
     </table>
   </div>

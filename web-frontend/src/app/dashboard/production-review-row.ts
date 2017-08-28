@@ -21,7 +21,6 @@ export class ProductionReviewRow implements DayDataRow {
       null,
       null,
       null,
-      0
-    )
+      0)
   }
 }

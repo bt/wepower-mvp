@@ -7,6 +7,10 @@ import {ConsumptionPredictionService} from "../../registration/prediction/consum
 import {EthereumService} from "../../shared/ethereum.service";
 import {ElectricityMarketPriceService} from "../electricity-market-price.service";
 import {TokensHandlerService} from "../tokens-handler.service";
+import {TransactionsLogService} from "../../shared/transactions-log-service";
+import {Observable} from "rxjs/Observable";
+import {TransactionData} from "../../shared/transaction-data";
+import {ExchangeRateService} from "../exchange-rate.service";
 
 @Component({
     selector: 'app-client-dashboard-header',
@@ -19,13 +23,15 @@ export class ClientDashboardHeaderComponent implements OnInit {
     boughtTotal: number
     headerPeriod: Period
     marketPricesReview: Array<MarketPriceRow>
+    clientPricesReview: Array<MarketPriceRow>
     walletId: string
 
     // Charts stuff, should be refactored into separate component
     labelValuesMap = {}
 
     public lineChartData: Array<any> = [
-        {data: [], label: 'Market price'}
+        {data: [], label: 'Market price'},
+        {data: [], label: 'Your price'}
     ];
 
     public lineChartLabels: Array<any>;
@@ -33,7 +39,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
     public lineChartColors: Array<any> = [
       {
         borderWidth: 4,
-        backgroundColor: 'rgba(0,0,0,0)',
+        backgroundColor: '#001cff',
         borderColor: '#001cff',
 
         pointBackgroundColor: '#001cff',
@@ -49,7 +55,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
       },
       {
         borderWidth: 4,
-        backgroundColor: 'rgba(0,0,0,0)',
+        backgroundColor: '#00a700',
         borderColor: '#00a700',
 
         pointBackgroundColor: '#00a700',
@@ -77,6 +83,7 @@ export class ClientDashboardHeaderComponent implements OnInit {
             bottom: 0
           }
         },
+        barPercentage: 0.5,
         responsive: true,
         maintainAspectRatio: false,
         legend: {display: false},
@@ -254,6 +261,8 @@ export class ClientDashboardHeaderComponent implements OnInit {
                     fontColor: '#000',
                     padding: 10
                 },
+                categoryPercentage: 0.5,
+                barPercentage: 0.6,
                 gridLines: {
                     display: false
                 }
@@ -263,8 +272,10 @@ export class ClientDashboardHeaderComponent implements OnInit {
 
     constructor(private predictionService: ConsumptionPredictionService,
                 private ethereum: EthereumService,
+                private exchangeRateService: ExchangeRateService,
                 private electricityPriceService: ElectricityMarketPriceService,
-                private tokensHandlerService: TokensHandlerService
+                private tokensHandlerService: TokensHandlerService,
+                private transactionLogs: TransactionsLogService
     ) {
     }
 
@@ -333,16 +344,40 @@ export class ClientDashboardHeaderComponent implements OnInit {
         // Expected to add prices from contracts, which will have to be merged.
         Promise.all(
             [
-                this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise()
+                this.electricityPriceService.getElectricityPrices(marketReviewPeriod).toPromise(),
+                this.loadClientPrice(marketReviewPeriod).toPromise(),
+                this.exchangeRateService.exchangeRate().toPromise()
             ]
         ).then(values => {
             let marketPrices = values[0]
+            let clientPrices = values[1]
+            let exchangeRate = values[2]
 
-            this.setChartData(marketPrices)
+            this.setChartData(marketPrices, clientPrices, exchangeRate)
             // Prices from contract will have to be added later
             this.marketPricesReview = marketPrices
                 .map(priceForDay => new MarketPriceRow(priceForDay[0], priceForDay[1], 25))
         }).catch(error => console.error(error))
+    }
+
+    private loadClientPrice(range: Period): Observable<Array<[Date, number]>> {
+
+        const self_ = this
+        const promises = []
+
+        let from = moment(range.from)
+        const to = moment(range.to)
+
+        //TODO: refactor this to use one call for all info
+        while (from.isSameOrBefore(to)) {
+            promises.push(
+                this.transactionLogs.transactionsConsumer(self_.walletId, from.toDate())
+                    .mergeMap((data: Array<TransactionData>) =>
+                        data.map(val => [val.date, val.amountEth / val.amountKwh]))
+                    .toPromise())
+                from = from.add(1, 'day')
+        }
+        return Observable.fromPromise(Promise.all(promises))
     }
 
     private initChartLabels(chartPeriod : Period) {
@@ -360,12 +395,20 @@ export class ClientDashboardHeaderComponent implements OnInit {
         this.lineChartLabels = dayLabels;
     }
 
-    public setChartData(marketPrices: Array<[Date, number]>): void {
+    public setChartData(marketPrices: Array<[Date, number]>, clientPrices: Array<[Date, number]>, exchangeRate: number): void {
         let _lineChartData: Array<any> = new Array(this.lineChartData.length);
 
         _lineChartData[0] = {data: new Array(7), label: 'Market price'};
+
         for (let j = 0; j < marketPrices.length; j++) {
             _lineChartData[0].data[j] = marketPrices[j][1];
+        }
+
+        _lineChartData[1] = {data: new Array(7), label: 'Your price'}
+        for (let j = 0; j < clientPrices.length; j++) {
+            if (clientPrices[j]) {
+                _lineChartData[1].data[j] = this.round(clientPrices[j][1] * exchangeRate, 6);
+            }
         }
 
         let allPlotedPrices = _lineChartData[0].data
@@ -387,5 +430,11 @@ export class ClientDashboardHeaderComponent implements OnInit {
             // Timeout required because of angular and chart js integration bug.
             this.lineChartData = _lineChartData;
         }, 50);
+    }
+
+    private round(number: number, precision: number) {
+        const factor = Math.pow(10, precision)
+        const roundedTempNumber = Math.round(number * factor)
+        return roundedTempNumber / factor
     }
 }
