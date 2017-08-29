@@ -194,6 +194,7 @@ export class PlantDashboardHeaderComponent implements OnInit {
                 tooltipEl.style.position = 'absolute';
                 tooltipEl.style.left = (position.left + tooltipModel.caretX - 110) + 'px';
                 tooltipEl.style.top = position.top + top + 'px';
+                tooltipEl.style.zIndex = '6';
             }
         },
         scales: {
