@@ -244,8 +244,9 @@ export class ClientDashboardHeaderComponent implements OnInit {
             tokens => {
                 this.needToBuy = 0
                 this.boughtTotal = 0
-                this.loadRequirmentsForWeek(this.headerPeriod);
+                this.loadRequirmentsForWeek(this.headerPeriod)
                 this.loadTotalBought(this.headerPeriod)
+                this.loadMarketData()
             }
         );
 
