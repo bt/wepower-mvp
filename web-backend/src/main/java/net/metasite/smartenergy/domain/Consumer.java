@@ -138,7 +138,7 @@ public class Consumer {
 
             BigDecimal predictionForDay = predictedConsumption.get();
             int absoluteVariation = predictionForDay.multiply(new BigDecimal(variation)).intValue();
-            int randomDeviation = ThreadLocalRandom.current().nextInt(absoluteVariation);
+            int randomDeviation = ThreadLocalRandom.current().nextInt(absoluteVariation + 1);
 
             BigDecimal productionPrediction = predictionForDay.subtract(new BigDecimal(randomDeviation));
 

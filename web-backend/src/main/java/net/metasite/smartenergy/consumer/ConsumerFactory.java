@@ -74,6 +74,7 @@ public class ConsumerFactory {
         );
 
         consumer.assignLogs(usageLogs);
+        consumer.mockConsumption(closed(consumeFrom, consumeTo));
 
         consumerRepository.save(consumer);
 
