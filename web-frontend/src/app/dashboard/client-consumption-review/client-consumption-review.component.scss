@@ -60,11 +60,19 @@
 .dashboard-container {
   .dashboard-table {
 
-    thead th {
-      font-weight: normal;
-      border-top: 0px;
-      border-bottom: 0px;
+    .actions-col {
+      max-width: 175px;
+      min-width: 175px;
     }
+
+    thead {
+      th {
+        font-weight: normal;
+        border-top: 0px;
+        border-bottom: 0px;
+      }
+    }
+
     tbody {
 
       .circle {
@@ -96,9 +104,20 @@
           border-top: 3px solid $power-background-grey;
         }
 
+
+
         .row-action {
           color: $power-blue;
           cursor: pointer;
+        }
+      }
+
+      .bestPrice {
+        color: $power-green;
+        margin-right: 3.5em;
+
+        i {
+          margin-right: 0.5em;
         }
       }
 

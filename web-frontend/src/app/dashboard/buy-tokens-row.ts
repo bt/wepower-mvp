@@ -8,7 +8,8 @@ export class BuyTokensRow implements DayDataRow {
               public priceEth: number,
               public priceEur: number,
               public sum: number,
-              public address: string) {
+              public address: string,
+              public bestPrice: boolean) {
   }
 
   public static emptyForDay(date: Date) {
@@ -19,7 +20,8 @@ export class BuyTokensRow implements DayDataRow {
       0,
       null,
       null,
-      null
+      null,
+      false
     )
   }
 }

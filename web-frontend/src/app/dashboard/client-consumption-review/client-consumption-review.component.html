@@ -28,7 +28,7 @@
         <th class="text-right">Price, ETH/kWh</th>
         <th class="text-right">Price, EUR/kWh</th>
         <th class="text-right">Sum</th>
-        <th></th>
+        <th class="actions-col"></th>
       </tr>
       </thead>
       <tbody>
@@ -52,13 +52,13 @@
               <img *ngIf="row.type == 0" class="img-fluid circle" src="/assets/images/icon-sun.svg">
               <img *ngIf="row.type == 2" class="img-fluid circle" src="/assets/images/icon-hydro.svg">
               <img *ngIf="row.type == 1" class="img-fluid circle" src="/assets/images/icon-wind.svg">
-            <span>{{row.tokens}}</span></div></td>
+            <span>{{row.tokens}} kWh</span></div></td>
           <td class="text-right review-cell"><span *ngIf="row.tokens > 0 && row.priceEth > 0">{{row.priceEth}} ETH</span></td>
           <td class="text-right review-cell"><span *ngIf="row.tokens > 0 && row.priceEur > 0">{{row.priceEur}} EUR</span></td>
           <td class="text-right review-cell">
             <div *ngIf="row.tokens > 0 && row.paidEth">{{row.paidEth}} ETH</div>
           </td>
-          <td class="text-right review-cell">
+          <td class="text-right review-cell actions-col">
             <div *ngIf="isAfter(row.date)">
               <div *ngIf="row.tokens > 0; else detailsButton">
                 <button [disabled]="transferring" type="button" class="btn btn-primary power-button" id="send-button"  data-toggle="modal" (click)="prepareTransferData(row.date, row.tokens)" data-target="#tokensTransaction">
@@ -91,7 +91,8 @@
             <td class="text-right align-middle"><span *ngIf="detail.priceEth != 0">{{detail.priceEth}} ETH</span></td>
             <td class="text-right align-middle"><span *ngIf="detail.priceEth != 0">{{detail.priceEur}} EUR</span></td>
             <td class="text-right align-middle"><span *ngIf="detail.priceEth != 0">{{detail.sum}} ETH</span></td>
-            <td class="text-right align-middle">
+            <td class="text-right align-middle actions-col">
+              <span *ngIf="detail.bestPrice" class="bestPrice"><i class="fa fa-tag" aria-hidden="true"></i>Best price</span>
               <button (click)="buyTokens(detail.address, detail.tokens, detail.date, detail.sum)"
                       [disabled]="detail.priceEth == 0 || buying"
                       type="button" class="btn btn-primary power-button" id="send-button">

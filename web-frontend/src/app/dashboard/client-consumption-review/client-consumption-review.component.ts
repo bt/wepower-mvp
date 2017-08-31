@@ -203,6 +203,13 @@ export class ClientConsumptionReviewComponent implements OnInit {
                 this.bestPrice(amount, date, PlantType.WIND, rate)
             ]))
         .then(values => {
+            const prices = values.map(val => val.priceEth)
+            const validPrices = prices.filter(a => a > 0)
+            if (validPrices.length > 0) {
+                const bestPrice = validPrices.reduce((a, b) => a < b ? a : b)
+                values[prices.indexOf(bestPrice)].bestPrice = true
+            }
+
             this.details[date.getTime()] = values;
         })
   }
@@ -226,8 +233,15 @@ export class ClientConsumptionReviewComponent implements OnInit {
             return this.ethereum.getPrice(data)
         }).map(price => {
             const priceInEth: number = this.ethereum.weiToETH(price)
-            return new BuyTokensRow(date, amount, type, this.round(priceInEth, 6),
-                this.round(priceInEth * exchangeRate, 6), this.round(priceInEth * amount, 6), bestPriceAddr)
+            return new BuyTokensRow(
+                date,
+                amount,
+                type,
+                this.round(priceInEth, 6),
+                this.round(priceInEth * exchangeRate, 6),
+                this.round(priceInEth * amount, 6),
+                bestPriceAddr,
+                false)
         }).toPromise()
   }
 
