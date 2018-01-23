@@ -17,14 +17,19 @@ public class ExchangeMarketService {
     private String ethPriceServiceUrl;
 
     public BigDecimal getPrice() {
-        ResponseEntity<CryptoPricesDTO> priceResponse = new RestTemplate()
-                .getForEntity(ethPriceServiceUrl, CryptoPricesDTO.class);
+        ResponseEntity<CryptoPricesDTO[]> priceResponse = new RestTemplate()
+                .getForEntity(ethPriceServiceUrl, CryptoPricesDTO[].class);
 
         if (priceResponse.getStatusCode() != HttpStatus.OK) {
             // TODO: Handle failure
             return BigDecimal.ZERO;
         }
 
-        return priceResponse.getBody().getEur();
+        CryptoPricesDTO[] prices = priceResponse.getBody();
+        if (prices.length == 0) {
+            return BigDecimal.ONE;
+        }
+
+        return prices[0].getPriceEur();
     }
 }
