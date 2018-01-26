@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import net.metasite.smartenergy.api.consumer.request.ConsumerDetailsDTO;
 import net.metasite.smartenergy.api.consumer.response.ConsumptionAvailabilityDTO;
@@ -23,9 +24,11 @@ import net.metasite.smartenergy.consumer.ConsumerManager;
 import net.metasite.smartenergy.domain.Consumer;
 import net.metasite.smartenergy.domain.ConsumptionLog;
 import net.metasite.smartenergy.repositories.ConsumerRepository;
+import net.metasite.smartenergy.usedip.UsedIpManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +55,9 @@ public class ConsumerController {
     @Resource
     private ConsumerRepository consumerRepository;
 
+    @Resource
+    private UsedIpManager usedIpManager;
+
     /**
      * Controller is, and will be used only by Front-end,
      *  therefore we Ignore HTTP specification and instead of 201+location header
@@ -62,7 +68,15 @@ public class ConsumerController {
      */
     @PostMapping
     public ResponseEntity<CreatedConsumerDTO> createConsumer(
-            @RequestBody ConsumerDetailsDTO request) {
+            @RequestBody ConsumerDetailsDTO request, HttpServletRequest httpRequest) {
+
+        String ip = httpRequest.getHeader("X-Real-IP");
+        LOG.debug("Creating account for {}", ip);
+        if (ip != null && !usedIpManager.isAllowed(ip)) {
+            String errorMessage = "There are already max allowed consumers registerd on this ip address";
+            LOG.error(errorMessage);
+            return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+        }
 
         if (consumerManagementService.isTaken(request.getWalletId())) {
             String errorMessage = String.format("Wallet %s is already taken", request.getWalletId());
@@ -77,8 +91,9 @@ public class ConsumerController {
                 request.getConsumption(),
                 request.getHouseSizeCode(),
                 request.getConsumeFrom(),
-                request.getConsumeTo()
-        );
+                request.getConsumeTo());
+
+        usedIpManager.addAcc(ip);
 
         return ResponseEntity.ok(new CreatedConsumerDTO(consumerId));
     }
